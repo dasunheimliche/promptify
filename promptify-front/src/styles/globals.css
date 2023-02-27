@@ -1,0 +1,430 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+
+
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+}
+
+/* GENERAL */
+
+.p {
+  cursor: pointer;
+}
+
+/* MAIN */
+.main {
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+}
+
+/* MAIN SIDEBAR*/
+
+.main-sidebar {
+  background-color: rgb(27,27,27);
+
+  min-width: 72px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ms-logo {
+  color: white;
+  font-weight: bold;
+  font-size: 23px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 60px;
+
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.ms-ai-logos {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.ms-ai-logo, .ms-add-ai {
+  background-color: rgb(242,238,233);
+  background-color: rgb(180, 216, 138);
+  /* background-color: rgb(153,183,221);
+  background-color: rgb(233, 135, 103); */
+  
+  border-radius: 17px;
+
+  width: 55px;
+  height: 55px;
+
+  font-size: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ms-add-ai {
+  margin-top: 13px;
+  font-size: 27px;
+}
+
+
+/* SECOND SIDEBAR*/
+
+.second-sidebar {
+  color: white;
+  background-color: rgb(16,16,20);
+
+  min-width: 400px;
+
+  /* padding-top: 27px; */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.ss-add {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+
+  position: relative;
+}
+
+.ss-add-header {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  justify-content: space-between;
+}
+.ss-add-title {
+  font-size: 19px;
+}
+
+.ss-add-button {
+  all: unset;
+  border: 2px solid rgba(245, 245, 245, 0.702);
+  width: 26px;
+  height: 26px;
+  border-radius: 50px;
+
+  font-size: 17px;
+  font-weight: bolder;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family:'Times New Roman', Times, serif;
+  cursor: pointer;
+}
+
+.ss-form {
+  display: flex;
+  width: 93%;
+
+  border-radius: 12px;
+  border: 1px solid rgba(245, 245, 245, 0.268);
+  position: relative;
+
+  overflow: hidden;
+
+  margin-bottom: 25px;
+}
+.ss-form input {
+  all: unset;
+  background-color: white;
+  height: 35px;
+  width: 100%;
+  padding-left: 15px;
+
+  font-size: 17px;
+}
+.ss-form button {
+  all: unset;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+.ss-ai-title {
+  font-size: 23px;
+  font-weight: bolder;
+
+  min-height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ss-ai-topic {
+  background-color: rgb(27,27,27);
+  border-radius: 10px;
+
+  width: 93%;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+
+  padding-left: 10px;
+
+}
+
+/* MAIN CONTENT*/
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+
+  position: relative; 
+
+  width: 100%; /* ??? */
+
+  background-color: rgb(242,238,233);
+}
+
+/* MAIN CONTENT MENU*/
+
+.mc-header {
+  outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Lexend Deca', sans-serif;
+
+  /* padding-top: 23px;
+  padding-bottom: 23px; */
+
+  min-height: 60px;
+}
+
+.mc-header-title {
+  font-size: 23px;
+}
+
+
+/* MAIN CONTENT GRID*/
+
+.mc-grid {
+  min-height: calc(100vh - 70px);
+  column-gap: 15px;
+  padding: 15px;
+  position: relative;
+
+  overflow: auto;
+}
+
+.wrapper {
+  overflow: auto;
+
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.wrapper::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+.prompt {
+  background: rgb(255, 255, 255);
+  margin-bottom: 15px;
+  border-radius: 12px;
+  padding: 25px;
+  overflow: hidden;
+  white-space: pre-line;
+
+  font-family: 'DM Sans', sans-serif;
+
+
+  font-size: 19px;
+  color: rgb(60, 60, 60);
+
+}
+
+.prompt-title {
+  font-size: 17px;
+  font-weight: bolder;
+  margin-bottom: 15px;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.opt-mode {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.342);
+  top: 0px;
+  left: 0px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-panel {
+  z-index: 2;
+  background-color: white;
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.menu-panel-form {
+  display: flex;
+  flex-direction: column;
+}
+.menu-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.menu-buttons button {
+  all: unset;
+  background-color: black;
+  color: white;
+}
+
+.add-prompt {
+  background-color: rgb(247,212,76);
+  border-radius: 100px;
+  padding: 25px;
+
+  width: 60px;
+  height: 60px;
+
+  font-size: 23px;
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+/* PROMPT SIDEBAR */
+
+.prompt-sidebar {
+  background-color: rgb(231,220,244);
+  min-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: relative;
+}
+
+.ps-header {
+  width: 95%;
+  min-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  margin-bottom: 15px;
+}
+
+.ps-back-button {
+  width: 35px;
+  height: 35px;
+
+  background-image: url(../icons/back.png);
+  background-size: cover;
+
+  transform: rotate(180deg);
+}
+
+.ps-title {
+  font-size: 23px;
+}
+
+.ps-buttons {
+  display: flex;
+  gap: 20px;
+
+  font-family: 'Lexend Deca', sans-serif;
+
+  margin-right: 3px;
+}
+
+.ps-content {
+  width: 95%;
+  height: 100%;
+}
+
+.ps-content-title {
+  background-color: white;
+
+  height: 7%;
+
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  display: flex;
+  align-items: center;
+
+  padding-left: 17px;
+  font-size: 32px;
+  font-family: 'Inconsolata', monospace;
+
+  font-weight: bolder;
+}
+
+.ps-content-textarea {
+  all: unset;
+
+  width: calc(100% - 34px);
+  height: 85%;
+  padding: 17px;
+  padding-top: 0px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  font-size: 23px;
+
+  background-color: white;
+
+  font-family: 'Inconsolata', monospace;
+}
