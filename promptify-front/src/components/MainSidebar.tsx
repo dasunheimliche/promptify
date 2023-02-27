@@ -18,6 +18,8 @@ const MainSidebar = ({ user, main, showSS, setMain, setShowMenu, setShowSS}: Mai
             setMain(ainame)
             if (ainame === main) {
                 setShowSS(!showSS)
+            } else {
+                setShowSS(true)
             }
             
         }
