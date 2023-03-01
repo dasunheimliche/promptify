@@ -1,55 +1,87 @@
 import { useEffect, useState, Dispatch } from 'react'
-import { Prompt } from '../types'
+import { Prompt, Card } from '../types'
 
 interface PromptSidebarProps {
-    currPrompt: Prompt
+    currCard: Card
     showPS: boolean
     setShowPS: Dispatch<boolean>
 }
 
 
-const PromptSidebar = ({currPrompt, showPS, setShowPS} : PromptSidebarProps)=> {
+const PromptSidebar = ({currCard, showPS, setShowPS} : PromptSidebarProps)=> {
 
-    const [p, setP] = useState<Prompt>(currPrompt)
+    const [card, setCard] = useState<Card>(currCard)
+    const [index, setIndex] = useState<number>(0)
+
 
     useEffect(()=> {
-        setP(currPrompt)
-    }, [currPrompt])
+        setCard(currCard)
+    }, [currCard])
+
+    const clear = ()=> {
+        setCard(currCard)
+    }
 
     const restart = ()=> {
-        setP(currPrompt)
+        setIndex(0)
+        setCard(currCard)
     }
 
     const copy = ()=> {
-        if (typeof p.content === "string") {
-            navigator.clipboard.writeText(p.content)
+        if (typeof card.prompts[index].content === "string") {
+            navigator.clipboard.writeText(card.prompts[index].content)
+            .then(()=> forward())
         }
+    }
+
+    const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>)=> {
+        let copia = JSON.parse(JSON.stringify(card))
+        copia.prompts[index].content = e.target.value
+        setCard(copia)
     }
 
     const close = ()=> {
         setShowPS(false)
     }
 
-    if (typeof p.content === "string") {
-        return (
-            <div className='prompt-sidebar'>
-                <div className='ps-header'>
-                <span className='ps-back-button p' onClick={close}></span>
-                    <div className="ps-buttons">
-                        <div className="ps-button p" onClick={restart}>RESTART</div>   
-                        <div className="ps-button p" onClick={copy}>COPY</div>
-                 </div>
-                </div>
-                <div className="ps-content">
-                    <div className="ps-content-title">{currPrompt?.title}</div>
-                    <textarea className='ps-content-textarea' placeholder='prompt' value={p.content} onChange={e=> setP({...p, content: e.target.value})} spellCheck="false"></textarea>
-                </div>
-            </div>
-        )
+    const forward = ()=> {
+        const maxind = card.prompts.length - 1
+        if (index + 1 <= maxind) {
+            setIndex(index + 1)
+        }
     }
 
+    const back = ()=> {
+        const maxind = card.prompts.length - 1
+        if (index - 1 >= 0) {
+            setIndex(index - 1)
+        }
+    }
+
+
     return (
-        <div></div>
+        <div className='prompt-sidebar'>
+            <div className='ps-header'>
+                <span className='ps-back-button p' onClick={close}></span>
+                <div className="ps-buttons">
+                <div className="ps-button p" onClick={restart}>RESTART</div> 
+                    <div className="ps-button p" onClick={clear}>CLEAR</div>   
+                    <div className="ps-button p" onClick={copy}>COPY</div>
+                </div>
+            </div>
+            <div className="ps-content">
+                <div className="ps-content-title">{currCard?.title}</div>
+                <div className="ps-content-subtitle-container">
+                    <div className="ps-content-subtitle">{`${index + 1} - ${card.prompts[index].title}`}</div>
+                </div>
+                <textarea className='ps-content-textarea' placeholder='prompt' value={card.prompts[index].content} onChange={onChangeHandler} spellCheck="false"></textarea>
+                <div className="ps-content-playback">
+                    <div className="psc-back p" onClick={back}>{"< "}</div>
+                    <div className="psc-display">{`${index+1}/${card.prompts.length}`}</div>
+                    <div className="psc-fwrd p" onClick={forward}>{" >"}</div>
+                </div>
+            </div>
+        </div>
     )
     
 }

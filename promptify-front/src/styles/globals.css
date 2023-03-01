@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
 
@@ -43,7 +43,7 @@ body {
 
 .ms-logo {
   color: white;
-  font-weight: bold;
+  font-weight:700;
   font-size: 23px;
 
   display: flex;
@@ -63,8 +63,8 @@ body {
 }
 
 .ms-ai-logo, .ms-add-ai {
-  background-color: rgb(242,238,233);
   background-color: rgb(180, 216, 138);
+  background-color: rgb(210, 210, 210);
   /* background-color: rgb(153,183,221);
   background-color: rgb(233, 135, 103); */
   
@@ -78,11 +78,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  font-family: 'Lexend Deca', sans-serif;
 }
 
 .ms-add-ai {
   margin-top: 13px;
   font-size: 27px;
+  font-family:'Times New Roman', Times, serif;
 }
 
 
@@ -162,7 +165,7 @@ body {
 .ss-form input {
   all: unset;
   background-color: white;
-  height: 35px;
+  height: 45px;
   width: 100%;
   padding-left: 15px;
 
@@ -200,6 +203,7 @@ body {
   align-items: center;
 
   padding-left: 10px;
+  font-weight: bolder;
 
 }
 
@@ -230,6 +234,7 @@ body {
   padding-bottom: 23px; */
 
   min-height: 60px;
+  font-weight: bolder;
 }
 
 .mc-header-title {
@@ -243,6 +248,7 @@ body {
   min-height: calc(100vh - 70px);
   column-gap: 15px;
   padding: 15px;
+  padding-top: 0px;
   position: relative;
 
   overflow: auto;
@@ -271,7 +277,7 @@ body {
 
 
   font-size: 19px;
-  color: rgb(60, 60, 60);
+  color: rgba(49, 49, 49, 0.862);
 
 }
 
@@ -297,29 +303,102 @@ body {
   justify-content: center;
 }
 
+/* GENERIC MENU */
+
 .menu-panel {
+  font-family: 'Lexend Deca', sans-serif;
   z-index: 2;
   background-color: white;
   border-radius: 15px;
-  padding: 15px;
+  padding: 20px;
+  padding-bottom: 0px;
+}
+
+.mp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 19px;
+}
+
+.mp-header-title {
+  font-size: 21px;
+}
+.mp-header-close {
+  font-size: 21px;
+}
+
+.mp-stack-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mp-stack-header button {
+  all: unset;
+}
+
+.menu-title {
+  margin-bottom: 5px;
+  font-size: 19px;
 }
 
 .menu-panel-form {
   display: flex;
   flex-direction: column;
 }
+
+.menu-panel-form input {
+  all: unset;
+  margin-bottom: 10px;
+
+  border: 1px solid rgba(165, 165, 165, 0.742);
+  border-radius: 10px;
+
+  padding: 10px;
+
+  width: 400px;
+  height: 20px;
+}
+
+.menu-panel-form textarea {
+  all: unset;
+
+  border: 1px solid rgba(165, 165, 165, 0.742);
+  border-radius: 10px;
+
+  padding: 10px;
+
+  width: 400px;
+  height: 300px;
+}
+
+.menu-panel-form textarea:focus {
+  border: 1px solid rgb(86, 176, 255);
+}
+
+.menu-panel-form input:focus {
+  border: 1px solid rgb(86, 176, 255);
+}
+
 .menu-buttons {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 13px;
+
+  height: 60px;
 }
 
 .menu-buttons button {
   all: unset;
-  background-color: black;
-  color: white;
+  color: rgba(0, 0, 0, 0.838);
+  font-weight: 700;
+
+  cursor: pointer;
 }
+
+/* ADD PROMPT BUTTON */
 
 .add-prompt {
   background-color: rgb(247,212,76);
@@ -330,15 +409,71 @@ body {
   height: 60px;
 
   font-size: 23px;
-  position: absolute;
-  right: 25px;
-  bottom: 25px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  overflow: hidden;
+  font-family:'Times New Roman', Times, serif;
+
+  /* overflow: hidden; */
+}
+
+.add-prompt-container {
+  position: absolute;
+  right: 25px;
+  bottom: 25px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#add-single-prompt {
+  font-family: 'Lexend Deca', sans-serif;
+  background-image: url('../icons/prompt.png');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#add-stack-prompt {
+  font-family: 'Lexend Deca', sans-serif;
+  background-image: url('../icons/stack.png');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#add-single-prompt:hover::after {
+  background-color: black;
+  content: "Add Prompt";
+  color: rgb(255, 255, 255);
+  font-size: 17px;
+  min-width: 100px;
+
+  position: relative;
+  right: 90px;
+
+  border-radius: 10px;
+  padding: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+#add-stack-prompt:hover::after {
+  background-color: black;
+  content: "Add Stack";
+  color: rgb(255, 255, 255);
+  font-size: 17px;
+  min-width: 85px;
+
+  position: relative;
+  right: 90px;
+
+  border-radius: 10px;
+  padding: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 /* PROMPT SIDEBAR */
@@ -359,11 +494,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding-top: 15px;
-  padding-bottom: 15px;
-
-  margin-bottom: 15px;
 }
 
 .ps-back-button {
@@ -390,14 +520,22 @@ body {
 }
 
 .ps-content {
+  /* outline: 1px solid red; */
   width: 95%;
-  height: 100%;
+  height: 90%;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  font-family: 'Inconsolata', monospace;
 }
 
 .ps-content-title {
   background-color: white;
 
-  height: 7%;
+  height: 40px;
 
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -407,24 +545,54 @@ body {
 
   padding-left: 17px;
   font-size: 27px;
-  font-family: 'Inconsolata', monospace;
 
   font-weight: bolder;
 }
 
-.ps-content-textarea {
-  all: unset;
+.ps-content-subtitle-container {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  
+  background-color: white;  
+  padding-left: 17px;
+  padding-right: 17px;
 
-  width: calc(100% - 34px);
-  height: 85%;
-  padding: 17px;
-  padding-top: 0px;
+  font-size: 21px;
+  font-weight: bolder;
+}
+
+.ps-content-playback {
+  display: flex;
+  gap: 7px;
+  height: 40px;
+
+  background-color: white;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 21px;
+  font-weight: bolder;
+}
+
+.ps-content-textarea {
+  
+  all: unset;
+  /* outline: 1px solid blue; */
+
+  width: calc(100% - 34px);
+  height: calc(100% - 120px);
+  padding: 17px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 
   font-size: 21px;
 
   background-color: white;
 
-  font-family: 'Inconsolata', monospace;
+  color: rgba(0, 0, 0, 0.757);
 }

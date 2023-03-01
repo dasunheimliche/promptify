@@ -1,22 +1,28 @@
 export interface Prompt {
     id: number
     title: string
-    content: string | Prompt
+    content: string 
+}
+
+export interface Card {
+    title: string
+    prompts: Prompt[]
+
 }
   
 export interface Section {
-    name: string,
-    prompts: Prompt[] | undefined
+    name: string
+    cards: Card[]
 }
   
-export interface AIs {
-    name: string,
-    abb: string,
+export interface AI {
+    name: string
+    abb: string
     sections: Section[] | undefined
 }
 
 export interface User {
-    username: string,
-    userID: string,
-    allPrompts: AIs[] | undefined
+    username: string
+    userID: string
+    allPrompts: AI[] | undefined
 }

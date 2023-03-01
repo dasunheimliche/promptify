@@ -1,0 +1,52 @@
+{
+    "username": "Claussimar",
+    "userID": "13456548794654",
+    "allPrompts": [
+      {
+        "name": "Midjourney",
+        "abb": "MJ",
+        "sections": [
+          {
+            "name": "General",
+            "prompts": [
+              { "id": 1, "title": "Convertir texto a preguntas", "content": "Convert the next text in a series of questions. Don't answer them for now. \n" },
+              { "id": 2, "title": "asdf", "content": "Convert the next text in a series of questions. Don't answer them for now. \n" }
+            ]
+          },
+          {
+            "name": "Programming",
+            "prompts": [
+              { "id": 1, "title": "asdf", "content": "Convert the next text in a series of questions. Don't answer them for now. \n"  },
+              { "id": 2, "title": "asdf", "content": "Convert the next text in a series of questions. Don't answer them for now. \n"  }
+            ]
+          },
+          {
+            "name": "History",
+            "prompts": []
+          }
+        ]
+      },
+      {
+        "name": "Chat GPT",
+        "abb": "C-GPT",
+        "sections": [
+          {
+            "name": "General",
+            "prompts": [
+              { "id": 1, "title": "Convertir texto a preguntas", "content": "Convert the next text in a series of questions. Don't answer them for now.\n\n" },
+              { "id": 2, "title": "Responde las preguntas", "content": "Answer all this questions and PLEASE don't forget adding typescript code for better understanding on each answer:\n\n\n\n\n\nPLEASE don't forget adding typescript code for better understanding on each answer:" },
+              { "id": 3, "title": "asdf", "content": "Convert the next text in a series of questions. Don't answer them for now. \n"  }
+            ]
+          },
+          {
+            "name": "Programming",
+            "prompts": [
+              { "id": 1, "title": "asdf", "content": "Convert the next text in a series of questions. Don't answer them for now. \n"  },
+              { "id": 2, "title": "asdf", "content": "Convert the next text in a series of questions. Don't answer them for now. \n"  }
+
+            ]
+          }
+        ]
+      }
+    ]
+}

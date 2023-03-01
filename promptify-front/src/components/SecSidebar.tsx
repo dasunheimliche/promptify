@@ -28,14 +28,12 @@ const SecSidebar = ({user, main, showSS, setTopic, setUser, setShowSS, setShowPS
             let index = copied.allPrompts?.findIndex(ai => ai.name === main)
             copied.allPrompts[index].sections?.push({
                 name: addTopic,
-                prompts: []
+                cards: []
             })
             setShow(false)
             setUser(copied)
         }
     }   
-
-
 
     return (
         <div style={!showSS? {display:"none"} : {}} className="second-sidebar">
@@ -51,7 +49,6 @@ const SecSidebar = ({user, main, showSS, setTopic, setUser, setShowSS, setShowPS
                 </form>}
             </div>
             {loadSections()}
-
         </div>
     )
 }

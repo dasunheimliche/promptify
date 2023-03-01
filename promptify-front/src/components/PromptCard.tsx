@@ -1,31 +1,25 @@
-import { useState, Dispatch } from 'react'
-import { Prompt } from '../types'
+import { Dispatch } from 'react'
+import { Prompt, Card } from '../types'
 
 interface PromptProps {
-    prompt: Prompt
-    setCurrentPromt: Dispatch<Prompt>
+    card: Card
+    setCurrentCard: Dispatch<Card>
     setShowPS: Dispatch<boolean>
 }
 
-const Prompt = ({prompt, setCurrentPromt, setShowPS} : PromptProps)=> {
+const PromptCard = ({card, setCurrentCard, setShowPS} : PromptProps)=> {
 
     const clickHandler = ()=> {
-        setCurrentPromt(prompt)
+        setCurrentCard(card)
         setShowPS(true)
     }
 
-    if (typeof prompt.content === "string") {
-        return (
-            <div className="prompt p" onClick={clickHandler}>
-                <div className="prompt-title">{prompt.title}</div>
-                <div className="prompt-content">{prompt.content}</div>
-            </div>
-        )
-    }
-
     return (
-        <div className="test">HOLA</div>
+        <div className={card.prompts.length > 1? "prompt stack p" : "prompt p"} onClick={clickHandler}>
+            <div className="prompt-title">{card.prompts.length > 1? card.title: card.prompts[0].title}</div>
+            <div className="prompt-content">{card.prompts[0].content}</div>
+        </div>
     )
 }
 
-export default Prompt
+export default PromptCard

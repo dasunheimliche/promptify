@@ -14,22 +14,21 @@ const AddPrompt = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=>
     const [title, setName] = useState<string>("")
     const [content, setContent] = useState<string>("")
 
-    const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+    const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
         setShowMenu("none")
     }
 
-    const addAI = (e: React.FormEvent<HTMLDivElement>)=> {
+    const addPrompt = (e: React.FormEvent<HTMLDivElement>)=> {
         e.preventDefault()
         let copied: User = JSON.parse(JSON.stringify(user))
 
         if (copied.allPrompts) {
             let indexAI = copied.allPrompts?.findIndex(ai => ai.name === main)
             let indexSec = copied.allPrompts[indexAI].sections?.findIndex(sec => sec.name === topic)
-            copied.allPrompts[indexAI].sections![indexSec!].prompts?.push({
-                id: 10,
+            copied.allPrompts[indexAI].sections![indexSec!].cards?.push({
                 title,
-                content
+                prompts: [{id: 1, title: "", content: content}]
             })
             setUser(copied)
         }
@@ -37,7 +36,11 @@ const AddPrompt = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=>
     }
 
     return (
-        <div className="menu-panel" onSubmit={addAI}>
+        <div className="menu-panel" onSubmit={addPrompt}>
+            <div className="mp-header">
+                <div className="mp-header-title">Add a Prompt</div>
+                <div className="mp-header-close p" onClick={closePanel}>x</div>
+            </div>
             <form action="" className="menu-panel-form ">
                 <label className="menu-title">{"Title"}</label>
                 <input type="text" placeholder="title" onChange={e=> setName(e.target.value)}/>
@@ -46,8 +49,7 @@ const AddPrompt = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=>
                 <textarea value={content} placeholder="Write your prompt" onChange={e=> setContent(e.target.value)}/>
 
                 <div className="menu-buttons">
-                    <button type="submit">Enviar</button>
-                    <button onClick={closePanel}>Cerrar</button>
+                    <button type="submit">Add Prompt</button>
                 </div>
             </form>
         </div>
