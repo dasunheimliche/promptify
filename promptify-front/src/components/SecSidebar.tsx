@@ -17,7 +17,7 @@ const SecSidebar = ({user, main, showSS, setTopic, setUser, setShowSS, setShowPS
 
     const loadSections = ()=>{
         const ai = user.allPrompts?.find(ai => ai.name === main)
-        return ai?.sections?.map((sec, i)=> <div key={i} className={"ss-ai-topic p"} onClick={()=>setTopic(sec.name)}>{sec.name}</div>)
+        return ai?.topics?.map((sec, i)=> <div key={i} className={"ss-ai-topic p"} onClick={()=>setTopic(sec.name)}>{sec.name}</div>)
     }
 
     const addTopicHandler = (e: React.FormEvent<HTMLFormElement>)=> {
@@ -26,7 +26,7 @@ const SecSidebar = ({user, main, showSS, setTopic, setUser, setShowSS, setShowPS
 
         if (copied.allPrompts) {
             let index = copied.allPrompts?.findIndex(ai => ai.name === main)
-            copied.allPrompts[index].sections?.push({
+            copied.allPrompts[index].topics?.push({
                 name: addTopic,
                 cards: []
             })

@@ -10,7 +10,7 @@ export interface Card {
 
 }
   
-export interface Section {
+export interface Topic {
     name: string
     cards: Card[]
 }
@@ -18,7 +18,7 @@ export interface Section {
 export interface AI {
     name: string
     abb: string
-    sections: Section[] | undefined
+    topics: Topic[] | undefined
 }
 
 export interface User {

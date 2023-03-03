@@ -46,8 +46,8 @@ const AddStack = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=> 
 
         if (copied.allPrompts) {
             let indexAI = copied.allPrompts?.findIndex(ai => ai.name === main)
-            let indexSec = copied.allPrompts[indexAI].sections?.findIndex(sec => sec.name === topic)
-            copied.allPrompts[indexAI].sections![indexSec!].cards?.push({
+            let indexSec = copied.allPrompts[indexAI].topics?.findIndex(sec => sec.name === topic)
+            copied.allPrompts[indexAI].topics![indexSec!].cards?.push({
                 title: stackTitle,
                 prompts: stack
             })

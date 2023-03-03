@@ -24,7 +24,7 @@ const AddAI = ({user, setUser, setShowMenu} : AddAIProps)  : JSX.Element => {
         copied.allPrompts?.push({
             name,
             abb,
-            sections: []
+            topics: []
         })
         setShowMenu("none")
         setUser(copied)

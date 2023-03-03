@@ -19,7 +19,7 @@ const MainContentGrid = ({ user, main, topic, columns, setUser, setShowMenu, set
     
     const loadPrompts = () => {
         const ai = user.allPrompts?.find(ai => ai.name === main)
-        const section = ai?.sections?.find(sec => sec.name === topic)
+        const section = ai?.topics?.find(sec => sec.name === topic)
         return section?.cards?.map((c,i)=> <PromptCard key={i} card={c} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
     }
 

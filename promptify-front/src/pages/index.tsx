@@ -22,7 +22,7 @@ let me: User = {
       {
         "name": "Chat GPT",
         "abb": "C-GPT",
-        "sections": [
+        "topics": [
           {
             "name": "General",
             "cards": [
