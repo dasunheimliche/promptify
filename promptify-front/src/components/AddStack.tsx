@@ -1,23 +1,44 @@
-import { useState, Dispatch, useRef } from 'react'
-import { User, Prompt } from '../types'
+import { useState, Dispatch } from 'react'
+import { Prompt, Topic, Card } from '../types'
+import { useMutation } from '@apollo/client';
+import { ADD_CARD } from '@/queries'
 
 interface AddPromptProps {
-    user: User
-    setUser: Dispatch<User>
     setShowMenu: Dispatch<string>
-    main: string
-    topic: string
+    topic: Topic | undefined
+    cardList: Card[] | undefined
+    setCardList: Dispatch<Card[]>
 }
 
-const AddStack = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=> {
+interface addCardData {
+    createCard: Card
+}
+
+interface promptVariables {
+    title: string
+    content: string
+}
+
+interface addCardVariables {
+    topicId: string
+    card: {
+        title: string
+        prompts: promptVariables[]
+    }
+}
+
+const AddStack = ({cardList, setCardList, topic, setShowMenu} : AddPromptProps)=> {
 
     const [stackTitle, setStackTitle] = useState<string>("")
     const [count, setCount] = useState<number>(0)
 
-    const [stack, setStack] = useState<Prompt[] | undefined>([])
+    const [stack, setStack] = useState<promptVariables[] | undefined>([])
     const [promptTitle, setPromptTitle] = useState<string>("")
     const [promptContent, setPromptContent] = useState<string>("")
 
+    const [ createCard, { error, data } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
+
+    // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
         setShowMenu("none")
@@ -26,7 +47,7 @@ const AddStack = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=> 
     const addToStack = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
         e.preventDefault()
         setCount(count + 1)
-        let newPrompt: Prompt = {id: count + 1, title: promptTitle, content: promptContent}
+        let newPrompt = {title: promptTitle, content: promptContent}
         if (stack) {
             setStack( [...stack, newPrompt])
         } else {
@@ -36,24 +57,36 @@ const AddStack = ({user, main, topic, setUser, setShowMenu} : AddPromptProps)=> 
         setPromptContent("")
     }
 
-    const addPrompt = (e: React.FormEvent<HTMLDivElement>) => {
+    const addPrompt = async(e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault()
-        let copied: User = JSON.parse(JSON.stringify(user))
 
-        if (!stack) {
+        if (!topic || !stack || !cardList ) {
             return
         }
 
-        if (copied.allPrompts) {
-            let indexAI = copied.allPrompts?.findIndex(ai => ai.name === main)
-            let indexSec = copied.allPrompts[indexAI].topics?.findIndex(sec => sec.name === topic)
-            copied.allPrompts[indexAI].topics![indexSec!].cards?.push({
-                title: stackTitle,
-                prompts: stack
-            })
-            setUser(copied)
+        const variables = {topicId: topic.id, aiId: topic.aiId, card: {
+            title: stackTitle,
+            prompts: stack
+        }}
+    
+        const newCard = await createCard({variables: variables})
+
+        if (!newCard.data) {
+            return
         }
 
+        let copied
+
+        if (!cardList) {
+            copied = [newCard.data.createCard]
+        } else {
+            copied = [...cardList, newCard.data.createCard]
+
+        }
+
+        if (!copied) return
+
+        setCardList(copied)
     }
 
     return (

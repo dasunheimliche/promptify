@@ -1,33 +1,62 @@
 import { useState, Dispatch } from 'react'
-import { User } from '../types'
+import { User, AI } from '../types'
+import { useMutation } from '@apollo/client';
+
+import { ADD_AI } from '@/queries'
 
 interface AddAIProps {
-    user: User
-    setUser: Dispatch<User>
+    me: User | undefined
+    aiList: AI[] | undefined
     setShowMenu: Dispatch<string>
+    setAiList: Dispatch<AI[]>
+    setMain: Dispatch<AI>
 }
 
+interface addAiData {
+    createAi : AI
+}
+interface addAiVariables {
+    userId: string
+    ai: {
+        name: string
+        abb: string
+    }
+}
 
-const AddAI = ({user, setUser, setShowMenu} : AddAIProps)  : JSX.Element => {
+const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  => {
 
+    // STATES
     const [name, setName] = useState<string>("")
     const [abb, setAbb] = useState<string>("")
 
+    // MUTATIONS
+    const [ createAi, { error, data } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
+
+    // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
         e.preventDefault()
         setShowMenu("none")
     }
 
-    const addAI = (e: React.FormEvent<HTMLDivElement>)=> {
+    const addAI = async (e: React.FormEvent<HTMLDivElement>)=> {
         e.preventDefault()
-        let copied: User = JSON.parse(JSON.stringify(user))
-        copied.allPrompts?.push({
-            name,
-            abb,
-            topics: []
-        })
+
+        if (!me || !aiList) {
+            return
+        }
+
+        const variables = {userId: me.id, ai: {name, abb}}
+        const newAI = await createAi({variables: variables})
+
+        if (!newAI.data) {
+            return
+        }
+
+        let copia : AI[] = [...aiList, newAI.data.createAi]
+
+        setAiList(copia)
+        setMain(newAI.data.createAi)
         setShowMenu("none")
-        setUser(copied)
     }
 
     return (

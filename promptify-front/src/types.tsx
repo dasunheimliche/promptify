@@ -1,28 +1,53 @@
+export interface User {
+    id: string
+    name: string
+    lastname: string
+    username: string
+    email: string
+    allPrompts: string[] | undefined
+    __typename: string
+}
+
+export interface AI {
+    id: string
+    userId: string
+    name: string
+    abb: string
+    fav: boolean
+    topics: string[] | undefined
+    __typename: string
+}
+
+export interface Topic {
+    id: string
+    aiId: string
+    userId: string
+    fav: boolean
+    name: string
+    cards: string[] | undefined
+    __typename: string
+}
+
 export interface Prompt {
-    id: number
     title: string
-    content: string 
+    content: string
+    __typename: string
 }
 
 export interface Card {
+    id: string
+    topicId: string
+    aiId: string
+    userId: string
+
     title: string
+
+    fav: boolean
+
     prompts: Prompt[]
-
-}
-  
-export interface Topic {
-    name: string
-    cards: Card[]
-}
-  
-export interface AI {
-    name: string
-    abb: string
-    topics: Topic[] | undefined
+    __typename: string
 }
 
-export interface User {
-    username: string
-    userID: string
-    allPrompts: AI[] | undefined
+export interface Token {
+	value: string
 }

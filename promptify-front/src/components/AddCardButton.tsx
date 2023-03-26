@@ -11,8 +11,8 @@ const AddCardButton = ({ setShowMenu } : AddCardButtonProps)=> {
 
     return (
         <div className="add-prompt-container">
-            {open && <div id="add-single-prompt" className='add-prompt p' onClick={()=>setShowMenu("add prompt")}></div>}
             {open && <div id="add-stack-prompt" className='add-prompt p' onClick={()=>setShowMenu("add stack")}></div>}
+            {open && <div id="add-single-prompt" className='add-prompt p' onClick={()=>setShowMenu("add prompt")}></div>}
             <div className='add-prompt p' onClick={()=>setOpen(!open)}>+</div>
         </div>
     )

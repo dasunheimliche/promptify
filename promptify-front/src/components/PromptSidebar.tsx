@@ -3,12 +3,11 @@ import { Prompt, Card } from '../types'
 
 interface PromptSidebarProps {
     currCard: Card
-    showPS: boolean
     setShowPS: Dispatch<boolean>
 }
 
 
-const PromptSidebar = ({currCard, showPS, setShowPS} : PromptSidebarProps)=> {
+const PromptSidebar = ({currCard, setShowPS} : PromptSidebarProps)=> {
 
     const [card, setCard] = useState<Card>(currCard)
     const [index, setIndex] = useState<number>(0)
@@ -72,7 +71,7 @@ const PromptSidebar = ({currCard, showPS, setShowPS} : PromptSidebarProps)=> {
             <div className="ps-content">
                 <div className="ps-content-title">{currCard?.title}</div>
                 <div className="ps-content-subtitle-container">
-                    <div className="ps-content-subtitle">{`${index + 1} - ${card.prompts[index].title}`}</div>
+                    {card.prompts.length > 1 && <div className="ps-content-subtitle">{`${index + 1} - ${card.prompts[index].title}`}</div>}
                 </div>
                 <textarea className='ps-content-textarea' placeholder='prompt' value={card.prompts[index].content} onChange={onChangeHandler} spellCheck="false"></textarea>
                 <div className="ps-content-playback">

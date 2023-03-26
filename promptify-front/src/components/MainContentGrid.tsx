@@ -1,35 +1,73 @@
-import { useState, Dispatch } from 'react'
-import { User, Prompt, Card } from '../types'
+import { Dispatch, useEffect } from 'react'
+import { Card, AI, Topic } from '../types'
+import { GET_CARDS } from '@/queries'
+import { useQuery } from '@apollo/client';
 
 import PromptCard from './PromptCard'
 import AddCardButton from './AddCardButton'
 
 interface MainContentGridProps {
-    user: User
-    main: string
-    topic: string
+    main: AI | undefined
+    topic: Topic | undefined
+    cardList: Card[] | undefined
     columns: number
     setShowPS: Dispatch<boolean>
-    setUser: Dispatch<User>
     setShowMenu: Dispatch<string>
     setCurrentCard: Dispatch<Card>
+    setCardList: Dispatch<Card[]>
 }
 
-const MainContentGrid = ({ user, main, topic, columns, setUser, setShowMenu, setCurrentCard, setShowPS }: MainContentGridProps)=> {
+interface getCardsData {
+    getCards: Card[]
+}
+
+interface getCardsVariables {
+    list: string[] | undefined
+}
+
+const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
+    console.log("CARD LIST", cardList)
+    const { loading: cardLoading, error: cardError, data: cardData } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+        variables: {list:topic?.cards}
+      });
     
+    
+    useEffect(()=> {
+        if (cardData) {
+            setCardList(cardData.getCards)
+        }
+    }, [cardData]) //eslint-disable-line
+
     const loadPrompts = () => {
-        const ai = user.allPrompts?.find(ai => ai.name === main)
-        const section = ai?.topics?.find(sec => sec.name === topic)
-        return section?.cards?.map((c,i)=> <PromptCard key={i} card={c} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+        if (!main || !cardList) {
+            return
+        }
+        const newCardList = cardList.filter(c => c.fav !== true)
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+    }
+
+    const loadFavPrompts = () => {
+        if (!main || !cardList) {
+            return
+        }
+        const newCardList = cardList.filter(c => c.fav === true)
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+    }
+
+    const theresfavs = ()=> {
+        return cardList?.some(card => card.fav)
     }
 
     return (
         <div className='wrapper'>
-            <div style={{columnCount: `${columns}`}} className="mc-grid">
-                {loadPrompts()}
-                
+            {theresfavs() && <div>Favourites</div>}
+            <div style={{columnCount: `${columns}`}} className="mc-grid"> 
+                {theresfavs() && loadFavPrompts()}
             </div>
-            {topic !== "none" && <AddCardButton  setShowMenu={setShowMenu}/>}
+            <div style={{columnCount: `${columns}`}} className="mc-grid"> 
+                {loadPrompts()}
+            </div>
+            {topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}
         </div>
     )
 }

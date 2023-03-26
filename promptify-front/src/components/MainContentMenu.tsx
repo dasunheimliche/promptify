@@ -1,6 +1,9 @@
+import { Topic } from '../types'
+
+
 
 interface MainContentMenu {
-    topic: string
+    topic: Topic | undefined
 }
 
 
@@ -8,7 +11,7 @@ const MainContentMenu = ({topic} : MainContentMenu )=> {
 
     return (
         <div className="mc-header">
-            <div className="mc-header-title">{topic}</div>
+            <div className="mc-header-title">{topic?.name}</div>
         </div>
     )
 }
