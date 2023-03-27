@@ -51,13 +51,23 @@ export default function Me() {
   const [cardList, setCardList]    = useState<Card[] | undefined>(undefined)
 
   // CUSTOM HOOKS
-  const {token} = useAuth()
+  const {token, setToken} = useAuth()
   const router = useRouter()
 
   // QUERIES
   const {loading, error, data, refetch } = useQuery<meData>(ME)  
 
   // USE EFFECTS
+
+  useEffect(()=> {
+    const newToken = localStorage.getItem('user-token')
+    
+    if (newToken) {
+      setToken(newToken)
+    } 
+  }, [])
+
+
   useEffect(()=> {
     if (data) {
       setMe(data.me)

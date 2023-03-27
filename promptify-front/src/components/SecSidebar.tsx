@@ -3,6 +3,7 @@ import { AI, Topic } from '../types'
 import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV } from '@/queries'
 import { useQuery, useMutation } from '@apollo/client';
 import DeleteAlert from './DeleteAlert';
+import TopicComponent from './Topic'
 
 interface SecSideBarProps {
     main: AI | undefined
@@ -66,20 +67,15 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
         }
 
         await deleteAi({variables: {userId, aiId}})
-
         if (!aiList) return
-
         const newAiList = aiList.filter(arrayAi => arrayAi.id != aiId)
-
         setAiList(newAiList)
-
         if (newAiList.length === 0) {
             return
         } else {
             setMain(newAiList[0])
             setDeleteAlert("none")
         }
-
     }
 
     const deleteAiHandler = ()=> {
@@ -116,40 +112,23 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
         const newTopicList = lista?.filter(t=> t?.fav === false )
         console.log("NO FAV SECTIONS", newTopicList)
 
-        return newTopicList?.map((sec:Topic, i:number) => {
-
-            const deleteTopicHandler = ()=> {
-                console.log("CLICK DELETE TOPIC")
-                deleteTopicfunc(main?.userId, sec.id)
-            }
-
-            const addToFav = async()=> {
-                if (!lista) {
-                    return
-                }
-                const newTopic = await addTopicToFavs({variables:{topicId: sec.id}})
-                const topicIndex = lista.findIndex(t => t.id === topic?.id)
-
-                const newTopicList = [...lista];
-                newTopicList[topicIndex] = newTopic.data.addTopicToFavs
-                setLista(newTopicList)
-            }
-
-            return (
-                <div key={i} className="topic-container">
-                    {(deleteAlert === "topic") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteTopicHandler} />}
-                    <div className={"ss-ai-topic p"} onClick={()=>clickHandler(sec)}>{sec.name}</div>
-                    {topic?.id === sec.id && <div className="topic-opt">
-                        <div className="del-topic p" onClick={addToFav}>F</div>
-                        <div className="del-topic p" onClick={()=>setDeleteAlert("topic")}>D</div>
-                    </div>}
-                </div>
-            )
-        })
+        return newTopicList?.map((sec:Topic, i:number) => 
+            <TopicComponent 
+                key={i}
+                main={main}
+                sec={sec}
+                lista={lista}
+                deleteAlert={deleteAlert}
+                deleteTopicfunc={deleteTopicfunc}
+                addTopicToFavs={addTopicToFavs}
+                clickHandler={clickHandler}
+                setLista={setLista}
+                setDeleteAlert={setDeleteAlert}
+            />
+        )
     }
 
     const loadFavSections = ()=>{
-        console.log("LOADING FAV SECTIONS")
         if (!main) {
             return
         }
@@ -158,40 +137,22 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
             setTopic(sec)
             refetch()
         }
-        console.log("LOADING FAV TOPICS WITH", lista)
         const newTopicList = lista?.filter(t=> t?.fav !== false )
-        console.log("FAV TOPIC LIST", newTopicList)
 
-        return newTopicList?.map((sec:Topic, i:number) => {
-
-            const deleteTopicHandler = ()=> {
-                console.log("CLICK DELETE TOPIC")
-                deleteTopicfunc(main?.userId, sec.id)
-            }
-
-            const addToFav = async()=> {
-                if (!lista) {
-                    return
-                }
-                const newTopic = await addTopicToFavs({variables:{topicId: sec.id}})
-                const topicIndex = lista.findIndex(t => t.id === topic?.id)
-
-                const newTopicList = [...lista];
-                newTopicList[topicIndex] = newTopic.data.addTopicToFavs
-                setLista(newTopicList)
-            }
-
-            return (
-                <div key={i} className="topic-container">
-                    {(deleteAlert === "topic") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteTopicHandler} />}
-                    <div className={"ss-ai-topic p"} onClick={()=>clickHandler(sec)}>{sec.name}</div>
-                    {topic?.id === sec.id && <div className="topic-opt">
-                        <div className="del-topic p" onClick={addToFav}>F</div>
-                        <div className="del-topic p" onClick={()=>setDeleteAlert("topic")}>D</div>
-                    </div>}
-                </div>
-            )
-        })
+        return newTopicList?.map((sec:Topic, i:number) => 
+            <TopicComponent 
+                key={i}
+                main={main}
+                sec={sec}
+                lista={lista}
+                deleteAlert={deleteAlert}
+                deleteTopicfunc={deleteTopicfunc}
+                addTopicToFavs={addTopicToFavs}
+                clickHandler={clickHandler}
+                setLista={setLista}
+                setDeleteAlert={setDeleteAlert}
+            />
+        )
     }
 
     const addTopicHandler = async (e: React.FormEvent<HTMLFormElement>)=> {
@@ -229,10 +190,16 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
         }
         const newAi = await addAiToFavs({variables:{aiId: main.id}})
         const aiIndex = aiList?.findIndex(ai=> ai.id === main.id)
+        const newMain = {...main, fav: !main.fav}
         
         const newAiList = [...aiList]
         newAiList[aiIndex] = newAi.data.addAiToFavs
+        setMain(newMain)
         setAiList(newAiList)
+    }
+
+    const theresFavs = ()=> {
+        return lista?.some(c => c.fav === true)
     }
 
     return (
@@ -240,10 +207,10 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} />}
             <div className="ss-ai-container">
                 <div className="ss-ai-title">{main && main.name}</div>
-                <div className="ss-ai-op" >
-                    <div className="ss-ai-op-del p" onClick={()=>setDeleteAlert("ai")}>D</div>
-                    <div className="ss-ai-op-fav" onClick={addToFavs}>F</div>
-                </div>
+                {main && <div className="ss-ai-op" >
+                    <div className="del-ai p" onClick={()=>setDeleteAlert("ai")}></div> 
+                    <div className={main?.fav? "fav-ai fav-ai-on p" : "fav-ai p"} onClick={addToFavs}></div> 
+                </div>}
             </div>
             <div className="ss-add">
                 <div className="ss-add-header">
@@ -256,9 +223,9 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
                 </form>}
             </div>
             <div className="topic-wrapper">
-                <div>favs</div>
-                {loadFavSections()}
-                <div className="div">No favs</div>
+                {theresFavs() && <div>Favourites</div>}
+                {theresFavs() && loadFavSections()}
+                <div className="divisor"></div>
                 {loadSections()} 
             </div>
         </div>

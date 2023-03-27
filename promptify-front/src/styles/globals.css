@@ -49,6 +49,10 @@ body {
 
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
+
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
 }
 
 .logos-wrapper::-webkit-scrollbar {
@@ -68,20 +72,19 @@ body {
   min-height: 60px;
 
   font-family: 'Lexend Deca', sans-serif;
+  margin-bottom: 23px;
 }
 
 .ms-ai-logos {
-  margin-top: 23px;
+  /* margin-top: 23px; */
   display: flex;
   flex-direction: column;
   gap: 13px;
 }
 
 .ms-ai-logo, .ms-add-ai {
-  background-color: rgb(180, 216, 138);
+
   background-color: rgb(210, 210, 210);
-  /* background-color: rgb(153,183,221);
-  background-color: rgb(233, 135, 103); */
   
   border-radius: 17px;
 
@@ -107,9 +110,15 @@ body {
 
 /* SECOND SIDEBAR*/
 
+.divisor {
+  outline: 1px solid rgba(255, 255, 255, 0.032);
+  width: 90%;
+}
+
 .topic-opt {
   display: flex;
   gap: 15px;
+  margin-right: 10px;
 }
 
 .topic-wrapper {
@@ -186,11 +195,45 @@ body {
 }
 
 .ss-ai-op {
+  /* outline: 1px solid red; */
   position: absolute;
   right: 15px;
 
   display: flex;
-  gap: 15px;
+  gap: 10px;
+
+}
+
+.del-ai {
+  background-image: url('../icons/del-off.png');
+  background-size: cover;
+  height: 23px;
+  width: 23px;
+
+  opacity: 5%;
+}
+
+.fav-ai {
+  background-image: url('../icons/fav-off.png');
+  background-size: cover;
+  height: 23px;
+  width: 23px;
+
+  opacity: 5%;
+}
+
+.fav-ai-on {
+  background-image: url('../icons/fav-on.png');
+  opacity: 70%;
+}
+
+.del-ai:hover {
+  background-image: url('../icons/del-on.png');
+  opacity: 100%;
+}
+.fav-ai:hover {
+  background-image: url('../icons/fav-on.png');
+  opacity: 100%;
 }
 
 .ss-ai-container {
@@ -229,7 +272,7 @@ body {
 }
 
 .ss-add-header {
-  width: 90%;
+  width: 93%;
   display: flex;
   align-items: center;
   padding-top: 15px;
@@ -310,6 +353,38 @@ body {
   /* position: relative; */
 }
 
+.del-topic {
+  background-image: url('../icons/del-off.png');
+  background-size: cover;
+  height: 17px;
+  width: 17px;
+
+  opacity: 5%;
+}
+
+.fav-topic {
+  background-image: url('../icons/fav-off.png');
+  background-size: cover;
+  height: 17px;
+  width: 17px;
+
+  opacity: 5%;
+}
+
+.fav-topic-on {
+  opacity: 70%;
+  background-image: url('../icons/fav-on.png');
+}
+
+.del-topic:hover {
+  background-image: url('../icons/del-on.png');
+  opacity: 100%;
+}
+.fav-topic:hover {
+  background-image: url('../icons/fav-on.png');
+  opacity: 100%;
+}
+
 .ss-ai-topic {
   background-color: rgb(27,27,27);
   border-radius: 10px;
@@ -364,6 +439,19 @@ body {
 
 /* MAIN CONTENT GRID*/
 
+.divisor-grid {
+  outline: 1px solid rgba(0, 0, 0, 0.041);
+  width: 90%;
+  position: relative;
+  bottom: 5px;
+}
+
+.grid-favs {
+  font-family: 'Lexend Deca', sans-serif;
+  margin-bottom: 10px;
+  font-size: 21px;
+}
+
 .mc-grid {
   /* min-height: calc(100vh - 70px); */
   column-gap: 15px;
@@ -384,6 +472,10 @@ body {
 
   padding-left: 15px;
   padding-right: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .wrapper::-webkit-scrollbar { 
@@ -419,9 +511,6 @@ body {
   font-family: 'Lexend Deca', sans-serif;
 }
 
-.prompt-content {
-  
-}
 
 .prompt-text {
   padding-bottom: 15px;
@@ -448,6 +537,39 @@ body {
   justify-content: flex-end;
   gap: 15px;
 }
+/**/
+.prompt-delete {
+  background-image: url('../icons/del-off-black.png');
+  background-size: cover;
+  height: 23px;
+  width: 23px;
+
+  opacity: 10%;
+}
+
+.prompt-fav {
+  background-image: url('../icons/fav-off-black.png');
+  background-size: cover;
+  height: 23px;
+  width: 23px;
+
+  opacity: 10%;
+}
+
+.prompt-fav-on {
+  opacity: 70%;
+  background-image: url('../icons/fav-on.png');
+}
+
+.prompt-delete:hover {
+  background-image: url('../icons/del-on.png');
+  opacity: 100%;
+}
+.prompt-fav:hover {
+  background-image: url('../icons/fav-on.png');
+  opacity: 100%;
+}
+
 
 /* GENERIC MENU */
 

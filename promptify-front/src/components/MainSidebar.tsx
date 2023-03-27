@@ -68,6 +68,7 @@ const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu
             <div className="ms-logo p">Pfy</div>
             <div className="logos-wrapper">
                 {theresfavs() && <div className='ms-ai-logos'>{loadFavAis()}</div>}
+                <div className="divisor"></div>
                 <div className='ms-ai-logos'>{loadAIs()}</div>
             </div>
             <div className='ms-add-ai p' onClick={openPanel}>+</div>

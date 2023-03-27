@@ -60,10 +60,11 @@ const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurren
 
     return (
         <div className='wrapper'>
-            {theresfavs() && <div>Favourites</div>}
+            {theresfavs() && <div className='grid-favs'>Favourites</div>}
             <div style={{columnCount: `${columns}`}} className="mc-grid"> 
                 {theresfavs() && loadFavPrompts()}
             </div>
+            {theresfavs() && <div className="divisor-grid"></div>}
             <div style={{columnCount: `${columns}`}} className="mc-grid"> 
                 {loadPrompts()}
             </div>
