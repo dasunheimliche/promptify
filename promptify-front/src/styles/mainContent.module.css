@@ -1,0 +1,135 @@
+.header {
+    outline-offset: -1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-family: 'Lexend Deca', sans-serif;
+  
+    min-height: 60px;
+    font-weight: bolder;
+}
+  
+.header-title {
+    font-size: 23px;
+}
+
+.cards-wrapper {
+    overflow: auto;
+  
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  
+    padding-left: 15px;
+    padding-right: 15px;
+  
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+  
+.cards-wrapper::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
+.grid-favs {
+    font-family: 'Lexend Deca', sans-serif;
+    margin-bottom: 10px;
+    font-size: 21px;
+}
+
+.grid {
+    /* min-height: calc(100vh - 70px); */
+    column-gap: 15px;
+    padding: 15px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    position: relative;
+  
+    overflow: auto;
+}
+
+.divisor-grid {
+    outline: 1px solid rgba(0, 0, 0, 0.041);
+    width: 90%;
+    position: relative;
+    bottom: 5px;
+}
+
+.add-card-container {
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+  
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#add-single-prompt {
+    font-family: 'Lexend Deca', sans-serif;
+    background-image: url('../icons/prompt.png');
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+  
+#add-stack-prompt {
+    font-family: 'Lexend Deca', sans-serif;
+    background-image: url('../icons/stack.png');
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+  
+#add-single-prompt:hover::after {
+    background-color: black;
+    content: "Add Prompt";
+    color: rgb(255, 255, 255);
+    font-size: 17px;
+    min-width: 100px;
+  
+    position: relative;
+    right: 90px;
+  
+    border-radius: 10px;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+  
+#add-stack-prompt:hover::after {
+    background-color: black;
+    content: "Add Stack";
+    color: rgb(255, 255, 255);
+    font-size: 17px;
+    min-width: 85px;
+  
+    position: relative;
+    right: 90px;
+  
+    border-radius: 10px;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.add-prompt {
+    background-color: rgb(247,212,76);
+    border-radius: 100px;
+    padding: 25px;
+  
+    width: 60px;
+    height: 60px;
+  
+    font-size: 23px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-family:'Times New Roman', Times, serif;
+  
+    /* overflow: hidden; */
+}

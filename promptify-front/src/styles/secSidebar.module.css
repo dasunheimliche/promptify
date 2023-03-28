@@ -1,0 +1,235 @@
+
+.second-sidebar {
+    color: white;
+    background-color: rgb(16,16,20);
+  
+    min-width: 400px;
+  
+    /* padding-top: 27px; */
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  
+    /* position: relative; */
+    /* overflow: hidden; */
+  
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.ai-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    outline-offset: -1px;
+    width: 100%;
+}
+
+.ai-title {
+    font-size: 23px;
+    font-weight: bolder;
+  
+    min-height: 60px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-opt {
+    position: absolute;
+    right: 15px;
+  
+    display: flex;
+    gap: 10px;
+}
+
+.del-ai {
+    background-image: url('../icons/del-off.png');
+    background-size: cover;
+    height: 23px;
+    width: 23px;
+    opacity: 5%;
+}
+
+.fav-ai {
+    background-image: url('../icons/fav-off.png');
+    background-size: cover;
+    height: 23px;
+    width: 23px;
+  
+    opacity: 5%;
+}
+  
+.fav-ai-on {
+    background-image: url('../icons/fav-on.png');
+    opacity: 70%;
+}
+  
+.del-ai:hover {
+    background-image: url('../icons/del-on.png');
+    opacity: 100%;
+}
+
+.fav-ai:hover {
+    background-image: url('../icons/fav-on.png');
+    opacity: 100%;
+}
+
+.addContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  
+    position: relative;
+}
+
+.add-header {
+    width: 93%;
+    display: flex;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    justify-content: space-between;
+}
+
+.add-title {
+    font-size: 19px;
+}
+
+.add-button {
+    all: unset;
+    border: 1px solid rgba(196, 196, 196, 0.702);
+    width: 26px;
+    height: 26px;
+    border-radius: 50px;
+  
+    font-size: 17px;
+    font-weight: bolder;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-family:'Times New Roman', Times, serif;
+    cursor: pointer;
+}
+
+.add-form {
+    display: flex;
+    width: 93%;
+  
+    border-radius: 7px;
+    border: 1px solid rgba(245, 245, 245, 0.268);
+    position: relative;
+  
+    overflow: hidden;
+  
+    margin-bottom: 25px;
+}
+
+.add-form input {
+    all: unset;
+    background-color: white;
+    height: 44px;
+    width: 100%;
+    padding-left: 15px;
+    color: rgba(0, 0, 0, 0.71);
+    font-size: 17px;
+  }
+  
+.add-form button {
+    all: unset;
+    padding-left: 10px;
+    padding-right: 10px;
+  
+    font-size: 15px;
+  
+    cursor: pointer;
+}
+
+.topics-wrapper {
+    /* outline: 1px solid red; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  
+    overflow: auto;
+  
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+  
+.topics-wrapper::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+.topic-container {
+    background-color: rgb(27,27,27);
+    width: 93%;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+  
+    /* position: relative; */
+}
+
+.topic-name {
+    background-color: rgb(27,27,27);
+    border-radius: 10px;
+  
+    width: 90%;
+    height: 45px;
+  
+    display: flex;
+    align-items: center;
+  
+    padding-left: 10px;
+    font-weight: bolder;
+  
+}
+
+.topic-opt {
+    display: flex;
+    gap: 15px;
+    margin-right: 10px;
+}
+
+.del-topic {
+    background-image: url('../icons/del-off.png');
+    background-size: cover;
+    height: 17px;
+    width: 17px;
+  
+    opacity: 5%;
+}
+  
+.fav-topic {
+    background-image: url('../icons/fav-off.png');
+    background-size: cover;
+    height: 17px;
+    width: 17px;
+  
+    opacity: 5%;
+}
+  
+.fav-topic-on {
+    opacity: 70%;
+    background-image: url('../icons/fav-on.png');
+}
+  
+.del-topic:hover {
+    background-image: url('../icons/del-on.png');
+    opacity: 100%;
+}
+
+.fav-topic:hover {
+    background-image: url('../icons/fav-on.png');
+    opacity: 100%;
+}

@@ -20,6 +20,8 @@ import { useQuery } from "@apollo/client"
 
 import { ME } from '@/queries'
 
+import style from '../styles/me.module.css'
+
 interface meData {
   me: User
 }
@@ -65,7 +67,7 @@ export default function Me() {
     if (newToken) {
       setToken(newToken)
     } 
-  }, [])
+  }, []) // eslint-disable-line
 
 
   useEffect(()=> {
@@ -90,9 +92,9 @@ export default function Me() {
 
 
   return (
-    <div className='main'>
+    <div className={style.main}>
       {showMenu !== "none" && 
-        <div className="opt-mode">
+        <div className={style[`opt-mode`]}>
           {showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}      setShowMenu={setShowMenu}  setMain={setMain}/>}
           {showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}                   />}
           {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}                   />}
@@ -101,7 +103,7 @@ export default function Me() {
       
       <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS}/>
       <SecSidebar main={main} aiList={aiList} topic={topic} showSS={showSS} setTopic={setTopic} setAiList={setAiList} setMain={setMain}/>
-      <div className="main-content">
+      <div className={style[`main-content`]}>
         <MainContentMenu topic={topic} />
         <MainContentGrid cardList={cardList} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
       </div>

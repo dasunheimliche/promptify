@@ -1,6 +1,7 @@
 import { Topic, AI } from "@/types"
 import { Dispatch } from "react"
 import DeleteAlert from "./DeleteAlert"
+import style from '../styles/secSidebar.module.css'
 
 interface addTopicVariables {
     aiId: string
@@ -45,12 +46,12 @@ const Topic = ({main, sec, lista, setLista, deleteTopicfunc, addTopicToFavs, set
     }
 
     return (
-        <div className="topic-container">
+        <div className={style[`topic-container`]}>
             {(deleteAlert === "topic") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteTopicHandler} />}
-            <div className={"ss-ai-topic p"} onClick={()=>clickHandler(sec)}>{sec.name}</div>
-            {<div className="topic-opt">
-                <div className="del-topic p"  onClick={()=>setDeleteAlert("topic")}></div>
-                <div className={sec.fav? "fav-topic fav-topic-on p": "fav-topic p"} onClick={addToFav}></div>
+            <div className={ `${style[`topic-name`]} p`} onClick={()=>clickHandler(sec)}>{sec.name}</div>
+            {<div className={style[`topic-opt`]}>
+                <div className={`${style[`del-topic`]} p`}  onClick={()=>setDeleteAlert("topic")}></div>
+                <div className={sec.fav? `${style[`fav-topic`]} ${style[`fav-topic-on`]} p`: `${style[`fav-topic`]} p`} onClick={addToFav}></div>
             </div>}
         </div>
     )

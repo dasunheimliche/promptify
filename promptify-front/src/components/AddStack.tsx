@@ -1,7 +1,8 @@
 import { useState, Dispatch } from 'react'
-import { Prompt, Topic, Card } from '../types'
+import { Topic, Card } from '../types'
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
+import style from '../styles/popups.module.css'
 
 interface AddPromptProps {
     setShowMenu: Dispatch<string>
@@ -90,23 +91,23 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu} : AddPromptProps)=
     }
 
     return (
-        <div className="menu-panel" onSubmit={addPrompt}>
-            <div className="mp-header">
-                <div className="mp-header-title">Add a Stack</div>
-                <div className="mp-header-close p" onClick={closePanel}>x</div>
+        <div className={style.popup} onSubmit={addPrompt}>
+            <div className={style.header}>
+                <div className={style[`header-title`]}>Add a Stack</div>
+                <div className={`${style[`header-close`]} p`} onClick={closePanel}>x</div>
             </div>
-            <form action="" className="menu-panel-form ">
-                <label className="menu-title">{"Stack Title"}</label>
+            <form action="" className={style.form}>
+                <label className={style.title}>{"Stack Title"}</label>
                 <input type="text" placeholder=" stack title" onChange={ e=> setStackTitle(e.target.value)}/>
 
-                <div className='mp-stack-header'>
-                    <label className="menu-title">{`Prompt Stack: ${count}`}</label>
+                <div className={style[`stack-header`]}>
+                    <label className={style.title}>{`Prompt Stack: ${count}`}</label>
                     <button onClick={addToStack}>+ Add to Stack</button>
                 </div>
                 <input value={promptTitle} type="text" placeholder="prompt title" onChange={e=> setPromptTitle(e.target.value)}/>
                 <textarea value={promptContent} placeholder="Write your prompt" onChange={e=> setPromptContent(e.target.value)}/>
 
-                <div className="menu-buttons">
+                <div className={style.buttons}>
                     <button type="submit">Add Prompt</button>
                 </div>
             </form>

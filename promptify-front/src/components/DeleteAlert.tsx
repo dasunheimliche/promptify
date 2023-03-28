@@ -1,5 +1,7 @@
-import { Topic } from "@/types"
+
 import { Dispatch } from "react"
+import style from '../styles/popups.module.css'
+
 
 interface DeleteArgs {
     setDeleteAlert: Dispatch<string>
@@ -9,12 +11,12 @@ interface DeleteArgs {
 const DeleteAlert = ({setDeleteAlert, deleteHandler} : DeleteArgs)=> {
 
     return(
-        <div className="deleteAlert">
-            <div className="deleteAlertContainer">
-                <div className="deleteAlertMsg">Estas seguro de eliminar este elemento?</div>
-                <div className="deleteAlertButtons">
-                    <button className='deleteAlertCancel p' onClick={()=>setDeleteAlert("none")}>CANCEL</button>
-                    <button className='deleteAlertAccept p' onClick={deleteHandler}>ACCEPT</button>
+        <div className={style[`delete-background`]}>
+            <div className={style[`delete-alert-container`]}>
+                <div>Estas seguro de eliminar este elemento?</div>
+                <div className={style[`delete-alert-buttons`]}>
+                    <button onClick={()=>setDeleteAlert("none")}>CANCEL</button>
+                    <button onClick={deleteHandler}>ACCEPT</button>
                 </div>
             </div>                
         </div>

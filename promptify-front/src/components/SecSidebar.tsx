@@ -1,9 +1,10 @@
 import { useState, Dispatch, useEffect } from 'react'
 import { AI, Topic } from '../types'
 import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV } from '@/queries'
-import { useQuery, useMutation } from '@apollo/client';
-import DeleteAlert from './DeleteAlert';
+import { useQuery, useMutation } from '@apollo/client'
+import DeleteAlert from './DeleteAlert'
 import TopicComponent from './Topic'
+import style from '../styles/secSidebar.module.css'
 
 interface SecSideBarProps {
     main: AI | undefined
@@ -203,26 +204,26 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
     }
 
     return (
-        <div style={!showSS? {display:"none"} : {}} className="second-sidebar"> 
+        <div style={!showSS? {display:"none"} : {}} className={style[`second-sidebar`]}> 
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} />}
-            <div className="ss-ai-container">
-                <div className="ss-ai-title">{main && main.name}</div>
-                {main && <div className="ss-ai-op" >
-                    <div className="del-ai p" onClick={()=>setDeleteAlert("ai")}></div> 
-                    <div className={main?.fav? "fav-ai fav-ai-on p" : "fav-ai p"} onClick={addToFavs}></div> 
+            <div className={style[`ai-container`]}>
+                <div className={style[`ai-title`]}>{main && main.name}</div>
+                {main && <div className={style[`ai-opt`]}>
+                    <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> 
+                    <div className={main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={addToFavs}></div> 
                 </div>}
             </div>
-            <div className="ss-add">
-                <div className="ss-add-header">
-                    <span className="ss-add-title">Topics</span>
-                    <button className='ss-add-button' onClick={e=>setShow(!show)}>+</button>
+            <div className={style.addContainer}>
+                <div className={style[`add-header`]}>
+                    <span className={style[`add-title`]}>Topics</span>
+                    <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
                 </div>
-                {show && <form className='ss-form' action="" onSubmit={addTopicHandler}>
+                {show && <form className={style[`add-form`]} action="" onSubmit={addTopicHandler}>
                     <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)}></input>
                     <button type='submit'>ADD</button>
                 </form>}
             </div>
-            <div className="topic-wrapper">
+            <div className={style[`topics-wrapper`]}>
                 {theresFavs() && <div>Favourites</div>}
                 {theresFavs() && loadFavSections()}
                 <div className="divisor"></div>

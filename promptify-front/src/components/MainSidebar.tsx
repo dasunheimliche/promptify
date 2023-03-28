@@ -4,6 +4,8 @@ import { GET_AIS } from '@/queries'
 import { useQuery } from '@apollo/client';
 
 import AiButton from './AiButton';
+
+import style from '../styles/mainSidebar.module.css'
  
 interface MainSideBarProps {
     main: AI | undefined
@@ -64,14 +66,14 @@ const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu
     }
     
     return(
-        <div className="main-sidebar">
-            <div className="ms-logo p">Pfy</div>
-            <div className="logos-wrapper">
-                {theresfavs() && <div className='ms-ai-logos'>{loadFavAis()}</div>}
+        <div className={style[`main-sidebar`]}>
+            <div className={`${style.logo} p`}>Pfy</div>
+            <div className={style[`ais-wrapper`]}>
+                {theresfavs() && <div className={style[`ai-logos`]}>{loadFavAis()}</div>}
                 <div className="divisor"></div>
-                <div className='ms-ai-logos'>{loadAIs()}</div>
+                <div className={style[`ai-logos`]}>{loadAIs()}</div>
             </div>
-            <div className='ms-add-ai p' onClick={openPanel}>+</div>
+            <div className={`${style[`add-ai`]} p`} onClick={openPanel}>+</div>
         </div>
     )
 }

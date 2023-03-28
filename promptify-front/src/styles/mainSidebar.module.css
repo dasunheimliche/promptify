@@ -1,0 +1,89 @@
+.main-sidebar {
+    background-color: rgb(27,27,27);
+  
+    min-width: 72px;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    /* overflow:scroll; */
+}
+
+.logo {
+
+    color: white;
+    font-weight:700;
+    font-size: 23px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    min-height: 60px;
+  
+    font-family: 'Lexend Deca', sans-serif;
+    margin-bottom: 23px;
+}
+
+.ais-wrapper {
+    overflow: auto;
+  
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+  
+.ais-wrapper::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+.ai-logos {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.ai-logo {
+
+    background-color: rgb(210, 210, 210);
+    
+    border-radius: 17px;
+  
+    width: 55px;
+    height: 55px;
+  
+    font-size: 14px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.add-ai {
+    margin-top: 13px;
+    margin-bottom: 13px;
+
+    background-color: rgb(210, 210, 210);
+    
+    border-radius: 17px;
+  
+    width: 55px;
+    height: 55px;
+  
+    font-size: 14px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+
+

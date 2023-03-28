@@ -1,4 +1,5 @@
-import { AI, User } from '../types'
+import { AI } from '../types'
+import style from '../styles/mainSidebar.module.css'
 
 const AiButton = ({ai, main, setMain, setShowSS, showSS, refetch } : any)=> {
 
@@ -22,7 +23,7 @@ const AiButton = ({ai, main, setMain, setShowSS, showSS, refetch } : any)=> {
     }
 
     return(
-        <div  className={"ms-ai-logo p"} onClick={()=>clickHandler(ai)}>{ai.abb}</div>
+        <div  className={style[`ai-logo`]} onClick={()=>clickHandler(ai)}>{ai.abb}</div>
     )
 }
 

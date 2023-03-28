@@ -1,5 +1,5 @@
 import { Topic } from '../types'
-
+import style from '../styles/mainContent.module.css'
 
 
 interface MainContentMenu {
@@ -10,8 +10,8 @@ interface MainContentMenu {
 const MainContentMenu = ({topic} : MainContentMenu )=> {
 
     return (
-        <div className="mc-header">
-            <div className="mc-header-title">{topic?.name}</div>
+        <div className={style.header}>
+            <div className={style[`header-title`]}>{topic?.name}</div>
         </div>
     )
 }

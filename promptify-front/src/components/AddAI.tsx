@@ -3,6 +3,7 @@ import { User, AI } from '../types'
 import { useMutation } from '@apollo/client';
 
 import { ADD_AI } from '@/queries'
+import style from '../styles/popups.module.css'
 
 interface AddAIProps {
     me: User | undefined
@@ -60,15 +61,15 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
     }
 
     return (
-        <div className="menu-panel" onSubmit={addAI}>
-            <form action="" className="menu-panel-form ">
-                <label className="menu-title">{"AI's name:"}</label>
+        <div className={style.popup} onSubmit={addAI}>
+            <form action="" className={style.form}>
+                <label className={style.title}>{"AI's name:"}</label>
                 <input type="text" placeholder="name" onChange={e=> setName(e.target.value)}/>
 
-                <label className="menu-title">{"AI's abb:"}</label>
+                <label className={style.title}>{"AI's abb:"}</label>
                 <input type="text" placeholder="abb" onChange={e=> setAbb(e.target.value)}/>
 
-                <div className="menu-buttons">
+                <div className={style.buttons}>
                     <button type="submit">Enviar</button>
                     <button onClick={closePanel}>Cerrar</button>
                 </div>

@@ -6,6 +6,8 @@ import { useQuery } from '@apollo/client';
 import PromptCard from './PromptCard'
 import AddCardButton from './AddCardButton'
 
+import style from '../styles/mainContent.module.css'
+
 interface MainContentGridProps {
     main: AI | undefined
     topic: Topic | undefined
@@ -59,12 +61,12 @@ const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurren
     }
 
     return (
-        <div className='wrapper'>
-            {theresfavs() && <div className='grid-favs'>Favourites</div>}
-            <div style={{columnCount: `${columns}`}} className="mc-grid"> 
+        <div className={style[`cards-wrapper`]}>
+            {theresfavs() && <div className={style[`grid-favs`]}>Favourites</div>}
+            <div style={{columnCount: `${columns}`}} className={style.grid}> 
                 {theresfavs() && loadFavPrompts()}
             </div>
-            {theresfavs() && <div className="divisor-grid"></div>}
+            {theresfavs() && <div className={style[`divisor-grid`]}></div>}
             <div style={{columnCount: `${columns}`}} className="mc-grid"> 
                 {loadPrompts()}
             </div>

@@ -1,0 +1,70 @@
+
+.prompt {
+    background: rgb(255, 255, 255);
+    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 25px;
+    padding-bottom: 0px;
+    overflow: hidden;
+    white-space: pre-line;
+  
+    font-family: 'DM Sans', sans-serif;
+  
+    min-width: 350px;
+    max-width: 465px;
+  
+  
+    font-size: 19px;
+    color: rgba(49, 49, 49, 0.862);
+}
+
+.title {
+    font-size: 17px;
+    font-weight: bolder;
+    margin-bottom: 15px;
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+.content {
+    padding-bottom: 15px;
+}
+
+.options {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.delete {
+    background-image: url('../icons/del-off-black.png');
+    background-size: cover;
+    height: 23px;
+    width: 23px;
+  
+    opacity: 10%;
+}
+  
+.fav {
+    background-image: url('../icons/fav-off-black.png');
+    background-size: cover;
+    height: 23px;
+    width: 23px;
+  
+    opacity: 10%;
+}
+  
+.fav-on {
+    opacity: 70%;
+    background-image: url('../icons/fav-on.png');
+}
+  
+.delete:hover {
+    background-image: url('../icons/del-on.png');
+    opacity: 100%;
+}
+
+.fav:hover {
+    background-image: url('../icons/fav-on.png');
+    opacity: 100%;
+}

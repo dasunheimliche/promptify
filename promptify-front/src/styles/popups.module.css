@@ -1,0 +1,145 @@
+/* ADD AI - PROMPT - STACK*/
+
+.popup {
+    font-family: 'Lexend Deca', sans-serif;
+    z-index: 2;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    padding-bottom: 0px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    margin-bottom: 19px;
+}
+
+.header-title {
+    font-size: 21px;
+}
+
+.header-close {
+    font-size: 21px;
+}
+
+.stack-header {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.stack-header button {
+    all: unset;
+}
+
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+  
+.form input {
+    all: unset;
+    margin-bottom: 10px;
+  
+    border: 1px solid rgba(165, 165, 165, 0.742);
+    border-radius: 10px;
+  
+    padding: 10px;
+  
+    width: 400px;
+    height: 20px;
+}
+  
+.form textarea {
+    all: unset;
+  
+    border: 1px solid rgba(165, 165, 165, 0.742);
+    border-radius: 10px;
+  
+    padding: 10px;
+  
+    width: 400px;
+    height: 300px;
+}
+  
+.form textarea:focus {
+    border: 1px solid rgb(86, 176, 255);
+}
+  
+.form input:focus {
+    border: 1px solid rgb(86, 176, 255);
+}
+
+.title {
+    margin-bottom: 5px;
+    font-size: 19px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 13px;
+  
+    height: 60px;
+}
+  
+.buttons button {
+    all: unset;
+    color: rgba(0, 0, 0, 0.838);
+    font-weight: 700;
+  
+    cursor: pointer;
+}
+
+/* DELETE ALERT */
+
+.delete-background {
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.518);
+    outline-offset: -1px;
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+    top: 0;
+    left: 0px;
+    padding: inherit;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    overflow: hidden;
+}
+
+.delete-alert-container {
+    background-color: white;
+    padding: 25px;
+    color: black;
+    font-size: 20px;
+    border-radius: 15px;
+    width: 300px;
+    position: relative;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.delete-alert-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    font-size: 17px;
+    width: 100%;
+}
+  
+.delete-alert-buttons button {
+    all: unset;
+    cursor: pointer;
+}
