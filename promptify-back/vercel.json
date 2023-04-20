@@ -7,13 +7,6 @@
           "config": { "includeFiles": ["build/**"] }
         }
     ],
-    "routes": [
-        { 
-          "src": "/(.*)", 
-          "dest": "build/index.js",
-          "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
-        }
-    ],
     "headers": [
       {
         "source": "/(.*)",
