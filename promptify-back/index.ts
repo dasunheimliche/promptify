@@ -1,4 +1,4 @@
-import cors from "cors";
+// import cors from "cors";
 
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
