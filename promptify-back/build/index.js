@@ -1,5 +1,4 @@
 "use strict";
-// import cors from "cors";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,9 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const cors_1 = __importDefault(require("cors"));
 const server_1 = require("@apollo/server");
-const standalone_1 = require("@apollo/server/standalone");
+const drainHttpServer_1 = require("@apollo/server/plugin/drainHttpServer");
+const express4_1 = require("@apollo/server/express4");
+const body_parser_1 = require("body-parser");
+// import { startStandaloneServer } from "@apollo/server/standalone";
 const graphql_1 = require("graphql");
+const express_1 = __importDefault(require("express"));
+const http_1 = __importDefault(require("http"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -440,30 +445,89 @@ const resolvers = {
     }
 };
 /* CREATING THE SERVER */
+const app = (0, express_1.default)();
+const httpServer = http_1.default.createServer(app);
 const server = new server_1.ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    plugins: [(0, drainHttpServer_1.ApolloServerPluginDrainHttpServer)({ httpServer })]
 });
-(0, standalone_1.startStandaloneServer)(server, {
-    context: ({ req }) => __awaiter(void 0, void 0, void 0, function* () {
-        return ({
-            currentUser: () => __awaiter(void 0, void 0, void 0, function* () {
-                if (!req) {
+server.start()
+    .then(() => {
+    app.use((0, cors_1.default)({ origin: "*" }), (0, body_parser_1.json)(), (0, express4_1.expressMiddleware)(server, {
+        context: ({ req }) => __awaiter(void 0, void 0, void 0, function* () {
+            return ({
+                currentUser: () => __awaiter(void 0, void 0, void 0, function* () {
+                    if (!req) {
+                        return null;
+                    }
+                    // ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
+                    const auth = req.headers.authorization;
+                    if (!auth) {
+                        return null;
+                    }
+                    if (auth && auth.startsWith("Bearer ")) {
+                        const decodedToken = jsonwebtoken_1.default.verify(auth.substring(7), process.env.SECRET || "");
+                        const current = yield User_1.default.findById(decodedToken.id);
+                        return current;
+                    }
                     return null;
-                }
-                // ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
-                const auth = req.headers.authorization;
-                if (!auth) {
-                    return null;
-                }
-                if (auth && auth.startsWith("Bearer ")) {
-                    const decodedToken = jsonwebtoken_1.default.verify(auth.substring(7), "SECRET");
-                    const current = yield User_1.default.findById(decodedToken.id);
-                    return current;
-                }
-                return null;
-            }),
-        });
-    }),
-    listen: { port: 4000 },
-}).then(({ url }) => console.log("Server connected to:", url));
+                }),
+            });
+        })
+    }));
+    httpServer.listen({ port: 4000 }, () => {
+        console.log("Server connected to port: 4000");
+    });
+});
+// app.use(
+// 	cors<cors.CorsRequest>({ origin: ["*"] }),
+// 	expressMiddleware(server, {
+// 		context: async ({req }) => ({
+// 			currentUser: async () => {
+// 				if (!req) {
+// 					return null;
+// 				}
+// 				// ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
+// 				const auth = req.headers.authorization;
+// 				if (!auth) {
+// 					return null;
+// 				}
+// 				if (auth && auth.startsWith("Bearer ")) {
+// 					const decodedToken = jwt.verify(
+// 						auth.substring(7), process.env.SECRET || ""
+// 					) as JwtPayload;
+// 					const current = await UserCollection.findById(decodedToken.id);
+// 					return current;
+// 				}
+// 				return null;
+// 			},
+// 		})
+// 	}),
+// );
+// httpServer.listen({ port: 4000 }, ()=> {
+// 	console.log("Server connected to port: 4000");
+// });
+// startStandaloneServer(server, {
+// 	context: async ({req }) => ({
+// 		currentUser: async () => {
+// 			if (!req) {
+// 				return null;
+// 			}
+// 			// ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
+// 			const auth = req.headers.authorization;
+// 			if (!auth) {
+// 				return null;
+// 			}
+// 			if (auth && auth.startsWith("Bearer ")) {
+// 				const decodedToken = jwt.verify(
+// 					auth.substring(7), process.env.SECRET || ""
+// 				) as JwtPayload;
+// 				const current = await UserCollection.findById(decodedToken.id);
+// 				return current;
+// 			}
+// 			return null;
+// 		},
+// 	}),
+// 	listen: { port: 4000 },
+// }).then(({url})=>console.log("Server connected to:", url));
