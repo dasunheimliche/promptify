@@ -1,3 +1,5 @@
+import cors from "cors";
+
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { GraphQLError } from "graphql";
@@ -494,13 +496,22 @@ const resolvers = {
 
 /* CREATING THE SERVER */
 
-const server = new ApolloServer({ typeDefs, resolvers });
+
+  
+
+const server = new ApolloServer({ 
+	typeDefs, 
+	resolvers
+});
+
 
 interface JwtPayload {
 	username: string
 	id: string
 	iat: number
 }
+
+
 
 startStandaloneServer(server, {
 	context: async ({req}) => ({
