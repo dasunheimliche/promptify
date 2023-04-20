@@ -224,8 +224,6 @@
     }
 
     .main-sidebar {
-        outline: 3px solid blue;
-        outline-offset: -3px;
         min-height: 100dvh;
     }
 
