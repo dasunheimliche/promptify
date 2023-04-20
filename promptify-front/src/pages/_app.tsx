@@ -13,7 +13,8 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-const httpLink = createHttpLink({uri: 'http://172.21.144.1:4000/'})
+// const httpLink = createHttpLink({uri: 'http://172.21.144.1:4000/'})
+const httpLink = createHttpLink({uri: 'https://promptify-eta.vercel.app/'})
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
