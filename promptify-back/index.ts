@@ -522,7 +522,7 @@ const server = new ApolloServer({
 server.start()
 	.then(()=>{
 		app.use(
-			cors<cors.CorsRequest>({ origin: ["http://localhost:3000"] }),
+			cors<cors.CorsRequest>({ origin: "*", credentials: true }),
 			json(),
 			expressMiddleware(server, {
 				context: async ({req }) => ({
