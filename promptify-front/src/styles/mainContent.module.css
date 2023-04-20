@@ -39,15 +39,13 @@
 }
 
 .grid {
-    /* min-height: calc(100vh - 70px); */
     column-gap: 15px;
     padding: 15px;
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 0px;
     position: relative;
-  
-    overflow: auto;
+    overflow: visible;
 }
 
 .divisor-grid {
@@ -130,6 +128,253 @@
     justify-content: center;
   
     font-family:'Times New Roman', Times, serif;
+}
+
+/* ====================================================================== */
+
+/* .header {
+    min-height: 60px;
+}
   
-    /* overflow: hidden; */
+.header-title {
+    font-size: 23px;
+}
+
+.cards-wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+    gap: 15px;
+}
+  
+
+.grid-favs {
+    margin-bottom: 10px;
+    font-size: 21px;
+}
+
+.grid {
+    column-gap: 15px;
+    padding: 15px;
+}
+
+.divisor-grid {
+    bottom: 5px;
+}
+
+.add-card-container {
+    right: 25px;
+    bottom: 25px;
+    gap: 10px;
+}
+
+#add-single-prompt {
+    background-size: 70%;
+
+}
+  
+#add-stack-prompt {
+    background-size: 70%;
+}
+  
+#add-single-prompt:hover::after {
+    font-size: 17px;
+    min-width: 100px;
+    right: 90px;
+    border-radius: 10px;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+  
+#add-stack-prompt:hover::after {
+    font-size: 17px;
+    min-width: 85px;
+  
+    right: 90px;
+  
+    border-radius: 10px;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.add-prompt {
+    border-radius: 100px;
+    padding: 25px;
+    width: 60px;
+    height: 60px;
+    font-size: 23px;
+} */
+
+@media (max-width: 1600px) {
+    .header {
+        min-height: 50px;
+    }
+      
+    .header-title {
+        font-size: 19px;
+    }
+    
+    .cards-wrapper {
+        padding-left: 12px;
+        padding-right: 12px;
+        gap: 12px;
+    }
+      
+    
+    .grid-favs {
+        margin-bottom: 8px;
+        font-size: 17px;
+    }
+    
+    .grid {
+        column-gap: 12px;
+        padding: 12px;
+    }
+    
+    .divisor-grid {
+        bottom: 4px;
+    }
+    
+    .add-card-container {
+        right: 21px;
+        bottom: 21px;
+        gap: 8px;
+    }
+    
+    #add-single-prompt {
+        background-size: 70%;
+    
+    }
+      
+    #add-stack-prompt {
+        background-size: 70%;
+    }
+      
+    #add-single-prompt:hover::after {
+        font-size: 14px;
+        min-width: 83px;
+        right: 75px;
+        border-radius: 8px;
+        padding: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+      
+    #add-stack-prompt:hover::after {
+        font-size: 14px;
+        min-width: 71px;
+      
+        right: 75px;
+      
+        border-radius: 8px;
+        padding: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    .add-prompt {
+        border-radius: 83px;
+        padding: 21px;
+        width: 50px;
+        height: 50px;
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .header {
+        min-height: 42px;
+    }
+      
+    .header-title {
+        font-size: 16px;
+    }
+    
+    .cards-wrapper {
+        padding-left: 11px;
+        padding-right: 11px;
+        gap: 11px;
+    }
+      
+    
+    .grid-favs {
+        margin-bottom: 7px;
+        font-size: 15px;
+    }
+    
+    .grid {
+        column-gap: 11px;
+        padding: 11px;
+    }
+    
+    .divisor-grid {
+        bottom: 4px;
+    }
+    
+    .add-card-container {
+        right: 18px;
+        bottom: 18px;
+        gap: 7px;
+    }
+    
+    #add-single-prompt {
+        background-size: 70%;
+    
+    }
+      
+    #add-stack-prompt {
+        background-size: 70%;
+    }
+      
+    #add-single-prompt:hover::after {
+        font-size: 12px;
+        min-width: 71px;
+        right: 64px;
+        border-radius: 7px;
+        padding: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+      
+    #add-stack-prompt:hover::after {
+        font-size: 12px;
+        min-width: 60px;
+      
+        right: 64px;
+      
+        border-radius: 7px;
+        padding: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    
+    .add-prompt {
+        border-radius: 71px;
+        padding: 18px;
+        width: 43px;
+        height: 43px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 912px) and (orientation: portrait) {
+}
+
+@media (max-width: 500px) and (orientation: portrait) {
+    
+    .grid {
+        /* all: unset; */
+    }
+    
+    #grid {
+        /* column-count: 1; */
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .grid-favs {
+        margin-bottom: 0px;
+    }
 }

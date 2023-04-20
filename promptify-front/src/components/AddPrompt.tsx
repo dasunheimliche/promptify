@@ -34,7 +34,7 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu} : AddPromptProps)
     const [title, setName] = useState<string>("")
     const [content, setContent] = useState<string>("")
 
-    const [ createCard, { error, data } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
+    const [ createCard, { error, data, loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
 
     const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
@@ -75,8 +75,12 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu} : AddPromptProps)
         setCardList(copied)
     }
 
+    const doNothing = (e:any) => {
+        e.preventDefault()
+    }
+
     return (
-        <div className={style.popup} onSubmit={addPrompt}>
+        <div className={style.popup} onSubmit={loading? doNothing : addPrompt}>
             <div className={style.header}>
                 <div className={style[`header-title`]}>Add a Prompt</div>
                 <div className={`${style[`header-close`]} p`} onClick={closePanel}>x</div>

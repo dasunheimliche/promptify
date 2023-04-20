@@ -1,3 +1,13 @@
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+  
+    100% {
+      opacity: 1;
+    }
+}
+
 
 .second-sidebar {
     color: white;
@@ -36,6 +46,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    text-align: center;
 }
 
 .ai-opt {
@@ -43,6 +55,7 @@
     right: 15px;
   
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 
@@ -62,6 +75,14 @@
   
     opacity: 5%;
 }
+
+.edit-ai {
+    background-image: url('../icons/edit.png');
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    opacity: 5%;
+}
   
 .fav-ai-on {
     background-image: url('../icons/fav-on.png');
@@ -75,6 +96,10 @@
 
 .fav-ai:hover {
     background-image: url('../icons/fav-on.png');
+    opacity: 100%;
+}
+
+.edit-ai:hover {
     opacity: 100%;
 }
 
@@ -139,7 +164,7 @@
     padding-left: 15px;
     color: rgba(0, 0, 0, 0.71);
     font-size: 17px;
-  }
+}
   
 .add-form button {
     all: unset;
@@ -152,13 +177,12 @@
 }
 
 .topics-wrapper {
-    /* outline: 1px solid red; */
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    /* gap: 15px; */
   
     overflow: auto;
   
@@ -176,8 +200,8 @@
     border-radius: 7px;
     display: flex;
     align-items: center;
-  
-    /* position: relative; */
+    animation: fadeIn 0.1s ease-in-out;
+    margin-bottom: 15px;
 }
 
 .topic-name {
@@ -218,6 +242,15 @@
   
     opacity: 5%;
 }
+
+.edit-topic {
+    background-image: url('../icons/edit.png');
+    background-size: cover;
+    height: 17px;
+    width: 17px;
+  
+    opacity: 5%;
+}
   
 .fav-topic-on {
     opacity: 70%;
@@ -232,4 +265,550 @@
 .fav-topic:hover {
     background-image: url('../icons/fav-on.png');
     opacity: 100%;
+}
+
+.edit-topic:hover {
+    opacity: 100%;
+}
+
+/* PROFILE */
+
+.profile-card {
+    width: 95%;
+    height: 500px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    background-color: pink;
+}
+
+.profile-name {
+    margin-top: 15px;
+}
+
+.sign-off {
+    all: unset;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+
+    background-color: white;
+    color: black;
+    border-radius: 13px;
+}
+
+.sign-off:hover {
+    background-color: rgb(254, 46, 46);
+    color: rgb(237, 237, 237);
+}
+
+
+/* ========================================================================================== */
+
+
+/* .second-sidebar {
+    min-width: 400px;
+    gap: 15px;
+}
+
+.ai-container {
+    width: 100%;
+}
+
+.ai-title {
+    font-size: 23px;  
+    min-height: 60px;
+}
+
+.ai-opt {
+    right: 15px;
+    gap: 10px;
+}
+
+.del-ai {
+    height: 23px;
+    width: 23px;
+}
+
+.fav-ai {
+    height: 23px;
+    width: 23px;
+}
+
+.edit-ai {
+    height: 20px;
+    width: 20px;
+}
+  
+
+.addContainer {
+    width: 100%;
+}
+
+.add-header {
+    width: 93%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.add-title {
+    font-size: 19px;
+}
+
+.add-button {
+    width: 26px;
+    height: 26px;
+    border-radius: 50px;
+    font-size: 17px;
+}
+
+.add-form {
+    width: 93%;
+    border-radius: 7px;
+    margin-bottom: 25px;
+}
+
+.add-form input {
+    height: 44px;
+    width: 100%;
+    padding-left: 15px;
+    font-size: 17px;
+}
+  
+.add-form button {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+}
+
+.topics-wrapper {
+    width: 100%;
+    gap: 15px;
+}
+  
+
+.topic-container {
+    width: 93%;
+    border-radius: 7px;
+}
+
+.topic-name {
+    border-radius: 10px;
+    width: 90%;
+    height: 45px;
+    padding-left: 10px;
+  
+}
+
+.topic-opt {
+    gap: 15px;
+    margin-right: 10px;
+}
+
+.del-topic {
+    height: 17px;
+    width: 17px;
+}
+  
+.fav-topic {
+    height: 17px;
+    width: 17px;
+}
+
+.edit-topic {
+    height: 17px;
+    width: 17px;
+}
+
+.profile-card {
+    width: 95%;
+    height: 500px;
+    margin-top: 15px;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+}
+
+.profile-name {
+    margin-top: 15px;
+}
+
+.sign-off {
+    margin-top: 15px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 13px;
+} */
+
+@media (max-width: 1600px) {
+
+    .second-sidebar {
+        min-width: 333px;
+        gap: 12px;
+    }
+    
+    .ai-container {
+        width: 100%;
+    }
+    
+    .ai-title {
+        font-size: 19px;  
+        min-height: 50px;
+    }
+    
+    .ai-opt {
+        right: 12px;
+        gap: 8px;
+    }
+    
+    .del-ai {
+        height: 19px;
+        width: 19px;
+    }
+    
+    .fav-ai {
+        height: 19px;
+        width: 19px;
+    }
+    
+    .edit-ai {
+        height: 17px;
+        width: 17px;
+    }
+      
+    
+    .addContainer {
+        width: 100%;
+    }
+    
+    .add-header {
+        width: 93%;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    
+    .add-title {
+        font-size: 16px;
+    }
+    
+    .add-button {
+        width: 22px;
+        height: 22px;
+        border-radius: 42px;
+        font-size: 14px;
+    }
+    
+    .add-form {
+        width: 93%;
+        border-radius: 6px;
+        margin-bottom: 21px;
+    }
+    
+    .add-form input {
+        height: 37px;
+        width: 100%;
+        padding-left: 12px;
+        font-size: 14px;
+    }
+      
+    .add-form button {
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: 12px;
+    }
+    
+    .topics-wrapper {
+        width: 100%;
+    }
+      
+    
+    .topic-container {
+        width: 93%;
+        border-radius: 6px;
+        margin-bottom: 12px;
+    }
+    
+    .topic-name {
+        border-radius: 8px;
+        width: 90%;
+        height: 37px;
+        padding-left: 8px;
+      
+    }
+    
+    .topic-opt {
+        gap: 12px;
+        margin-right: 8px;
+    }
+    
+    .del-topic {
+        height: 14px;
+        width: 14px;
+    }
+      
+    .fav-topic {
+        height: 14px;
+        width: 14px;
+    }
+    
+    .edit-topic {
+        height: 14px;
+        width: 14px;
+    }
+    
+    .profile-card {
+        width: 95%;
+        height: 416px;
+        margin-top: 12px;
+    }
+    
+    .profile-pic {
+        width: 83px;
+        height: 83px;
+        border-radius: 42px;
+    }
+    
+    .profile-name {
+        margin-top: 12px;
+    }
+    
+    .sign-off {
+        margin-top: 12px;
+        padding: 4px;
+        padding-left: 7px;
+        padding-right: 7px;
+        border-radius: 11px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .second-sidebar {
+        min-width: 284px;
+        gap: 11px;
+    }
+    
+    .ai-container {
+        width: 100%;
+    }
+    
+    .ai-title {
+        font-size: 16px;  
+        min-height: 43px;
+    }
+    
+    .ai-opt {
+        right: 11px;
+        gap: 7px;
+    }
+    
+    .del-ai {
+        height: 16px;
+        width: 16px;
+    }
+    
+    .fav-ai {
+        height: 16px;
+        width: 16px;
+    }
+    
+    .edit-ai {
+        height: 14px;
+        width: 14px;
+    }
+      
+    .addContainer {
+        width: 100%;
+    }
+    
+    .add-header {
+        width: 93%;
+        padding-top: 11px;
+        padding-bottom: 11px;
+    }
+    
+    .add-title {
+        font-size: 13px;
+    }
+    
+    .add-button {
+        width: 18px;
+        height: 18px;
+        border-radius: 36px;
+        font-size: 12px;
+    }
+    
+    .add-form {
+        width: 93%;
+        border-radius: 5px;
+        margin-bottom: 18px;
+    }
+    
+    .add-form input {
+        height: 31px;
+        width: 100%;
+        padding-left: 11px;
+        font-size: 12px;
+    }
+      
+    .add-form button {
+        padding-left: 7px;
+        padding-right: 7px;
+        font-size: 11px;
+    }
+    
+    .topics-wrapper {
+        width: 100%;
+    }
+      
+    
+    .topic-container {
+        width: 93%;
+        border-radius: 5px;
+        margin-bottom: 11px;
+    }
+    
+    .topic-name {
+        border-radius: 7px;
+        width: 90%;
+        height: 32px;
+        padding-left: 7px;
+      
+    }
+    
+    .topic-opt {
+        gap: 11px;
+        margin-right: 7px;
+    }
+    
+    .del-topic {
+        height: 12px;
+        width: 12px;
+    }
+      
+    .fav-topic {
+        height: 12px;
+        width: 12px;
+    }
+    
+    .edit-topic {
+        height: 12px;
+        width: 12px;
+    }
+    
+    .profile-card {
+        width: 95%;
+        height: 355px;
+        margin-top: 11px;
+    }
+    
+    .profile-pic {
+        width: 71px;
+        height: 71px;
+        border-radius: 36px;
+    }
+    
+    .profile-name {
+        margin-top: 11px;
+    }
+    
+    .sign-off {
+        margin-top: 11px;
+        padding: 4px;
+        padding-left: 6px;
+        padding-right: 6px;
+        border-radius: 9px;
+    }
+}
+
+@media (max-width: 912px) and (orientation: portrait) {
+}
+
+@media (max-width: 500px) and (orientation: portrait) {
+
+    .ai-title {
+        font-size: 17px;
+    }
+
+    .second-sidebar {
+        min-width: calc(100% - 51px);
+        min-height: 100dvh;
+
+        transition: min-height 0.2s;
+    }
+
+    /* TEST */
+    .add-header {
+        width: 90%;
+    }
+
+    .add-title {
+        font-size: 16px;
+    }
+
+    .add-form input {
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .add-form button {
+        padding-left: 12px;
+        padding-right: 12px;
+        font-size: 11px;
+    }
+
+    .add-form {
+        display: flex;
+        width: 90%;
+      
+        border-radius: 17px;
+        border: 1px solid rgba(245, 245, 245, 0.051);
+    }
+
+    .topic-container {
+        /* outline: 1px solid blue; */
+        background-color: rgb(27,27,27);
+        width: 90%;
+        height: 40px;
+        border-radius: 17px;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+    }
+
+    .topic-opt {
+        margin-right: 15px;
+    }
+
+    .del-topic {
+        height: 15px;
+        width: 15px;
+    }
+      
+    .fav-topic {
+        height: 15px;
+        width: 15px;
+    }
+    
+    .edit-topic {
+        height: 15px;
+        width: 15px;
+    }
+
+    .sign-off {
+        font-size: 14px;
+    }
 }

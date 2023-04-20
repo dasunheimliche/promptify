@@ -37,7 +37,7 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu} : AddPromptProps)=
     const [promptTitle, setPromptTitle] = useState<string>("")
     const [promptContent, setPromptContent] = useState<string>("")
 
-    const [ createCard, { error, data } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
+    const [ createCard, { error, data, loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
 
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
@@ -90,8 +90,12 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu} : AddPromptProps)=
         setCardList(copied)
     }
 
+    const doNothing = (e:any)=> {
+        e.preventDefault()
+    }
+
     return (
-        <div className={style.popup} onSubmit={addPrompt}>
+        <div className={style.popup} onSubmit={loading? doNothing : addPrompt}>
             <div className={style.header}>
                 <div className={style[`header-title`]}>Add a Stack</div>
                 <div className={`${style[`header-close`]} p`} onClick={closePanel}>x</div>

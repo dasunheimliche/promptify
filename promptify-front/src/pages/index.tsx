@@ -4,7 +4,15 @@ import { AuthContext, useAuth } from "@/contexts/Authcontext"
 import { useRouter } from "next/router"
 
 const Home = ()=> {
-  const {token, setToken} = useAuth()
+
+  let tkn
+  if (typeof window !== "undefined") {
+    tkn = sessionStorage.getItem('user-token')
+  }
+
+  const [token]          = useState<string | undefined>(tkn? tkn : undefined)
+
+  // const {token, setToken} = useAuth()
 
   const router = useRouter()
 

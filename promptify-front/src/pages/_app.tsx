@@ -1,11 +1,10 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
-import { AuthProvider } from '@/contexts/Authcontext'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink  } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context'
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('user-token')
+  const token = sessionStorage.getItem('user-token')
   return {
     headers: {
       ...headers,
@@ -14,7 +13,7 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-const httpLink = createHttpLink({ uri: 'http://localhost:4000/' })
+const httpLink = createHttpLink({uri: 'http://172.21.144.1:4000/'})
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
@@ -26,9 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={client}>
-      <AuthProvider>
         <Component {...pageProps} />
-      </AuthProvider>
     </ApolloProvider>
   )
 }

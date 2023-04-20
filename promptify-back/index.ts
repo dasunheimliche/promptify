@@ -4,6 +4,9 @@ import { GraphQLError } from "graphql";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
 import "./db";
 
 import { Document } from "mongoose";
@@ -75,6 +78,7 @@ const typeDefs = `
 		topicId: ID!
 		aiId: ID!
 		userId: ID!
+		
 		fav: Boolean!
 		title: String!
 		prompts: [Prompt]!
@@ -94,6 +98,7 @@ const typeDefs = `
 	type Query {
     	hello: String
 		me: User
+		getInvalidUsernames: [String]!
 		getAis(list: [ID]!): [AI]
 		getTopics(list: [ID]!): [Topic]
 		getCards(list: [ID]!): [Card]
@@ -158,6 +163,22 @@ const typeDefs = `
 		addTopicToFavs (
 			topicId: String!
 		) : Topic
+
+		editAi (
+			aiId: String!
+			newName: String!
+		) : AI
+
+		editTopic (
+			topicId: String!
+			newName: String!
+		) : Topic
+
+		editCard (
+			cardId: String!
+			newTitle: String!
+			newPrompts: [PromptInput]!
+		) : Card
 	}
 `;
 
@@ -167,6 +188,12 @@ const resolvers = {
 		me: (_root: any, _args: any, context: any) => { // eslint-disable-line
 			// ! no devolver context.currentUser, sino context.currentUser()
 			return context.currentUser();
+		},
+		getInvalidUsernames: async() => {
+			const users = await UserCollection.find({});
+			const validNames = users.map(user => user.username);
+
+			return validNames;
 		},
 		getAis: async (_root: any, args: any, _context:any)=> { // eslint-disable-line
 
@@ -327,6 +354,7 @@ const resolvers = {
 			return nuevaCard;
 		},
 		login: async(_root:any, args: loginArgs) : Promise<Token> => { // eslint-disable-line
+
 			const user = await UserCollection.findOne({username: args.username});
 
 			const passCorrect = user === null? false : await bcrypt.compare(args.password, user.password!); // eslint-disable-line
@@ -344,7 +372,7 @@ const resolvers = {
 				id: user._id
 			};
 
-			const token = jwt.sign(userForToken, "SECRET");
+			const token = jwt.sign(userForToken, process.env.SECRET || "");
 
 			return {value: token};
 		},
@@ -368,11 +396,12 @@ const resolvers = {
 				return false;
 			}
 
-			await CardCollection.deleteMany({_id: {$in : topic.cards}});
+			
 
 			const aiIdObject = new mongoose.Types.ObjectId(aiId);
 			const topicIdObject = new mongoose.Types.ObjectId(topicId);
 
+			await CardCollection.deleteMany({topicId: topicIdObject});
 			await TopicCollection.findByIdAndDelete(topicId);
 			await AiCollection.updateOne({ _id: aiIdObject }, { $pull: { topics: topicIdObject} });
 
@@ -380,13 +409,12 @@ const resolvers = {
 		},
 		deleteAi: async(_root: any, args: any) => {
 			const { userId, aiId } = args;
-			console.log("DELETE AI WITH USERID AND AI ID OF :", userId, aiId);
 			const userIdObject = new mongoose.Types.ObjectId(userId);
 			const aiIdObject = new mongoose.Types.ObjectId(aiId);
 
-			await CardCollection.deleteMany({userId: userIdObject});
+			await CardCollection.deleteMany({aiId: aiIdObject});
 			await TopicCollection.deleteMany({aiId: aiIdObject});
-			await AiCollection.findByIdAndDelete(userId);
+			await AiCollection.findByIdAndDelete(aiId);
 
 			await UserCollection.updateOne({ _id: userIdObject }, { $pull: { allPrompts: aiIdObject} });
 
@@ -422,6 +450,43 @@ const resolvers = {
 			topic.fav = !topic.fav;
 			await topic.save();
 			return topic;
+		},
+		editAi: async(_root: any, args: any) => {
+
+			const { aiId, newName } = args;
+			const ai = await AiCollection.findById(aiId);
+			if (!ai) {
+				return;
+			}
+			ai.name = newName;
+
+			return await ai.save();
+		},
+		editTopic: async(_root:any, args: any) => {
+
+			const {topicId, newName} = args;
+			const topic = await TopicCollection.findById(topicId);
+
+			if(!topic) {
+				return;
+			}
+
+			topic.name = newName;
+
+			return await topic.save();
+		},
+		editCard: async(_root: any, args: any)=> {
+			const { cardId ,newTitle, newPrompts } = args;
+			const card = await CardCollection.findById(cardId);
+
+			if (!card) {
+				return;
+			}
+
+			card.title = newTitle;
+			card.prompts = newPrompts;
+
+			return await card.save();
 		}
 
 	}

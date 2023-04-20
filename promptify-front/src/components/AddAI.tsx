@@ -31,7 +31,10 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
     const [abb, setAbb] = useState<string>("")
 
     // MUTATIONS
-    const [ createAi, { error, data } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
+    const [ createAi, { data, loading, error } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
+
+    console.log("LOADING MUTATION", loading)
+
 
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
@@ -41,8 +44,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
 
     const addAI = async (e: React.FormEvent<HTMLDivElement>)=> {
         e.preventDefault()
-
-        if (!me || !aiList) {
+        if (!me) {
             return
         }
 
@@ -53,21 +55,31 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
             return
         }
 
-        let copia : AI[] = [...aiList, newAI.data.createAi]
+        let copia : AI[]
+
+        if (aiList) {
+            copia = [...aiList, newAI.data.createAi]
+        } else {
+            copia = [newAI.data.createAi]
+        }
 
         setAiList(copia)
         setMain(newAI.data.createAi)
         setShowMenu("none")
     }
 
+    const doNothing = (e: React.FormEvent<HTMLDivElement>)=> {
+        e.preventDefault()
+    }
+
     return (
-        <div className={style.popup} onSubmit={addAI}>
+        <div className={style.popup} onSubmit={loading? doNothing : addAI}>
             <form action="" className={style.form}>
                 <label className={style.title}>{"AI's name:"}</label>
                 <input type="text" placeholder="name" onChange={e=> setName(e.target.value)}/>
 
                 <label className={style.title}>{"AI's abb:"}</label>
-                <input type="text" placeholder="abb" onChange={e=> setAbb(e.target.value)}/>
+                <input type="text" placeholder="abb" onChange={e=> setAbb(e.target.value)} maxLength={5}/>
 
                 <div className={style.buttons}>
                     <button type="submit">Enviar</button>

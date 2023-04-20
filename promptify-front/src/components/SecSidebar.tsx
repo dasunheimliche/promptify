@@ -1,19 +1,25 @@
-import { useState, Dispatch, useEffect } from 'react'
-import { AI, Topic } from '../types'
-import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV } from '@/queries'
+import { useState, Dispatch, useEffect, useRef } from 'react'
+import { useRouter } from "next/router"
+import { AI, Topic, User } from '../types'
+import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
 import { useQuery, useMutation } from '@apollo/client'
 import DeleteAlert from './DeleteAlert'
 import TopicComponent from './Topic'
 import style from '../styles/secSidebar.module.css'
 
 interface SecSideBarProps {
+    me: User | undefined
     main: AI | undefined
     topic: Topic | undefined
     showSS: boolean
     aiList: AI[] | undefined
+    profile: boolean
+    signOff: ()=> void
     setAiList: Dispatch<AI[]>
     setTopic: Dispatch<Topic>
     setMain: Dispatch<AI>
+    setToken: Dispatch<string | undefined>
+    setShowSS: Dispatch<boolean>
 } 
 interface topicListData {
     getTopics: Topic[]
@@ -21,7 +27,6 @@ interface topicListData {
 interface topicListVariables {
     list: string[] | undefined
 }
-
 interface addAiData {
     createTopic: Topic
 }
@@ -32,33 +37,58 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}: SecSideBarProps)=> {
-    const [addTopic, setAddTopic] = useState<string>("")
-    const [show, setShow] = useState<boolean>(false)
-
+const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setToken, setShowSS}: SecSideBarProps)=> {
+    const [addTopic,    setAddTopic]    = useState<string>("")
+    const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
+
+    const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
+
+    const [edit,        setEdit]        = useState<boolean>(false) 
+    const [newTitle,    setNewTitle]    = useState<string | undefined>(main?.name)
+
+    const router = useRouter()
+
+    let isMobile: boolean
+
+    if (typeof window !== "undefined") {
+        isMobile = window.matchMedia("(max-width: 500px)").matches;
+    }
+    
+    
 
     // USE QUERY
 
-    const { loading, error, data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
+    const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
         variables: { list: main?.topics }
     });
 
-    const [lista, setLista] = useState<Topic[] | undefined>(undefined)
 
+    // USE EFFECT    
+    const inputRef = useRef<HTMLInputElement>(null)
     useEffect(()=> {
         if (data) {
             setLista(data.getTopics)
         }
-      }, [data])
+    }, [data])
+
+    useEffect(()=> {
+        inputRef.current?.focus()
+    },[edit])
+
+    useEffect(()=> {
+        setEdit(false)
+        setNewTitle(main?.name)
+    },[main])
 
     // MUTATIONS
 
-    const [ createTopic ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC)
-    const [ deleteTopic ] = useMutation(DELETE_TOPIC)
-    const [ deleteAi ] = useMutation(DELETE_AI)
-    const [ addAiToFavs ] = useMutation(ADD_AI_FAV);
-    const [ addTopicToFavs ] = useMutation(ADD_TOPIC_FAV)
+    const [ createTopic, {loading: CTloading} ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC)
+    const [ deleteTopic, {loading: DTloading} ] = useMutation(DELETE_TOPIC)
+    const [ deleteAi, {loading: DAloading} ] = useMutation(DELETE_AI)
+    const [ addAiToFavs, {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
+    const [ addTopicToFavs, {loading: ATTFloading} ] = useMutation(ADD_TOPIC_FAV)
+    const [ editAi, {loading: EAloading} ] = useMutation(EDIT_AI)
 
     // EVENT HANDLERS
     const deleteAifunc = async (userId: string | undefined, aiId: string | undefined)=> {
@@ -79,8 +109,9 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
         }
     }
 
-    const deleteAiHandler = ()=> {
-        deleteAifunc(main?.userId, main?.id)
+    const deleteAiHandler = async ()=> {
+        await deleteAifunc(main?.userId, main?.id)
+        setDeleteAlert("none")
     }
 
     const deleteTopicfunc = async (aiId:string, topicId:string)=> {
@@ -108,10 +139,13 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
         const clickHandler = (sec: Topic)=> {
             setTopic(sec)
             refetch()
+
+            if (isMobile) {
+                setShowSS(false)
+            }
+            
         }
-        console.log("LOADING NO FAV SECTIONS WITH", lista)
         const newTopicList = lista?.filter(t=> t?.fav === false )
-        console.log("NO FAV SECTIONS", newTopicList)
 
         return newTopicList?.map((sec:Topic, i:number) => 
             <TopicComponent 
@@ -119,11 +153,15 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
                 main={main}
                 sec={sec}
                 lista={lista}
+                topic={topic}
                 deleteAlert={deleteAlert}
                 deleteTopicfunc={deleteTopicfunc}
+                DTloading={DTloading}
                 addTopicToFavs={addTopicToFavs}
+                ATTFloading={ATTFloading}
                 clickHandler={clickHandler}
                 setLista={setLista}
+                setTopic={setTopic}
                 setDeleteAlert={setDeleteAlert}
             />
         )
@@ -146,11 +184,15 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
                 main={main}
                 sec={sec}
                 lista={lista}
+                topic={topic}
                 deleteAlert={deleteAlert}
                 deleteTopicfunc={deleteTopicfunc}
+                DTloading={DTloading}
                 addTopicToFavs={addTopicToFavs}
+                ATTFloading={ATTFloading}
                 clickHandler={clickHandler}
                 setLista={setLista}
+                setTopic={setTopic}
                 setDeleteAlert={setDeleteAlert}
             />
         )
@@ -199,36 +241,83 @@ const SecSidebar = ({main, topic, aiList, showSS, setTopic, setAiList, setMain}:
         setAiList(newAiList)
     }
 
+    const editAiHandler = async() => {
+        if (!aiList || !main || !newTitle) {
+            return
+        }
+
+        if (main.name === newTitle) {
+            setEdit(!edit)
+            return
+        }
+
+        const newAi = await editAi({variables:{aiId:main.id, newName:newTitle}})
+        const aiIndex = aiList?.findIndex(ai=> ai.id === main.id)
+        const newMain = {...main, name: newAi.data.editAi.name}
+
+        const newAiList = [...aiList]
+        newAiList[aiIndex] = newAi.data.editAi.name
+        setMain(newMain)
+        setAiList(newAiList)
+        setEdit(!edit)
+    }
+
     const theresFavs = ()=> {
         return lista?.some(c => c.fav === true)
     }
 
+    const setEditHandler = ()=> {
+        setEdit(!edit)
+    }
+
+    // const signOff = ()=> {
+    //     sessionStorage.clear()
+    //     setToken(undefined)
+    // }
+
+    const doNothing = (e : any)=> {
+        e.preventDefacult()
+    }
+
+
+
     return (
         <div style={!showSS? {display:"none"} : {}} className={style[`second-sidebar`]}> 
-            {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} />}
-            <div className={style[`ai-container`]}>
-                <div className={style[`ai-title`]}>{main && main.name}</div>
+            {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} loading={DAloading}/>}
+            {profile && 
+                <div className={style['profile-card']}>
+                    <div className={style['profile-pic']}></div>
+                    <div className={style['profile-name']}>{me?.name}</div>
+                    <button className={style['sign-off']} onClick={signOff} type='button' title='Sign off'>Sign Off</button>
+                </div>
+            }
+            {!profile && <div className={style[`ai-container`]}>
+                {!edit && <div className={style[`ai-title`]}>{main && main.name}</div>}
+                {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)}></input>}
                 {main && <div className={style[`ai-opt`]}>
-                    <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> 
-                    <div className={main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={addToFavs}></div> 
+                    {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
+                    {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
+                    {!edit && <div className={main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
+                    {edit && <div onClick={EAloading? doNothing : editAiHandler}>YES</div>}
+                    {edit && <div onClick={()=>setEdit(!edit)}>NO</div>}
                 </div>}
-            </div>
-            <div className={style.addContainer}>
+            </div>}
+            {!profile && <div className={style.addContainer}>
                 <div className={style[`add-header`]}>
                     <span className={style[`add-title`]}>Topics</span>
                     <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
                 </div>
-                {show && <form className={style[`add-form`]} action="" onSubmit={addTopicHandler}>
+                {show && <form className={style[`add-form`]} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
                     <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)}></input>
                     <button type='submit'>ADD</button>
                 </form>}
-            </div>
-            <div className={style[`topics-wrapper`]}>
+            </div>}
+            {!profile && <div className={style[`topics-wrapper`]}>
                 {theresFavs() && <div>Favourites</div>}
                 {theresFavs() && loadFavSections()}
                 <div className="divisor"></div>
                 {loadSections()} 
-            </div>
+            </div>}
         </div>
     )
 }

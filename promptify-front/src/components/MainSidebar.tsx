@@ -12,10 +12,12 @@ interface MainSideBarProps {
     showSS: boolean
     me: User | undefined
     aiList: AI[] | undefined
+    profile: boolean
     setMain: Dispatch<AI>
     setAiList: Dispatch<AI[]>
     setShowMenu: Dispatch<string>
     setShowSS: Dispatch<boolean>
+    setProfile: Dispatch<boolean>
 }
 
 interface aiListData {
@@ -25,7 +27,7 @@ interface aiListVariables {
     list: string[] | undefined
 }
 
-const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu, setShowSS}: MainSideBarProps)=> {
+const MainSidebar = ({ aiList, main, showSS, me, profile, setMain, setShowMenu, setShowSS, setAiList, setProfile}: MainSideBarProps)=> {
 
     const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
         variables: {list: me?.allPrompts}
@@ -37,6 +39,10 @@ const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu
         }
     }, [aiData]) // eslint-disable-line
 
+    useEffect(()=> {
+        aiRefetch()
+    }, [me]) // eslint-disable-line
+
 
     
     // EVENT HANDLERS
@@ -45,7 +51,7 @@ const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu
             return
         }
         const newAiList = aiList.filter(ai=> ai.fav !== true)
-        return newAiList?.map((ai: AI) => <AiButton refetch={aiRefetch} main={main} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} />)
+        return newAiList?.map((ai: AI) => <AiButton main={main} profile={profile} setProfile={setProfile} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} />)
     }
 
     const loadFavAis = ()=> {
@@ -53,7 +59,7 @@ const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu
             return
         }
         const newAiList = aiList?.filter(ai => ai.fav === true)
-        return newAiList?.map((ai: AI) => <AiButton refetch={aiRefetch} main={main} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} />)
+        return newAiList?.map((ai: AI) => <AiButton main={main} profile={profile} setProfile={setProfile} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} />)
     }
 
     const openPanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
@@ -64,15 +70,38 @@ const MainSidebar = ({ aiList, setAiList, main, showSS, me, setMain, setShowMenu
     const theresfavs = ()=> {
         return aiList?.some(ai => ai.fav)
     }
+
+    const toProfile = ()=> {
+
+        if (profile && showSS) {
+            setProfile(false)
+            setShowSS(false)
+        }
+
+        if (showSS) {
+            setProfile(true)
+        }
+
+        if (!showSS) {
+            setShowSS(true)
+            setProfile(true)
+        }
+    }
     
     return(
         <div className={style[`main-sidebar`]}>
             <div className={`${style.logo} p`}>Pfy</div>
-            <div className={style[`ais-wrapper`]}>
-                {theresfavs() && <div className={style[`ai-logos`]}>{loadFavAis()}</div>}
+            <div className={`${style[`add-ai`]} p`} onClick={toProfile}>ME</div>
+            {(aiList && aiList.length > 0) && <div className={style[`ais-wrapper`]}>
+                {theresfavs() && 
+                    <div className={style['favs-container']}>
+                        <div className={style['fav-ais']}></div>
+                        <div className={style[`ai-logos`]}>{loadFavAis()}</div>
+                    </div>
+                }
                 <div className="divisor"></div>
                 <div className={style[`ai-logos`]}>{loadAIs()}</div>
-            </div>
+            </div>}
             <div className={`${style[`add-ai`]} p`} onClick={openPanel}>+</div>
         </div>
     )

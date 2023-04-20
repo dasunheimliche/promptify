@@ -16,7 +16,7 @@ import { User, Topic, Card, AI } from '../types'
 
 import { useAuth } from "@/contexts/Authcontext"
 import { useRouter } from "next/router"
-import { useQuery } from "@apollo/client"
+import { useQuery, useApolloClient } from "@apollo/client"
 
 import { ME } from '@/queries'
 
@@ -28,12 +28,20 @@ interface meData {
 
 export default function Me() {
 
-  const [deleteAlert, setDeleteAlert] = useState({delete:"", userId:"", aiId:"", topicId:"", cadrId:""})
+  // const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+
+  let tkn
+  if (typeof window !== "undefined") {
+    tkn = sessionStorage.getItem('user-token')
+  }
+
 
   // STATES THAT CONTROLS ACTIVATED ITEMS
   const [main,     setMain]        = useState<AI    | undefined>(undefined)
   const [topic,    setTopic]       = useState<Topic | undefined>(undefined)
   const [currCard, setCurrentCard] = useState<Card  | undefined>(undefined)
+
+  const [profile, setProfile] = useState<boolean>(true)
 
   // STATES WHICH CONTROLS VISIVILITY
 
@@ -42,18 +50,18 @@ export default function Me() {
   const [showPS,   setShowPS]      = useState<boolean>(false)
   
   const [columns,  setColumns] = useState<number>(3)
-
-  const [panel, setPanel] = useState({topicPanel: true, promptPanel: false}
-)
+  
   // STATE WHICH SETS CURRENT USER
   const [me,       setMe]          = useState<User   | undefined>(undefined);
+  const [token, setToken]          = useState<string | undefined>(tkn? tkn : undefined)
 
   // STATES WICH CONTROLS ITEM LISTS
   const [aiList,   setAiList]      = useState<AI[]   | undefined>(undefined)
   const [cardList, setCardList]    = useState<Card[] | undefined>(undefined)
 
+  const client = useApolloClient()
+
   // CUSTOM HOOKS
-  const {token, setToken} = useAuth()
   const router = useRouter()
 
   // QUERIES
@@ -61,12 +69,14 @@ export default function Me() {
 
   // USE EFFECTS
 
+
   useEffect(()=> {
-    const newToken = localStorage.getItem('user-token')
+    const token = sessionStorage.getItem('user-token')
+    if (token === null) {
+      return
+    }    
+    setToken(token)
     
-    if (newToken) {
-      setToken(newToken)
-    } 
   }, []) // eslint-disable-line
 
 
@@ -77,6 +87,7 @@ export default function Me() {
   }, [data])
 
   useEffect(()=> {
+    refetch()
     if (!token) {
         router.push("/login")
     } 
@@ -85,10 +96,19 @@ export default function Me() {
   useEffect(()=> {
     if (showPS === true && showSS === true) {
       setColumns(2)
+    } else if (showPS === false && showSS === false)  {
+      setColumns(4)
     } else {
       setColumns(3)
     }
   }, [showPS, showSS])
+
+  const signOff = ()=> {
+    sessionStorage.clear()
+    setToken(undefined)
+    // client.resetStore()
+  }
+  
 
 
   return (
@@ -101,11 +121,11 @@ export default function Me() {
         </div>
       }
       
-      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS}/>
-      <SecSidebar main={main} aiList={aiList} topic={topic} showSS={showSS} setTopic={setTopic} setAiList={setAiList} setMain={setMain}/>
-      <div className={style[`main-content`]}>
+      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile}/>
+      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS}/>
+      <div className={style[`main-content`]} >
         <MainContentMenu topic={topic} />
-        <MainContentGrid cardList={cardList} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
+        <MainContentGrid cardList={cardList} currentCard={currCard} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
       </div>
       {(currCard !== undefined && showPS == true) && <PromptSidebar currCard={currCard} setShowPS={setShowPS}/>}
     </div>

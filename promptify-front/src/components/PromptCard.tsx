@@ -3,26 +3,32 @@ import { Card, Topic } from '../types'
 import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
 import { useMutation } from '@apollo/client'
 import DeleteAlert from './DeleteAlert'
+import EditPrompt from './EditPrompt'
 import style from '../styles/prompt.module.css'
 
 interface PromptProps {
     card: Card
     cardList: Card[]
     topic: Topic | undefined
+    currentCard: Card | undefined
     setCurrentCard: Dispatch<Card>
     setCardList: Dispatch<Card[]>
     setShowPS: Dispatch<boolean>
 }
 
-const PromptCard = ({card, topic, cardList, setCurrentCard, setCardList, setShowPS} : PromptProps)=> {
-
-    const [deleteCard, { error, data }] = useMutation(DELETE_CARD)
+const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCardList, setShowPS} : PromptProps)=> {
+    // STATE
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
+    const [edit,        setEdit]        = useState<boolean>(false)
+    const [editCard,    setEditCard]    = useState<Card | undefined>(card)
 
-    const [addCardToFavs] = useMutation(ADD_CARD_FAV)
+    // MUTATIONS
+    const [deleteCard, { error, data, loading: DCloading }] = useMutation(DELETE_CARD)
+    const [addCardToFavs, {loading: ACTFloading}] = useMutation(ADD_CARD_FAV)
 
-    const openCardHandler = ()=> {
-        setCurrentCard(card)
+    // EVENT HANDLER
+    const openCardHandler = async()=> {
+        await setCurrentCard(card)
         setShowPS(true)
     }
 
@@ -41,6 +47,7 @@ const PromptCard = ({card, topic, cardList, setCurrentCard, setCardList, setShow
             return
         }
         deleteCardfunc(card.id, topic.id)
+        setDeleteAlert("none")
     }
 
     const addToFavs = async()=> {
@@ -51,19 +58,23 @@ const PromptCard = ({card, topic, cardList, setCurrentCard, setCardList, setShow
         setCardList(newCardList)
     }
 
+    const doNothing = (e:any) => {
+        e.preventDefault()
+    }
+
 
     return (
         <div className={card.prompts.length > 1? `${style.prompt} ${style.stack}` : style.prompt } >
-            {(deleteAlert === "prompt") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteCardHandler} />}
+            {(deleteAlert === "prompt") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteCardHandler} loading={DCloading}/>}
+            {edit && <EditPrompt card={card} currentCard={currentCard} cardList={cardList} edit={edit} setCardList={setCardList} setEdit={setEdit} setCurrentCard={setCurrentCard}/>}
             <div className='p' onClick={openCardHandler}>
                 <div className={style.title}>{card.title}</div>
                 <div className={style.content}>{card.prompts[0].content}</div>
             </div>
             <div className={style.options}>
+                <div className={`${style.edit} p`} onClick={()=>setEdit(!edit)}></div>
                 <div className={`${style.delete} p`} onClick={()=>setDeleteAlert("prompt")}></div>
-                <div className={card.fav? `${style.fav} ${style[`fav-on`]} p` : `${style.fav} p`} onClick={addToFavs}></div>
-                
-                {/* <div className="prompt-edit p">EDIT</div> */}
+                <div className={card.fav? `${style.fav} ${style[`fav-on`]} p` : `${style.fav} p`} onClick={ACTFloading? doNothing : addToFavs}></div>
             </div>
         </div>
     )

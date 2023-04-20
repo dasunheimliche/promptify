@@ -1,3 +1,13 @@
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+  
+    100% {
+      opacity: 1;
+    }
+}
+
 
 .prompt {
     background: rgb(255, 255, 255);
@@ -12,10 +22,15 @@
   
     min-width: 350px;
     max-width: 465px;
+
+
   
-  
-    font-size: 19px;
     color: rgba(49, 49, 49, 0.862);
+    animation: fadeIn 0.1s ease-in-out;
+
+    
+    -webkit-user-select:none;
+    user-select: none;
 }
 
 .title {
@@ -34,6 +49,8 @@
     margin-bottom: 20px;
     justify-content: flex-end;
     gap: 15px;
+
+    align-items: center;
 }
 
 .delete {
@@ -53,6 +70,15 @@
   
     opacity: 10%;
 }
+
+.edit {
+    background-image: url('../icons/edit-black.png');
+    background-size: cover;
+    height: 22px;
+    width: 22px;
+  
+    opacity: 10%;
+}
   
 .fav-on {
     opacity: 70%;
@@ -67,4 +93,154 @@
 .fav:hover {
     background-image: url('../icons/fav-on.png');
     opacity: 100%;
+}
+
+.edit:hover {
+    opacity: 100%;
+}
+
+/* ======================================================================== */
+
+
+/* .prompt {
+    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 25px;
+    padding-bottom: 0px;
+  
+    min-width: 350px;
+    max-width: 465px;
+  
+  
+    font-size: 19px;
+}
+
+.title {
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+
+.content {
+    padding-bottom: 15px;
+}
+
+.options {
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.delete {
+    height: 23px;
+    width: 23px;
+    opacity: 10%;
+}
+  
+.fav {
+    height: 23px;
+    width: 23px;
+}
+
+.edit {
+    height: 22px;
+    width: 22px;
+} */
+
+@media (max-width: 1600px) {
+    .prompt {
+        margin-bottom: 12px;
+        border-radius: 10px;
+        padding: 21px;
+        padding-bottom: 0px;
+      
+        min-width: 292px;
+        max-width: 387px;
+      
+      
+        font-size: 16px;
+    }
+    
+    .title {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+    
+    .content {
+        padding-bottom: 12px;
+    }
+    
+    .options {
+        margin-bottom: 17px;
+        gap: 12px;
+    }
+    
+    .delete {
+        height: 19px;
+        width: 19px;
+        opacity: 10%;
+    }
+      
+    .fav {
+        height: 19px;
+        width: 19px;
+    }
+    
+    .edit {
+        height: 18px;
+        width: 18px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .prompt {
+        margin-bottom: 11px;
+        border-radius: 9px;
+        padding: 18px;
+        padding-bottom: 0px;
+      
+        min-width: 248px;
+        max-width: 330px;
+      
+      
+        font-size: 13px;
+    }
+    
+    .title {
+        font-size: 12px;
+        margin-bottom: 11px;
+    }
+    
+    .content {
+        padding-bottom: 11px;
+    }
+    
+    .options {
+        margin-bottom: 14px;
+        gap: 11px;
+    }
+    
+    .delete {
+        height: 17px;
+        width: 17px;
+        opacity: 10%;
+    }
+      
+    .fav {
+        height: 17px;
+        width: 17px;
+    }
+    
+    .edit {
+        height: 16px;
+        width: 16px;
+    }
+}
+
+@media (max-width: 912px) and (orientation: portrait) {
+}
+
+@media (max-width: 500px) and (orientation: portrait) {
+    .prompt {
+        min-width: 100%;
+        border-radius: 19px;
+    }
 }

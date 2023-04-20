@@ -9,12 +9,118 @@
     padding-bottom: 0px;
 }
 
+.prompt-container {
+    background-color: rgb(223, 223, 223);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 15px;
+}
+
+.prompt-container label:first-child {
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    font-weight: bold;
+    display: flex;
+}
+
+.playback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 7px;
+    
+}
+
+.goBack {
+    background-image: url('../icons/go-back.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 30px;
+    margin-left: 5px;
+    margin-right: 8px;
+    outline: 5px solid rgba(236, 171, 155, 0);
+    cursor: pointer;
+
+}
+
+.goForward {
+    background-image: url('../icons/go-forward.png');
+    background-size: cover;
+    width: 13px;
+    height: 13px;
+    border-radius: 30px;
+    margin-left: 8px;
+    margin-right: 5px;
+    outline: 5px solid rgba(236, 171, 155, 0);
+    cursor: pointer;
+}
+
+.goBack:hover, .goForward:hover {
+    outline: 5px solid rgb(184, 184, 184);
+    background-color: rgb(184, 184, 184);
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.delete {
+    background-image: url('../icons/del-off-black.png');
+    background-size: cover;
+    width: 19px;
+    height: 19px;
+    border-radius: 30px;
+    margin-left: 7px;
+    margin-right: 5px;
+    /* outline: 5px solid rgba(236, 171, 155, 0); */
+    cursor: pointer;
+}
+
+.addPrompt {
+    background-color: rgb(41, 41, 41);
+    color: white;
+    border-radius: 11px;
+    font-size: 15px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   
     margin-bottom: 19px;
+}
+
+.header-first {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+}
+
+.header-first div:nth-child(2) {
+    background-color: rgb(41, 41, 41);
+    border-radius: 13px;
+    font-size: 17px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: white;
 }
 
 .header-title {
@@ -49,8 +155,10 @@
   
     padding: 10px;
   
-    width: 400px;
+    width: 100%px;
     height: 20px;
+
+    background-color: rgb(255, 255, 255);
 }
   
 .form textarea {
@@ -58,19 +166,20 @@
   
     border: 1px solid rgba(165, 165, 165, 0.742);
     border-radius: 10px;
+    background-color: rgb(255, 255, 255);
   
     padding: 10px;
   
     width: 400px;
-    height: 300px;
+    height: 250px;
 }
   
 .form textarea:focus {
-    border: 1px solid rgb(86, 176, 255);
+    border: 1px solid rgb(148, 202, 249);
 }
   
 .form input:focus {
-    border: 1px solid rgb(86, 176, 255);
+    border: 1px solid rgb(148, 202, 249);
 }
 
 .title {
@@ -142,4 +251,418 @@
 .delete-alert-buttons button {
     all: unset;
     cursor: pointer;
+}
+
+/* ====================================================================================== */
+
+/* .popup {
+    border-radius: 15px;
+    padding: 20px;
+    padding-bottom: 0px;
+}
+
+.prompt-container {
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.prompt-container label:first-child {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.playback {
+    margin-left: 7px;
+}
+
+.goBack {
+    width: 13px;
+    height: 13px;
+    border-radius: 30px;
+    margin-left: 5px;
+    margin-right: 8px;
+    outline: 5px solid rgba(236, 171, 155, 0);
+}
+
+.goForward {
+    width: 13px;
+    height: 13px;
+    border-radius: 30px;
+    margin-left: 8px;
+    margin-right: 5px;
+    outline: 5px solid rgba(236, 171, 155, 0);
+}
+
+.goBack:hover, .goForward:hover {
+    outline: 5px solid rgb(184, 184, 184);
+}
+
+.options {
+    gap: 10px;
+}
+
+.delete {
+    width: 19px;
+    height: 19px;
+    border-radius: 30px;
+    margin-left: 7px;
+    margin-right: 5px;
+}
+
+.addPrompt {
+    border-radius: 11px;
+    font-size: 15px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.header {
+    margin-bottom: 19px;
+}
+
+.header-first {
+    gap: 15px;
+}
+
+.header-first div:nth-child(2) {
+    border-radius: 13px;
+    font-size: 17px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.header-title {
+    font-size: 21px;
+}
+
+.header-close {
+    font-size: 21px;
+}
+
+
+  
+.form input {
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%px;
+    height: 20px;
+}
+  
+.form textarea {
+    border-radius: 10px;
+    padding: 10px;
+    width: 400px;
+    height: 250px;
+}
+
+.title {
+    margin-bottom: 5px;
+    font-size: 19px;
+}
+
+.buttons {
+    gap: 13px;
+    height: 60px;
+}
+
+.delete-background {
+    min-width: 100%;
+    min-height: 100%;
+    top: 0;
+    left: 0px;
+}
+
+.delete-alert-container {
+    padding: 25px;
+    font-size: 20px;
+    border-radius: 15px;
+    width: 300px;
+    gap: 20px;
+}
+
+.delete-alert-buttons {
+    gap: 10px;
+    font-size: 17px;
+    width: 100%;
+} */
+
+@media (max-width: 1600px) {
+    .popup {
+        border-radius: 12px;
+        padding: 17px;
+        padding-bottom: 0px;
+    }
+    
+    .prompt-container {
+        padding: 8px;
+        border-radius: 12px;
+    }
+    
+    .prompt-container label:first-child {
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+    
+    .playback {
+        margin-left: 6px;
+    }
+    
+    .goBack {
+        width: 11px;
+        height: 11px;
+        border-radius: 25px;
+        margin-left: 4px;
+        margin-right: 7px;
+        outline: 4px solid rgba(236, 171, 155, 0);
+    }
+    
+    .goForward {
+        width: 11px;
+        height: 11px;
+        border-radius: 25px;
+        margin-left: 7px;
+        margin-right: 4px;
+        outline: 4px solid rgba(236, 171, 155, 0);
+    }
+    
+    .goBack:hover, .goForward:hover {
+        outline: 4px solid rgb(184, 184, 184);
+    }
+    
+    .options {
+        gap: 8px;
+    }
+    
+    .delete {
+        width: 16px;
+        height: 16px;
+        border-radius: 25px;
+        margin-left: 6px;
+        margin-right: 4px;
+    }
+    
+    .addPrompt {
+        border-radius: 9px;
+        font-size: 12px;
+        padding: 4px;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+    
+    .header {
+        margin-bottom: 16px;
+    }
+    
+    .header-first {
+        gap: 12px;
+    }
+    
+    .header-first div:nth-child(2) {
+        border-radius: 11px;
+        font-size: 14px;
+        padding: 4px;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+    
+    .header-title {
+        font-size: 17px;
+    }
+    
+    .header-close {
+        font-size: 17px;
+    }
+    
+    
+      
+    .form input {
+        margin-bottom: 8px;
+        border-radius: 8px;
+        padding: 8px;
+        width: 100%px;
+        height: 17px;
+    }
+      
+    .form textarea {
+        border-radius: 8px;
+        padding: 8px;
+        width: 333px;
+        height: 208px;
+    }
+    
+    .title {
+        margin-bottom: 4px;
+        font-size: 16px;
+    }
+    
+    .buttons {
+        gap: 11px;
+        height: 50px;
+    }
+    
+    .delete-background {
+        min-width: 100%;
+        min-height: 100%;
+        top: 0;
+        left: 0px;
+    }
+    
+    .delete-alert-container {
+        padding: 21px;
+        font-size: 17px;
+        border-radius: 12px;
+        width: 250px;
+        gap: 17px;
+    }
+    
+    .delete-alert-buttons {
+        gap: 8px;
+        font-size: 14px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 1366px) {
+    .popup {
+        border-radius: 11px;
+        padding: 14px;
+        padding-bottom: 0px;
+    }
+    
+    .prompt-container {
+        padding: 7px;
+        border-radius: 11px;
+    }
+    
+    .prompt-container label:first-child {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    
+    .playback {
+        margin-left: 5px;
+    }
+    
+    .goBack {
+        width: 9px;
+        height: 9px;
+        border-radius: 21px;
+        margin-left: 4px;
+        margin-right: 6px;
+        outline: 4px solid rgba(236, 171, 155, 0);
+    }
+    
+    .goForward {
+        width: 9px;
+        height: 9px;
+        border-radius: 21px;
+        margin-left: 6px;
+        margin-right: 4px;
+        outline: 4px solid rgba(236, 171, 155, 0);
+    }
+    
+    .goBack:hover, .goForward:hover {
+        outline: 4px solid rgb(184, 184, 184);
+    }
+    
+    .options {
+        gap: 7px;
+    }
+    
+    .delete {
+        width: 13px;
+        height: 13px;
+        border-radius: 21px;
+        margin-left: 5px;
+        margin-right: 3px;
+    }
+    
+    .addPrompt {
+        border-radius: 8px;
+        font-size: 11px;
+        padding: 4px;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    
+    .header {
+        margin-bottom: 13px;
+    }
+    
+    .header-first {
+        gap: 11px;
+    }
+    
+    .header-first div:nth-child(2) {
+        border-radius: 9px;
+        font-size: 12px;
+        padding: 4px;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    
+    .header-title {
+        font-size: 15px;
+    }
+    
+    .header-close {
+        font-size: 15px;
+    }
+    
+    
+      
+    .form input {
+        margin-bottom: 7px;
+        border-radius: 7px;
+        padding: 7px;
+        width: 100%px;
+        height: 14px;
+    }
+      
+    .form textarea {
+        border-radius: 7px;
+        padding: 7px;
+        width: 284px;
+        height: 178px;
+    }
+    
+    .title {
+        margin-bottom: 3px;
+        font-size: 13px;
+    }
+    
+    .buttons {
+        gap: 9px;
+        height: 43px;
+    }
+    
+    .delete-background {
+        min-width: 100%;
+        min-height: 100%;
+        top: 0;
+        left: 0px;
+    }
+    
+    .delete-alert-container {
+        padding: 18px;
+        font-size: 14px;
+        border-radius: 11px;
+        width: 213px;
+        gap: 14px;
+    }
+    
+    .delete-alert-buttons {
+        gap: 7px;
+        font-size: 12px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 912px) and (orientation: portrait) {
+}
+
+@media (max-width: 490px) and (orientation: portrait) {
 }

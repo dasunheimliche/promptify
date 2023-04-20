@@ -31,7 +31,7 @@ export interface Topic {
 export interface Prompt {
     title: string
     content: string
-    __typename: string
+    __typename?: string
 }
 
 export interface Card {

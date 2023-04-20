@@ -11,6 +11,7 @@ import style from '../styles/mainContent.module.css'
 interface MainContentGridProps {
     main: AI | undefined
     topic: Topic | undefined
+    currentCard: Card | undefined
     cardList: Card[] | undefined
     columns: number
     setShowPS: Dispatch<boolean>
@@ -27,8 +28,7 @@ interface getCardsVariables {
     list: string[] | undefined
 }
 
-const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
-    console.log("CARD LIST", cardList)
+const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
     const { loading: cardLoading, error: cardError, data: cardData } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
         variables: {list:topic?.cards}
       });
@@ -45,7 +45,7 @@ const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurren
             return
         }
         const newCardList = cardList.filter(c => c.fav !== true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
     }
 
     const loadFavPrompts = () => {
@@ -53,7 +53,7 @@ const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurren
             return
         }
         const newCardList = cardList.filter(c => c.fav === true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
     }
 
     const theresfavs = ()=> {
@@ -63,11 +63,11 @@ const MainContentGrid = ({cardList, main, topic, columns, setShowMenu, setCurren
     return (
         <div className={style[`cards-wrapper`]}>
             {theresfavs() && <div className={style[`grid-favs`]}>Favourites</div>}
-            <div style={{columnCount: `${columns}`}} className={style.grid}> 
+            <div id={style.grid} style={{columnCount: `${columns}`}} className={style.grid}> 
                 {theresfavs() && loadFavPrompts()}
             </div>
             {theresfavs() && <div className={style[`divisor-grid`]}></div>}
-            <div style={{columnCount: `${columns}`}} className="mc-grid"> 
+            <div  id={style.grid} style={{columnCount: `${columns}`}} className={style.grid}> 
                 {loadPrompts()}
             </div>
             {topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}

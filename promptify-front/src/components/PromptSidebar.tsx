@@ -15,6 +15,7 @@ const PromptSidebar = ({currCard, setShowPS} : PromptSidebarProps)=> {
 
 
     useEffect(()=> {
+        setIndex(0)
         setCard(currCard)
     }, [currCard])
 
@@ -64,9 +65,9 @@ const PromptSidebar = ({currCard, setShowPS} : PromptSidebarProps)=> {
             <div className={style.header}>
                 <span className={`${style[`back-button`]} p`} onClick={close}></span>
                 <div className={style.buttons}>
-                    <div onClick={restart}>RESTART</div> 
-                    <div onClick={clear}>CLEAR</div>   
-                    <div onClick={copy}>COPY</div>
+                    <div className='p' onClick={restart}>RESTART</div> 
+                    <div className='p' onClick={clear}>CLEAR</div>   
+                    <div className='p' onClick={copy}>COPY</div>
                 </div>
             </div>
             <div className={style.content}>

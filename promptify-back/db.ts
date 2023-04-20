@@ -1,6 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
 import mongoose from "mongoose";
 
-const MONGODB_URI = "mongodb+srv://Claussimar:clr87651234@cluster0.ntbmf8a.mongodb.net/promptify?retryWrites=true&w=majority";
+const MONGODB_URI : string = process.env.MONGODB_URI || "";
 
 mongoose.connect(MONGODB_URI)
 	.then(()=> console.log("Connected to MongoDB"))

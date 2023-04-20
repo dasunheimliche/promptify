@@ -1,29 +1,50 @@
 import { AI } from '../types'
 import style from '../styles/mainSidebar.module.css'
 
-const AiButton = ({ai, main, setMain, setShowSS, showSS, refetch } : any)=> {
+const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile } : any)=> {
 
     const clickHandler = (ai: AI)=> {
         // console.log("CLICKED AI")
-
         setMain(ai)
+        setProfile(false)
 
-        if (!main || !ai) {
-            return null
+        // if (!main || !ai) {
+        //     return null
+        // }
+
+        if (showSS && profile) {
+            // setProfile(false)
+            return
         }
 
-        if (ai.name === main.name) {
-            setShowSS(!showSS)
-        } else {
+        if (showSS && (ai.name !== main.name)) {
+            // setProfile(false)
+            return
+        }
+
+        if (showSS && (ai.name === main.name)) {
+            // setProfile(false)
+            setShowSS(false)
+            return
+        }
+
+        if (!showSS) {
+            // setProfile(false)
             setShowSS(true)
         }
+
+        // if (ai.name === main.name && !profile) {
+        //     setShowSS(!showSS)
+        // } else {
+        //     setShowSS(true)
+        // }
         
-        refetch()
+        // refetch()
 
     }
 
     return(
-        <div  className={style[`ai-logo`]} onClick={()=>clickHandler(ai)}>{ai.abb}</div>
+        <div  className={`${style[`ai-logo`]} p`} onClick={()=>clickHandler(ai)}>{ai.abb}</div>
     )
 }
 

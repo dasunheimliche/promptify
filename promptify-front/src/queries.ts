@@ -3,6 +3,18 @@ import { gql } from "@apollo/client"
 
 // MUTATIONS
 
+export const CREATE_USER = gql`
+mutation Mutation($name: String!, $lastname: String!, $username: String!, $password: String!, $email: String!) {
+    createUser(name: $name, lastname: $lastname, username: $username, password: $password, email: $email) {
+        name
+        lastname
+        username
+        password
+        email
+    }
+}
+`
+
 export const LOGIN = gql`
     mutation login($username: String!, $password: String!) {
         login(username: $username, password: $password)  {
@@ -16,6 +28,7 @@ export const ADD_AI = gql`
         createAi(userId: $userId, ai: $ai) {
             id
             userId
+            fav
             name
             abb
             topics
@@ -29,6 +42,7 @@ export const ADD_TOPIC = gql`
             id
             aiId
             userId
+            fav
             name
             cards
         }
@@ -43,6 +57,7 @@ export const ADD_CARD = gql`
             aiId
             userId
             title
+            fav
             prompts {
                 content
                 title
@@ -69,6 +84,92 @@ export const DELETE_AI = gql`
     }
 `
 
+export const ADD_CARD_FAV = gql`
+mutation($cardId: String!) {
+    addCardToFavs(cardId: $cardId) {
+      id
+        topicId
+        aiId
+        userId
+        title
+        fav
+        prompts {
+            content
+            title
+        }
+    }
+}
+`
+
+export const ADD_AI_FAV = gql`
+mutation($aiId: String!) {
+    addAiToFavs(aiId: $aiId) {
+        id
+        userId
+        name
+        abb
+        fav
+        topics
+    }
+  }
+`
+
+export const ADD_TOPIC_FAV = gql`
+mutation($topicId: String!) {
+    addTopicToFavs(topicId: $topicId) {
+        id
+        aiId
+        userId
+        name
+        fav
+        cards
+    }
+  }
+`
+
+export const EDIT_AI = gql`
+mutation($aiId: String!, $newName: String!) {
+    editAi(aiId: $aiId, newName: $newName) {
+        id
+        userId
+        name
+        abb
+        fav
+        topics
+    }
+}
+`
+
+export const EDIT_TOPIC = gql`
+mutation($topicId: String!, $newName: String!) {
+    editTopic(topicId: $topicId, newName: $newName) {
+        id
+        aiId
+        userId
+        name
+        fav
+        cards
+    }
+}
+`
+
+export const EDIT_CARD = gql`
+mutation($cardId: String!, $newTitle: String!, $newPrompts: [PromptInput]!) {
+    editCard(cardId: $cardId, newTitle: $newTitle, newPrompts: $newPrompts) {
+      id
+      topicId
+      aiId
+      userId
+      title
+      fav
+      prompts {
+          content
+          title
+      }
+    }
+  }
+`
+
 // QUERIES
 
 export const ME = gql`
@@ -77,9 +178,16 @@ export const ME = gql`
             id
             name
             lastname
+            username
             email
             allPrompts
         }
+    }
+`
+
+export const INVALID_USERNAMES = gql`
+    query {
+        getInvalidUsernames
     }
 `
 
@@ -126,45 +234,3 @@ query($list: [ID]!) {
   }
 `
 
-export const ADD_CARD_FAV = gql`
-mutation($cardId: String!) {
-    addCardToFavs(cardId: $cardId) {
-      id
-        topicId
-        aiId
-        userId
-        title
-        fav
-        prompts {
-            content
-            title
-        }
-    }
-}
-`
-
-export const ADD_AI_FAV = gql`
-mutation($aiId: String!) {
-    addAiToFavs(aiId: $aiId) {
-        id
-        userId
-        name
-        abb
-        fav
-        topics
-    }
-  }
-`
-
-export const ADD_TOPIC_FAV = gql`
-mutation($topicId: String!) {
-    addTopicToFavs(topicId: $topicId) {
-        id
-        aiId
-        userId
-        name
-        fav
-        cards
-    }
-  }
-`
