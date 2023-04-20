@@ -33,7 +33,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
     // MUTATIONS
     const [ createAi, { data, loading, error } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
 
-    console.log("LOADING MUTATION", loading)
+    console.log("LOADING MUTATION", loading, error)
 
 
     // EVENT HANDLERS
@@ -50,6 +50,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
 
         const variables = {userId: me.id, ai: {name, abb}}
         const newAI = await createAi({variables: variables})
+        console.log("NEW AI", newAI)
 
         if (!newAI.data) {
             return

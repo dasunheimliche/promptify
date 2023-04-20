@@ -528,7 +528,7 @@ startStandaloneServer(server, {
 			if (auth && auth.startsWith("Bearer ")) {
 
 				const decodedToken = jwt.verify(
-					auth.substring(7), "SECRET"
+					auth.substring(7), process.env.SECRET || ""
 				) as JwtPayload;
 
 				const current = await UserCollection.findById(decodedToken.id);
