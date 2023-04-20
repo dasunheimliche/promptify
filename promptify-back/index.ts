@@ -1,8 +1,13 @@
-// import cors from "cors";
+import cors from "cors";
 
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { expressMiddleware } from "@apollo/server/express4";
+import { json } from "body-parser";
+// import { startStandaloneServer } from "@apollo/server/standalone";
 import { GraphQLError } from "graphql";
+import express from "express";
+import http from "http";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -22,6 +27,13 @@ import mongoose from "mongoose";
 
 import { createUserArgs, loginArgs, createAiArgs, createTopicArgs, createCardArgs, User, AI, Topic, Card, Token, deleteCardArgs, deleteTopicArgs } from "./types";
 
+/* TYPES */ 
+
+interface JwtPayload {
+	username: string
+	id: string
+	iat: number
+}
 
 /* GRAPHQL DEFINITIONS */
 
@@ -496,49 +508,119 @@ const resolvers = {
 
 /* CREATING THE SERVER */
 
-
+const app = express();
+const httpServer = http.createServer(app);
   
 
 const server = new ApolloServer({ 
 	typeDefs, 
-	resolvers
+	resolvers,
+	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
 });
 
 
-interface JwtPayload {
-	username: string
-	id: string
-	iat: number
-}
+server.start()
+	.then(()=>{
+		app.use(
+			cors<cors.CorsRequest>({ origin: ["http://localhost:3000"] }),
+			json(),
+			expressMiddleware(server, {
+				context: async ({req }) => ({
+					currentUser: async () => {
+						if (!req) {
+							return null;
+						}
+						// ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
+						const auth = req.headers.authorization;
+						if (!auth) {
+							return null;
+						}
+			
+						if (auth && auth.startsWith("Bearer ")) {
+			
+							const decodedToken = jwt.verify(
+								auth.substring(7), process.env.SECRET || ""
+							) as JwtPayload;
+			
+							const current = await UserCollection.findById(decodedToken.id);
+							return current;
+						}
+						return null;
+					},
+				})
+			}),
+		);
+		
+		httpServer.listen({ port: 4000 }, ()=> {
+			console.log("Server connected to port: 4000");
+		});
+	});
 
 
 
-startStandaloneServer(server, {
-	context: async ({req}) => ({
-		currentUser: async () => {
-			if (!req) {
-				return null;
-			}
-			// ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
-			const auth = req.headers.authorization;
-			if (!auth) {
-				return null;
-			}
 
-			if (auth && auth.startsWith("Bearer ")) {
+// app.use(
+// 	cors<cors.CorsRequest>({ origin: ["*"] }),
+// 	expressMiddleware(server, {
+// 		context: async ({req }) => ({
+// 			currentUser: async () => {
+// 				if (!req) {
+// 					return null;
+// 				}
+// 				// ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
+// 				const auth = req.headers.authorization;
+// 				if (!auth) {
+// 					return null;
+// 				}
+	
+// 				if (auth && auth.startsWith("Bearer ")) {
+	
+// 					const decodedToken = jwt.verify(
+// 						auth.substring(7), process.env.SECRET || ""
+// 					) as JwtPayload;
+	
+// 					const current = await UserCollection.findById(decodedToken.id);
+// 					return current;
+// 				}
+// 				return null;
+// 			},
+// 		})
+// 	}),
+// );
 
-				const decodedToken = jwt.verify(
-					auth.substring(7), process.env.SECRET || ""
-				) as JwtPayload;
+// httpServer.listen({ port: 4000 }, ()=> {
+// 	console.log("Server connected to port: 4000");
+// });
 
-				const current = await UserCollection.findById(decodedToken.id);
-				return current;
-			}
-			return null;
-		},
-	}),
-	listen: { port: 4000 },
-}).then(({url})=>console.log("Server connected to:", url));
+
+
+// startStandaloneServer(server, {
+// 	context: async ({req }) => ({
+// 		currentUser: async () => {
+// 			if (!req) {
+// 				return null;
+// 			}
+// 			// ! ALERTA: debo enviar el token sin comillas desde apollo-server sino llegaran con comillas extras y el startsWith no va a funcionar
+// 			const auth = req.headers.authorization;
+// 			if (!auth) {
+// 				return null;
+// 			}
+
+// 			if (auth && auth.startsWith("Bearer ")) {
+
+// 				const decodedToken = jwt.verify(
+// 					auth.substring(7), process.env.SECRET || ""
+// 				) as JwtPayload;
+
+// 				const current = await UserCollection.findById(decodedToken.id);
+// 				return current;
+// 			}
+// 			return null;
+// 		},
+// 	}),
+// 	listen: { port: 4000 },
+// }).then(({url})=>console.log("Server connected to:", url));
+
 
 
 
