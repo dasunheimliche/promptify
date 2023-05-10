@@ -77,7 +77,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
         <div className={style.popup} onSubmit={loading? doNothing : addAI}>
             <form action="" className={style.form}>
                 <label className={style.title}>{"AI's name:"}</label>
-                <input type="text" placeholder="name" onChange={e=> setName(e.target.value)}/>
+                <input type="text" placeholder="name" onChange={e=> setName(e.target.value)} minLength={1}/>
 
                 <label className={style.title}>{"AI's abb:"}</label>
                 <input type="text" placeholder="abb" onChange={e=> setAbb(e.target.value)} maxLength={5}/>

@@ -293,7 +293,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             }
             {!profile && <div className={style[`ai-container`]}>
                 {!edit && <div className={style[`ai-title`]}>{main && main.name}</div>}
-                {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)}></input>}
+                {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)} minLength={1}></input>}
                 {main && <div className={style[`ai-opt`]}>
                     {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
                     {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
@@ -308,7 +308,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                     <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
                 </div>
                 {show && <form className={style[`add-form`]} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
-                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)}></input>
+                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1}></input>
                     <button type='submit'>ADD</button>
                 </form>}
             </div>}

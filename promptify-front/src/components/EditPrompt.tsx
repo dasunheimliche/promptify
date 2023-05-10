@@ -132,7 +132,7 @@ const EditPrompt = ({card, currentCard, cardList, edit, setEdit, setCardList, se
                 </div>
                 <form action="" className={style.form}>
                     <label className={style.title}>{mode === "prompt"? "Title" : "Stack title"}</label>
-                    <input value={newTitle} type="text" placeholder="title" onChange={e=>setNewTitle(e.target.value)}/>
+                    <input value={newTitle} type="text" placeholder="title" onChange={e=>setNewTitle(e.target.value)} minLength={1}/>
                     <div className={style[`prompt-container`]}>
                         {mode === "stack" &&
                             <div className={style[`stack-header`]}>
@@ -153,9 +153,9 @@ const EditPrompt = ({card, currentCard, cardList, edit, setEdit, setCardList, se
 
                         {mode === "prompt" && <label className={style.title}>{"Prompt"}</label>}
                         {mode === "stack" && <label className={style.title}>{"Prompt title:"}</label>}
-                        {mode === "stack" && <input value={newPrompts[index]?.title} placeholder={"Edit prompt title"} onChange={editPromptTitle}/>}
+                        {mode === "stack" && <input value={newPrompts[index]?.title} placeholder={"Edit prompt title"} onChange={editPromptTitle} minLength={1}/>}
                         {mode === "stack" && <label className={style.title}>{"Prompt Content:"}</label>}
-                        <textarea value={newPrompts[index]?.content}  placeholder="Write your prompt" onChange={editPromptContent}/>
+                        <textarea value={newPrompts[index]?.content}  placeholder="Write your prompt" onChange={editPromptContent} minLength={1}/>
                     </div>
                     <div className={style.buttons}>
                         <button onClick={loading? doNothing : editCardHandler}>Save</button>
