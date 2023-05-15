@@ -10,16 +10,36 @@
 
 
 .prompt-sidebar {
+    /* outline: 3px solid red;
+    outline-offset: -3px; */
     background-color: rgb(231,220,244);
     min-width: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    animation: fadeIn 0.1s ease-in-out;
+    /* animation: fadeIn 0.1s ease-in-out; */
+
+    width: 700px;
+    max-width: 700px;
+    overflow: hidden;
+    transition-property: min-width, max-width, width;
+    transition-duration: 0.3s;
 }
 
+.hidden-bar {
+    z-index: -1;
+    min-width: 0px;
+    max-width: 0px;
+    width: 0px;
+    transition-property: min-width, max-width, width;
+    transition-duration: 0.3s;
+}
+
+
 .header {
+    /* outline: 1px solid red;
+    outline-offset: -1px; */
     width: 95%;
     min-height: 60px;
     display: flex;
@@ -49,6 +69,8 @@
 }
 
 .content {
+    /* outline: 1px solid blue;
+    outline-offset: -1px; */
     width: 95%;
     height: 90%;
     position: relative;
@@ -88,19 +110,16 @@
 }
 
 .content-textarea {
-  
     all: unset;  
     width: calc(100% - 34px);
     height: calc(100% - 120px);
     padding: 17px;
     padding-top: 0px;
     padding-bottom: 0px;
-  
     font-size: 21px;
-  
     background-color: white;
-  
     color: rgba(0, 0, 0, 0.757);
+
 }
 
 .content-playback {
@@ -186,6 +205,18 @@
 @media (max-width: 1600px) {
     .prompt-sidebar {
         min-width: 583px;
+
+        width: 583px;
+        max-width: 583px;
+    }
+
+    .hidden-bar {
+        z-index: -1;
+        min-width: 0px;
+        max-width: 0px;
+        width: 0px;
+        transition-property: min-width, max-width, width;
+        transition-duration: 0.3s;
     }
     
     .header {
@@ -248,7 +279,12 @@
 @media (max-width: 1366px) {
     .prompt-sidebar {
         min-width: 498px;
+
+        width: 498px;
+        max-width: 498px;
     }
+
+    
     
     .header {
         width: 95%;
@@ -318,12 +354,19 @@
         min-height: 100dvh;
     }
 
-    .content-textarea {
-        height: calc(100% - 50px);
-        font-size: 17px;
-    }
-
     .header {
         font-size: 12px;
+        height: 5dvh;
+    }
+
+    .content {
+        height: 90dvh;
+        position: relative;
+    }
+
+    .content-textarea {
+        /* height: calc(100dvh - 0dvh); */
+        height: calc(100% - 84px);
+        font-size: 17px;
     }
 }

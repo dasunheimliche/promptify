@@ -1,3 +1,15 @@
+@keyframes fadeIn { /* ADAPTAR */
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+}
+
 .header {
     outline-offset: -1px;
     display: flex;
@@ -39,6 +51,7 @@
 }
 
 .grid {
+    /* outline: 1px solid red; */
     column-gap: 15px;
     padding: 15px;
     padding-left: 0px;
@@ -46,6 +59,24 @@
     padding-top: 0px;
     position: relative;
     overflow: visible;
+
+    /* width: -moz-fit-content;
+    width: fit-content; */
+
+    /* ADAPTAR A PARTIR DE ACA*/
+
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(370px, 0.5fr));
+    grid-gap: 10px;  */
+    
+    /* animation: fadeIn 0.5s ease-in-out;  */
+}
+
+.changed1 {
+    /* animation: fadeIn 0.5s ease-in-out;  */
+}
+.changed2 {
+    /* animation: fadeIn 0.5s ease-in-out;  */
 }
 
 .divisor-grid {
@@ -365,6 +396,8 @@
     
     .grid {
         /* all: unset; */
+        padding-left: 0px;
+        padding-right: 0px;
     }
     
     #grid {
@@ -376,5 +409,16 @@
 
     .grid-favs {
         margin-bottom: 0px;
+    }
+
+    .no-favs {
+        padding-bottom: 70px;
+    }
+
+    .cards-wrapper {
+        /* outline: 1px solid red; */
+        padding-left: 11px;
+        padding-right: 11px;
+        gap: 11px;
     }
 }

@@ -1,4 +1,4 @@
-import { Dispatch, useEffect } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { Card, AI, Topic } from '../types'
 import { GET_CARDS } from '@/queries'
 import { useQuery } from '@apollo/client';
@@ -16,7 +16,7 @@ interface MainContentGridProps {
     columns: number
     setShowPS: Dispatch<boolean>
     setShowMenu: Dispatch<string>
-    setCurrentCard: Dispatch<Card>
+    setCurrentCard: Dispatch<Card | undefined>
     setCardList: Dispatch<Card[]>
 }
 
@@ -29,10 +29,16 @@ interface getCardsVariables {
 }
 
 const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
+    
+    let [changed, setChanged] = useState<boolean>(false)
+    
     const { loading: cardLoading, error: cardError, data: cardData } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
         variables: {list:topic?.cards}
-      });
+    });
     
+    useEffect(()=> {
+        setChanged(!changed)
+    }, [columns])
     
     useEffect(()=> {
         if (cardData) {
@@ -63,11 +69,11 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
     return (
         <div className={style[`cards-wrapper`]}>
             {theresfavs() && <div className={style[`grid-favs`]}>Favourites</div>}
-            <div id={style.grid} style={{columnCount: `${columns}`}} className={style.grid}> 
+            <div id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid}` : `${style.grid} ${style.changed2}`}> 
                 {theresfavs() && loadFavPrompts()}
             </div>
             {theresfavs() && <div className={style[`divisor-grid`]}></div>}
-            <div  id={style.grid} style={{columnCount: `${columns}`}} className={style.grid}> 
+            <div  id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid} ${style['no-favs']}` : `${style.grid} ${style['no-favs']} ${style.changed2}`}> 
                 {loadPrompts()}
             </div>
             {topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}

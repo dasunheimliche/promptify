@@ -12,29 +12,40 @@
 .second-sidebar {
     color: white;
     background-color: rgb(16,16,20);
-  
     min-width: 400px;
-  
-    /* padding-top: 27px; */
   
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-  
-    /* position: relative; */
-    /* overflow: hidden; */
-  
     font-family: 'Lexend Deca', sans-serif;
+
+    width: 400px;
+    max-width: 400px;
+    overflow: hidden;
+    transition-property: min-width, max-width, width;
+    transition-duration: 0.3s;
+}
+
+.hidden-bar {
+    z-index: -1;
+    min-width: 0px;
+    max-width: 0px;
+    width: 0px;
+
+    transition-property: min-width, max-width, width;
+    transition-duration: 0.3s;
 }
 
 .ai-container {
+    /* outline: 1px solid red; */
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     outline-offset: -1px;
-    width: 100%;
+    min-width: 100%;
+    min-width: 400px; /* ADAPT */
 }
 
 .ai-title {
@@ -176,6 +187,10 @@
     cursor: pointer;
 }
 
+.favs-title { /* ADAPTAR */ 
+    margin-bottom: 15px;
+}
+
 .topics-wrapper {
     width: 100%;
     display: flex;
@@ -189,6 +204,17 @@
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
 }
+
+.topics {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 15px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
   
 .topics-wrapper::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
@@ -201,7 +227,7 @@
     display: flex;
     align-items: center;
     animation: fadeIn 0.1s ease-in-out;
-    margin-bottom: 15px;
+    /* margin-top: 15px; */
 }
 
 .topic-name {
@@ -274,7 +300,7 @@
 /* PROFILE */
 
 .profile-card {
-    width: 95%;
+    min-width: 95%;
     height: 500px;
 
     display: flex;
@@ -459,10 +485,25 @@
     .second-sidebar {
         min-width: 333px;
         gap: 12px;
+
+        width: 333px;
+        max-width: 333px;
+    }
+
+    .hidden-bar {
+        z-index: -1;
+        min-width: 0px;
+        max-width: 0px;
+        width: 0px;
+
+        transition-property: min-width, max-width, width;
+        transition-duration: 0.3s;
     }
     
     .ai-container {
         width: 100%;
+        min-width: 333px;
+
     }
     
     .ai-title {
@@ -534,12 +575,26 @@
     .topics-wrapper {
         width: 100%;
     }
-      
+
+    .topics {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 12px;
+    
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .favs-title { /* ADAPTAR */ 
+        margin-bottom: 12px;
+    }
     
     .topic-container {
         width: 93%;
         border-radius: 6px;
-        margin-bottom: 12px;
+        margin-top: 12px;
     }
     
     .topic-name {
@@ -599,10 +654,24 @@
     .second-sidebar {
         min-width: 284px;
         gap: 11px;
+
+        width: 284px;
+        max-width: 284px;
+    }
+
+    .hidden-bar {
+        z-index: -1;
+        min-width: 0px;
+        max-width: 0px;
+        width: 0px;
+
+        transition-property: min-width, max-width, width;
+        transition-duration: 0.3s;
     }
     
     .ai-container {
         width: 100%;
+        min-width: 284px;
     }
     
     .ai-title {
@@ -623,6 +692,10 @@
     .fav-ai {
         height: 16px;
         width: 16px;
+    }
+
+    .favs-title { /* ADAPTAR */ 
+        margin-bottom: 11px;
     }
     
     .edit-ai {
@@ -674,11 +747,21 @@
         width: 100%;
     }
       
+    .topics {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 11px;
+    
+        margin-top: 7px;
+        margin-bottom: 7px;
+    }
     
     .topic-container {
         width: 93%;
         border-radius: 5px;
-        margin-bottom: 11px;
+        margin-top: 11px;
     }
     
     .topic-name {
@@ -747,7 +830,18 @@
         min-width: calc(100% - 51px);
         min-height: 100dvh;
 
-        transition: min-height 0.2s;
+        transition-property: min-width, max-width, width;
+        transition-duration: 0.3s;
+    }
+
+    .hidden-bar {
+        z-index: -1;
+        min-width: 0px;
+        max-width: 0px;
+        width: 0px;
+
+        transition-property: min-width, max-width, width;
+        transition-duration: 0.3s;
     }
 
     /* TEST */
@@ -779,7 +873,6 @@
     }
 
     .topic-container {
-        /* outline: 1px solid blue; */
         background-color: rgb(27,27,27);
         width: 90%;
         height: 40px;

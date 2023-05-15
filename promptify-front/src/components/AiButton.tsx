@@ -1,12 +1,13 @@
 import { AI } from '../types'
 import style from '../styles/mainSidebar.module.css'
 
-const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile } : any)=> {
+const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setLista } : any)=> {
 
     const clickHandler = (ai: AI)=> {
         // console.log("CLICKED AI")
         setMain(ai)
         setProfile(false)
+        
 
         // if (!main || !ai) {
         //     return null
@@ -18,6 +19,7 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile } :
         }
 
         if (showSS && (ai.name !== main.name)) {
+            setLista(undefined)
             // setProfile(false)
             return
         }

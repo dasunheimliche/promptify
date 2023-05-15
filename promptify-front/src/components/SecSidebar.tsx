@@ -20,6 +20,9 @@ interface SecSideBarProps {
     setMain: Dispatch<AI>
     setToken: Dispatch<string | undefined>
     setShowSS: Dispatch<boolean>
+    
+    lista: Topic[] | undefined
+    setLista: Dispatch<Topic[] | undefined>
 } 
 interface topicListData {
     getTopics: Topic[]
@@ -37,12 +40,12 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setToken, setShowSS}: SecSideBarProps)=> {
+const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setToken, setShowSS, lista, setLista}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic]    = useState<string>("")
     const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
 
-    const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
+    // const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
 
     const [edit,        setEdit]        = useState<boolean>(false) 
     const [newTitle,    setNewTitle]    = useState<string | undefined>(main?.name)
@@ -175,6 +178,10 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         const clickHandler = (sec: Topic)=> {
             setTopic(sec)
             refetch()
+
+            if (isMobile) {
+                setShowSS(false)
+            }
         }
         const newTopicList = lista?.filter(t=> t?.fav !== false )
 
@@ -282,7 +289,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
 
     return (
-        <div style={!showSS? {display:"none"} : {}} className={style[`second-sidebar`]}> 
+        <div style={!showSS? {} : {}} className={showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} loading={DAloading}/>}
             {profile && 
                 <div className={style['profile-card']}>
@@ -313,10 +320,10 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 </form>}
             </div>}
             {!profile && <div className={style[`topics-wrapper`]}>
-                {theresFavs() && <div>Favourites</div>}
-                {theresFavs() && loadFavSections()}
+                {theresFavs() && <div className={style['favs-title']}>Favourites</div>}
+                {theresFavs() && <div className={style.topics}>{loadFavSections()}</div>}
                 <div className="divisor"></div>
-                {loadSections()} 
+                {<div className={style.topics}>{loadSections()}</div>} 
             </div>}
         </div>
     )

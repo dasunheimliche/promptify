@@ -21,7 +21,8 @@
     min-height: 60px;
   
     font-family: 'Lexend Deca', sans-serif;
-    margin-bottom: 23px;
+    /* margin-bottom: 23px; */
+    /* gap: 23px; */
 }
 
 .ais-wrapper {
@@ -57,11 +58,11 @@
 .ai-logos {
     display: flex;
     flex-direction: column;
-    /* gap: 13px; */
+    gap: 13px;
 }
 
 .ai-logo {
-
+    /* outline: 1px solid red; */
     background-color: rgb(210, 210, 210);
     
     border-radius: 17px;
@@ -77,7 +78,7 @@
   
     font-family: 'Lexend Deca', sans-serif;
 
-    margin-bottom: 13px;
+    /* margin-bottom: 13px; */
 }
 
 .add-ai {
@@ -147,7 +148,7 @@
         font-weight:700;
         font-size: 19px;
         min-height: 50px;
-        margin-bottom: 19px;
+        /* margin-bottom: 19px; */
     }
     
     .ais-wrapper {
@@ -155,7 +156,7 @@
     }
     
     .ai-logos {
-        /* gap: 11px; */
+        gap: 11px;
     }
     
     .ai-logo {
@@ -163,7 +164,7 @@
         width: 46px;
         height: 46px;
         font-size: 12px;
-        margin-bottom: 11px;
+        /* margin-bottom: 11px; */
     }
     
     .add-ai {
@@ -185,15 +186,19 @@
         font-weight:700;
         font-size: 16px;
         min-height: 43px;
-        margin-bottom: 16px;
+        /* margin-bottom: 16px; */
     }
     
     .ais-wrapper {
-        gap: 12px;
+        /* outline: 1px solid red; */
+        gap: 0px;
     }
     
     .ai-logos {
-        /* gap: 9px; */
+        /* outline: 1px solid blue; */
+        outline-offset: -1px;
+        gap: 12px;
+        margin-bottom: 0px;
     }
     
     .ai-logo {
@@ -205,8 +210,8 @@
     }
     
     .add-ai {
-        margin-top: 9px;
-        margin-bottom: 9px;
+        margin-top: 12px;
+        /* margin-bottom: 9px; */
         border-radius: 12px;
         width: 39px;
         height: 39px;
@@ -239,5 +244,6 @@
       
         width: 39px;
         height: 39px;
+        margin-bottom: 0px;
     }
 }

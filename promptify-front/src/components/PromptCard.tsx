@@ -11,7 +11,7 @@ interface PromptProps {
     cardList: Card[]
     topic: Topic | undefined
     currentCard: Card | undefined
-    setCurrentCard: Dispatch<Card>
+    setCurrentCard: Dispatch<Card | undefined>
     setCardList: Dispatch<Card[]>
     setShowPS: Dispatch<boolean>
 }
@@ -30,6 +30,11 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
     const openCardHandler = async()=> {
         await setCurrentCard(card)
         setShowPS(true)
+
+        if (card.id === currentCard?.id) {
+            setShowPS(false)
+            setCurrentCard(undefined)
+        }
     }
 
     const deleteCardfunc = async (cardId:string, topicId:string)=> {
@@ -64,7 +69,7 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
 
 
     return (
-        <div className={card.prompts.length > 1? `${style.prompt} ${style.stack}` : style.prompt } >
+        <div className={card.prompts.length > 1? (card.id === currentCard?.id? `${style.prompt} ${style.stack} ${style.selected}`:`${style.prompt} ${style.stack}`) : (card.id === currentCard?.id? `${style.prompt} ${style.selected}` :style.prompt) } >
             {(deleteAlert === "prompt") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteCardHandler} loading={DCloading}/>}
             {edit && <EditPrompt card={card} currentCard={currentCard} cardList={cardList} edit={edit} setCardList={setCardList} setEdit={setEdit} setCurrentCard={setCurrentCard}/>}
             <div className='p' onClick={openCardHandler}>

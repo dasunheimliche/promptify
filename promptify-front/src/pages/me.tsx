@@ -58,6 +58,7 @@ export default function Me() {
   // STATES WICH CONTROLS ITEM LISTS
   const [aiList,   setAiList]      = useState<AI[]   | undefined>(undefined)
   const [cardList, setCardList]    = useState<Card[] | undefined>(undefined)
+  const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
 
   const client = useApolloClient()
 
@@ -95,11 +96,18 @@ export default function Me() {
 
   useEffect(()=> {
     if (showPS === true && showSS === true) {
-      setColumns(2)
+      setTimeout(()=> {
+        setColumns(2)
+      }, 0)
     } else if (showPS === false && showSS === false)  {
-      setColumns(4)
+      setTimeout(()=> {
+        setColumns(4)
+      }, 0)
+      
     } else {
-      setColumns(3)
+      setTimeout(()=> {
+        setColumns(3)
+      }, 0)
     }
   }, [showPS, showSS])
 
@@ -109,8 +117,6 @@ export default function Me() {
     // client.resetStore()
   }
   
-
-
   return (
     <div className={style.main}>
       {showMenu !== "none" && 
@@ -121,13 +127,14 @@ export default function Me() {
         </div>
       }
       
-      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile}/>
-      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS}/>
+      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile} setLista={setLista}/>
+      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS} lista={lista} setLista={setLista}/>
       <div className={style[`main-content`]} >
         <MainContentMenu topic={topic} />
         <MainContentGrid cardList={cardList} currentCard={currCard} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
       </div>
-      {(currCard !== undefined && showPS == true) && <PromptSidebar currCard={currCard} setShowPS={setShowPS}/>}
+      {/* {(currCard !== undefined && showPS == true) && <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS}/>} */}
+      <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS} setCurrentCard={setCurrentCard}/>
     </div>
   )
 }

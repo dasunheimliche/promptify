@@ -12,6 +12,7 @@
     position: relative; 
   
     width: 100%; /* ??? */
+    max-width: 100%;
   
     background-color: rgb(242,238,233);
   }
@@ -44,7 +45,7 @@
 
 @media (max-width: 1600px) {
   .main {
-    height: 100%;
+    height: 100dvh;
     width: 100vw;
   }
   

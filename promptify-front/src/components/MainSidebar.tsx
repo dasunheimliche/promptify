@@ -1,5 +1,5 @@
 import { useEffect, Dispatch } from 'react'
-import { AI, User } from '../types'
+import { AI, User, Topic } from '../types'
 import { GET_AIS } from '@/queries'
 import { useQuery } from '@apollo/client';
 
@@ -18,6 +18,7 @@ interface MainSideBarProps {
     setShowMenu: Dispatch<string>
     setShowSS: Dispatch<boolean>
     setProfile: Dispatch<boolean>
+    setLista: Dispatch<Topic[] | undefined>
 }
 
 interface aiListData {
@@ -27,7 +28,7 @@ interface aiListVariables {
     list: string[] | undefined
 }
 
-const MainSidebar = ({ aiList, main, showSS, me, profile, setMain, setShowMenu, setShowSS, setAiList, setProfile}: MainSideBarProps)=> {
+const MainSidebar = ({ aiList, main, showSS, me, profile, setMain, setShowMenu, setShowSS, setAiList, setProfile, setLista}: MainSideBarProps)=> {
 
     const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
         variables: {list: me?.allPrompts}
@@ -51,7 +52,7 @@ const MainSidebar = ({ aiList, main, showSS, me, profile, setMain, setShowMenu, 
             return
         }
         const newAiList = aiList.filter(ai=> ai.fav !== true)
-        return newAiList?.map((ai: AI) => <AiButton main={main} profile={profile} setProfile={setProfile} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} />)
+        return newAiList?.map((ai: AI) => <AiButton main={main} profile={profile} setProfile={setProfile} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} setLista={setLista}/>)
     }
 
     const loadFavAis = ()=> {
@@ -59,7 +60,7 @@ const MainSidebar = ({ aiList, main, showSS, me, profile, setMain, setShowMenu, 
             return
         }
         const newAiList = aiList?.filter(ai => ai.fav === true)
-        return newAiList?.map((ai: AI) => <AiButton main={main} profile={profile} setProfile={setProfile} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} />)
+        return newAiList?.map((ai: AI) => <AiButton main={main} profile={profile} setProfile={setProfile} setMain={setMain} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} setLista={setLista}/>)
     }
 
     const openPanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
