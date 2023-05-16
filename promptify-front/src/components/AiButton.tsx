@@ -1,13 +1,16 @@
 import { AI } from '../types'
 import style from '../styles/mainSidebar.module.css'
 
-const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setLista } : any)=> {
+const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setLista, setTopic, lista } : any)=> {
 
     const clickHandler = (ai: AI)=> {
         // console.log("CLICKED AI")
         setMain(ai)
         setProfile(false)
-        
+        console.log("LISTAAAA EN AI BUTTON", lista)
+        if (lista) {
+            setTopic(lista[0])
+        }
 
         // if (!main || !ai) {
         //     return null

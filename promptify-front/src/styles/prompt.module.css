@@ -252,6 +252,6 @@
 @media (max-width: 500px) and (orientation: portrait) {
     .prompt {
         min-width: 100%;
-        border-radius: 19px;
+        border-radius: 15px;
     }
 }

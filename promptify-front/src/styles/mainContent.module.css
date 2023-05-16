@@ -10,6 +10,29 @@
     }
 }
 
+.loading {
+    z-index: 1;
+    width: 100%;
+    min-height: 100%;
+    /* position: absolute; */
+    /* background-color: rgb(14,14,14); */
+}
+  
+.loading::after {
+    content: "";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    width: 100%;
+    min-height: 22px;
+  
+    background-image: url("../icons/svg-loaders/grid_black.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 21px;
+}
+
 .header {
     outline-offset: -1px;
     display: flex;
@@ -398,6 +421,7 @@
         /* all: unset; */
         padding-left: 0px;
         padding-right: 0px;
+        padding: 0px;
     }
     
     #grid {

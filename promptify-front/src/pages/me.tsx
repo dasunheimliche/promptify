@@ -126,12 +126,12 @@ export default function Me() {
           {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}                   />}
         </div>
       }
-      
-      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile} setLista={setLista}/>
-      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS} lista={lista} setLista={setLista}/>
+      {aiList === undefined && <div className={style.loading}></div>}
+      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} lista={lista} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile} setLista={setLista} setTopic={setTopic}/>
+      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS} lista={lista} setLista={setLista} setCardList={setCardList}/>
       <div className={style[`main-content`]} >
         <MainContentMenu topic={topic} />
-        <MainContentGrid cardList={cardList} currentCard={currCard} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
+        <MainContentGrid cardList={cardList} currentCard={currCard} profile={profile} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
       </div>
       {/* {(currCard !== undefined && showPS == true) && <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS}/>} */}
       <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS} setCurrentCard={setCurrentCard}/>

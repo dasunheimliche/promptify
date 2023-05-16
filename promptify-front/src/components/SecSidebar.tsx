@@ -1,6 +1,6 @@
 import { useState, Dispatch, useEffect, useRef } from 'react'
 import { useRouter } from "next/router"
-import { AI, Topic, User } from '../types'
+import { AI, Topic, User, Card } from '../types'
 import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
 import { useQuery, useMutation } from '@apollo/client'
 import DeleteAlert from './DeleteAlert'
@@ -23,6 +23,8 @@ interface SecSideBarProps {
     
     lista: Topic[] | undefined
     setLista: Dispatch<Topic[] | undefined>
+
+    setCardList: Dispatch<Card[] | undefined>
 } 
 interface topicListData {
     getTopics: Topic[]
@@ -40,7 +42,7 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setToken, setShowSS, lista, setLista}: SecSideBarProps)=> {
+const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setToken, setShowSS, lista, setLista, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic]    = useState<string>("")
     const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
@@ -140,9 +142,14 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         }
 
         const clickHandler = (sec: Topic)=> {
+
+            if (topic?.id !== sec.id) {
+                setCardList(undefined)
+            }
+
             setTopic(sec)
             refetch()
-
+            
             if (isMobile) {
                 setShowSS(false)
             }
@@ -177,7 +184,13 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
         const clickHandler = (sec: Topic)=> {
             setTopic(sec)
+
+            if (topic?.id !== sec.id) {
+                setCardList(undefined)
+            }
+
             refetch()
+            
 
             if (isMobile) {
                 setShowSS(false)
@@ -314,15 +327,20 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                     <span className={style[`add-title`]}>Topics</span>
                     <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
                 </div>
-                {show && <form className={style[`add-form`]} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
-                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1}></input>
+                {<form className={show ? style[`add-form`] : `${style['add-form']} ${style['hidden-form']}`} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
+                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1} required></input>
                     <button type='submit'>ADD</button>
                 </form>}
+                {/* {show && <form className={style[`add-form`]} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
+                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1}></input>
+                    <button type='submit'>ADD</button>
+                </form>} */}
             </div>}
             {!profile && <div className={style[`topics-wrapper`]}>
                 {theresFavs() && <div className={style['favs-title']}>Favourites</div>}
                 {theresFavs() && <div className={style.topics}>{loadFavSections()}</div>}
-                <div className="divisor"></div>
+                {theresFavs() && <div className="divisor"></div>}
+                {lista === undefined && <div className={style.loading}></div>}
                 {<div className={style.topics}>{loadSections()}</div>} 
             </div>}
         </div>

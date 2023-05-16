@@ -7,6 +7,7 @@ import PromptCard from './PromptCard'
 import AddCardButton from './AddCardButton'
 
 import style from '../styles/mainContent.module.css'
+import { profile } from 'console';
 
 interface MainContentGridProps {
     main: AI | undefined
@@ -14,6 +15,7 @@ interface MainContentGridProps {
     currentCard: Card | undefined
     cardList: Card[] | undefined
     columns: number
+    profile: boolean
     setShowPS: Dispatch<boolean>
     setShowMenu: Dispatch<string>
     setCurrentCard: Dispatch<Card | undefined>
@@ -28,7 +30,7 @@ interface getCardsVariables {
     list: string[] | undefined
 }
 
-const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
+const MainContentGrid = ({cardList, currentCard, main, topic, columns, profile, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
     
     let [changed, setChanged] = useState<boolean>(false)
     
@@ -68,6 +70,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
 
     return (
         <div className={style[`cards-wrapper`]}>
+            
             {theresfavs() && <div className={style[`grid-favs`]}>Favourites</div>}
             <div id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid}` : `${style.grid} ${style.changed2}`}> 
                 {theresfavs() && loadFavPrompts()}
@@ -76,6 +79,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
             <div  id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid} ${style['no-favs']}` : `${style.grid} ${style['no-favs']} ${style.changed2}`}> 
                 {loadPrompts()}
             </div>
+            {/* {(cardList === undefined && !profile) && <div className={style.loading}></div>} */}
             {topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}
         </div>
     )
