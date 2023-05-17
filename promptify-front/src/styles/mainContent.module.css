@@ -168,7 +168,8 @@
 }
 
 .add-prompt {
-    background-color: rgb(247,212,76);
+    /* background-color: rgb(247,212,76); */
+    background-color: var(--add-ai);
     border-radius: 100px;
     padding: 25px;
   

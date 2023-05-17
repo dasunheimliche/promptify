@@ -87,10 +87,10 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu} : AddPromptProps)
             </div>
             <form action="" className={style.form}>
                 <label className={style.title}>{"Title"}</label>
-                <input type="text" placeholder="title" onChange={e=> setName(e.target.value)} minLength={1}/>
+                <input type="text" placeholder="title" onChange={e=> setName(e.target.value)} minLength={1} required/>
 
                 <label className={style.title}>{"Prompt"}</label>
-                <textarea value={content} placeholder="Write your prompt" onChange={e=> setContent(e.target.value)}/>
+                <textarea value={content} placeholder="Write your prompt" onChange={e=> setContent(e.target.value)} required/>
 
                 <div className={style.buttons}>
                     <button type="submit">Add Prompt</button>

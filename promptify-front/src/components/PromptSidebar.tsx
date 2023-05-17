@@ -84,9 +84,9 @@ const PromptSidebar = ({currCard, setShowPS, showPS, setCurrentCard} : PromptSid
                 </div>
                 <textarea className={style[`content-textarea`]} placeholder='prompt' value={card?.prompts[index].content} onChange={onChangeHandler} spellCheck="false"></textarea>
                 <div className={style[`content-playback`]}>
-                    <div onClick={back}>{"< "}</div>
+                    <div className={style.playback} onClick={back}>{"< "}</div>
                     <div>{`${index+1}/${card?.prompts.length}`}</div>
-                    <div onClick={forward}>{" >"}</div>
+                    <div className={style.playback} onClick={forward}>{" >"}</div>
                 </div>
             </div>
         </div>

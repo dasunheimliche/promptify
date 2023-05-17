@@ -77,8 +77,8 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
                 <div className={style.content}>{card.prompts[0].content}</div>
             </div>
             <div className={style.options}>
-                <div className={`${style.edit} p`} onClick={()=>setEdit(!edit)}></div>
                 <div className={`${style.delete} p`} onClick={()=>setDeleteAlert("prompt")}></div>
+                <div className={`${style.edit} p`} onClick={()=>setEdit(!edit)}></div>
                 <div className={card.fav? `${style.fav} ${style[`fav-on`]} p` : `${style.fav} p`} onClick={ACTFloading? doNothing : addToFavs}></div>
             </div>
         </div>

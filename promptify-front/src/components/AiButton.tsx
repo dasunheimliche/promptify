@@ -8,9 +8,10 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, se
         setMain(ai)
         setProfile(false)
         console.log("LISTAAAA EN AI BUTTON", lista)
-        if (lista) {
-            setTopic(lista[0])
-        }
+
+        // if (lista) {
+        //     setTopic(lista[0])
+        // }
 
         // if (!main || !ai) {
         //     return null
@@ -49,7 +50,7 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, se
     }
 
     return(
-        <div  className={`${style[`ai-logo`]} p`} onClick={()=>clickHandler(ai)}>{ai.abb}</div>
+        <div  className={ai.id === main.id? `${style[`ai-logo`]} p ${style['selected-main']}` : `${style[`ai-logo`]} p` } onClick={()=>clickHandler(ai)}>{ai.abb}</div>
     )
 }
 

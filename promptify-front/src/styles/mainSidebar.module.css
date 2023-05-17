@@ -1,5 +1,5 @@
 .main-sidebar {
-    background-color: rgb(27,27,27);
+    background-color: var(--main-sidebar);
   
     min-width: 72px;
   
@@ -21,8 +21,11 @@
     min-height: 60px;
   
     font-family: 'Lexend Deca', sans-serif;
-    /* margin-bottom: 23px; */
-    /* gap: 23px; */
+}
+
+.selected-main {
+    outline: 2px solid rgba(31, 151, 255, 0.777);
+    outline-offset: -2px;
 }
 
 .ais-wrapper {
@@ -63,7 +66,7 @@
 
 .ai-logo {
     /* outline: 1px solid red; */
-    background-color: rgb(210, 210, 210);
+    background-color: var(--ai-logo);
     
     border-radius: 17px;
   

@@ -102,14 +102,14 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu} : AddPromptProps)=
             </div>
             <form action="" className={style.form}>
                 <label className={style.title}>{"Stack Title"}</label>
-                <input type="text" placeholder=" stack title" onChange={ e=> setStackTitle(e.target.value)} minLength={1}/>
+                <input type="text" placeholder=" stack title" onChange={ e=> setStackTitle(e.target.value)} minLength={1} required/>
 
                 <div className={style[`stack-header`]}>
                     <label className={style.title}>{`Prompt Stack: ${count}`}</label>
                     <button onClick={addToStack}>+ Add to Stack</button>
                 </div>
-                <input value={promptTitle} type="text" placeholder="prompt title" onChange={e=> setPromptTitle(e.target.value)} minLength={1}/>
-                <textarea value={promptContent} placeholder="Write your prompt" onChange={e=> setPromptContent(e.target.value)}/>
+                <input value={promptTitle} type="text" placeholder="prompt title" onChange={e=> setPromptTitle(e.target.value)} minLength={1} required/>
+                <textarea value={promptContent} placeholder="Write your prompt" onChange={e=> setPromptContent(e.target.value)} required/>
 
                 <div className={style.buttons}>
                     <button type="submit">Add Prompt</button>

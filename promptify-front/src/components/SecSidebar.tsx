@@ -315,8 +315,8 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 {!edit && <div className={style[`ai-title`]}>{main && main.name}</div>}
                 {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)} minLength={1}></input>}
                 {main && <div className={style[`ai-opt`]}>
-                    {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
                     {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
+                    {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
                     {!edit && <div className={main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
                     {edit && <div onClick={EAloading? doNothing : editAiHandler}>YES</div>}
                     {edit && <div onClick={()=>setEdit(!edit)}>NO</div>}
@@ -331,10 +331,6 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                     <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1} required></input>
                     <button type='submit'>ADD</button>
                 </form>}
-                {/* {show && <form className={style[`add-form`]} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
-                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1}></input>
-                    <button type='submit'>ADD</button>
-                </form>} */}
             </div>}
             {!profile && <div className={style[`topics-wrapper`]}>
                 {theresFavs() && <div className={style['favs-title']}>Favourites</div>}
