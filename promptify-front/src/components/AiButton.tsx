@@ -3,6 +3,8 @@ import style from '../styles/mainSidebar.module.css'
 
 const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setLista, setTopic, lista } : any)=> {
 
+    
+
     const clickHandler = (ai: AI)=> {
         // console.log("CLICKED AI")
         setMain(ai)
@@ -50,7 +52,7 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, se
     }
 
     return(
-        <div  className={ai.id === main.id? `${style[`ai-logo`]} p ${style['selected-main']}` : `${style[`ai-logo`]} p` } onClick={()=>clickHandler(ai)}>{ai.abb}</div>
+        <div  className={(main && ai.id === main.id)? `${style[`ai-logo`]} p ${style['selected-main']}` : `${style[`ai-logo`]} p` } onClick={()=>clickHandler(ai)}>{ai.abb}</div>
     )
 }
 
