@@ -37,7 +37,7 @@ const Login = ()=> {
     const router = useRouter()
 
     // USE MUTATION
-    const [ login, {error: mutationError, data} ] = useMutation<loginData, loginVariables>(LOGIN, {
+    const [ login, {error: mutationError, data, loading} ] = useMutation<loginData, loginVariables>(LOGIN, {
         onError: (error) => {
             if (error.graphQLErrors && error.graphQLErrors.length > 0) {
                 setOk(false)
@@ -67,7 +67,7 @@ const Login = ()=> {
     // EVENT HANDLERS
     const submit = async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        login({ variables: { username, password } })
+        await login({ variables: { username, password } })
     }
 
     const demoSubmit = async(event:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
@@ -77,7 +77,6 @@ const Login = ()=> {
 
     return (
         <div className={style.main}>
-
             <div className={style['left-side']}>
 
                 <div className={style.card}>
@@ -91,7 +90,9 @@ const Login = ()=> {
                         <input required type='password' onChange={(e)=> setPassword(e.target.value)} placeholder={'password'} />
                         {!ok && <div className={style.failedLogin}></div>}
                         <button type='submit' className="p" >Log in</button>
-                        <button type='button' className="p" onClick={demoSubmit}>Demo</button>
+                        <button type='button' className="p" onClick={demoSubmit}>
+                            Demo
+                        </button>
 
                     </form>
 

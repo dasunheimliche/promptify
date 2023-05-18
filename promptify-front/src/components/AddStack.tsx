@@ -114,8 +114,8 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu, setTopic} : AddPro
                     <label className={style.title}>{`Prompt Stack: ${count}`}</label>
                     <button onClick={addToStack}>+ Add to Stack</button>
                 </div>
-                <input value={promptTitle} type="text" placeholder="prompt title" onChange={e=> setPromptTitle(e.target.value)} minLength={1} required/>
-                <textarea value={promptContent} placeholder="Write your prompt" onChange={e=> setPromptContent(e.target.value)} required/>
+                <input value={promptTitle} type="text" placeholder="prompt title" onChange={e=> setPromptTitle(e.target.value)} minLength={1} required={(stack && stack?.length > 0)? false:true}/>
+                <textarea value={promptContent} placeholder="Write your prompt" onChange={e=> setPromptContent(e.target.value)} required={(stack && stack?.length > 0)? false:true}/>
 
                 <div className={style.buttons}>
                     <button type="submit">Add Prompt</button>
