@@ -410,8 +410,6 @@ const resolvers = {
 				return false;
 			}
 
-			
-
 			const aiIdObject = new mongoose.Types.ObjectId(aiId);
 			const topicIdObject = new mongoose.Types.ObjectId(topicId);
 

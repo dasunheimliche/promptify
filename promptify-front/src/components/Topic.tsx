@@ -93,8 +93,8 @@ const Topic = ({main, sec, lista, topic, setTopic, setLista, deleteTopicfunc, ad
                 {!edit && <div className={`${style[`del-topic`]} p`}  onClick={()=>setDeleteAlert("topic")}></div>}
                 {!edit && <div className={`${style[`edit-topic`]} p`} onClick={()=>setEdit(!edit)}></div>}  
                 {!edit && <div className={sec.fav? `${style[`fav-topic`]} ${style[`fav-topic-on`]} p`: `${style[`fav-topic`]} p`} onClick={ATTFloading? doNothing : addToFav}></div>}
-                {edit && <div onClick={ETloading? doNothing : editTopicHandler}>YES</div>}
-                {edit && <div onClick={()=>setEdit(false)}>NO</div>}
+                {edit && <div className={`${style.yes} p`} onClick={ETloading? doNothing : editTopicHandler}>✓</div>}
+                {edit && <div className={`${style.not} p`} onClick={()=>setEdit(false)}>✕</div>}
             </div>}
         </div>
     )

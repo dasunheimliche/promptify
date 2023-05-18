@@ -8,6 +8,27 @@
     }
 }
 
+.yes {
+    /* outline: 1px solid red; */
+    transform: scaleX(1);
+    font-weight: bold;
+}
+.yes:hover {
+    color: rgb(3, 186, 3);
+}
+
+.not {
+    /* outline: 1px solid red; */
+    margin-left: 10px;
+    margin-right: 10px;
+    transform: scaleX(1);
+    font-weight: bold;
+}
+.not:hover {
+    color: rgb(255, 25, 0);
+}
+
+
 .loading {
     /* outline: 1px solid red; */
     z-index: 1;
@@ -981,6 +1002,20 @@
     .edit-topic {
         height: 15px;
         width: 15px;
+    }
+
+    .del-ai:hover {
+        background-image: url('../icons/del-on.png');
+        opacity: 0%;
+    }
+    
+    .fav-ai:hover {
+        background-image: url('../icons/fav-on.png');
+        opacity: 0%;
+    }
+    
+    .edit-ai:hover {
+        opacity: 0%;
     }
 
     .sign-off {

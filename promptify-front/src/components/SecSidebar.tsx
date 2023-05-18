@@ -348,8 +348,8 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                     {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
                     {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
                     {!edit && <div className={main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
-                    {edit && <div onClick={EAloading? doNothing : editAiHandler}>YES</div>}
-                    {edit && <div onClick={()=>setEdit(!edit)}>NO</div>}
+                    {edit && <div className={`${style.yes} p`} onClick={EAloading? doNothing : editAiHandler}>✓</div>}
+                    {edit && <div className={`${style.not} p`} onClick={()=>setEdit(!edit)}>✕</div>}
                 </div>}
             </div>}
             {!profile && <div className={style.addContainer}>

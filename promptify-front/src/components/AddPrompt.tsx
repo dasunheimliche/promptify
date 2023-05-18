@@ -78,6 +78,7 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu, setTopic} : AddPr
         let t = {...topic}
         t.cards = t.cards?.concat(newCard.data.createCard.id)
         setTopic(t)
+        setShowMenu("none")
     }
 
     const doNothing = (e:any) => {
