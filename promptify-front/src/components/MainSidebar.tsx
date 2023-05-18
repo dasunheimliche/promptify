@@ -94,7 +94,7 @@ const MainSidebar = ({ aiList, main, showSS, me, profile, lista, setMain, setSho
     return(
         <div className={style[`main-sidebar`]}>
             <div className={`${style.logo} p`}>Pfy</div>
-            <div className={`${style[`add-ai`]} p`} onClick={toProfile}>ME</div>
+            <div className={(profile && showSS)? `${style[`add-ai`]} ${style['selected-me']} p` :`${style[`add-ai`]} p`} onClick={toProfile}>ME</div>
             {(aiList && aiList.length > 0) && <div className={style[`ais-wrapper`]}>
                 {theresfavs() && 
                     <div className={style['favs-container']}>

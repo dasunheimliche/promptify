@@ -125,6 +125,7 @@
     background-size: 70%;
     background-repeat: no-repeat;
     background-position: center;
+
 }
   
 #add-stack-prompt {
@@ -183,6 +184,9 @@
     justify-content: center;
   
     font-family:'Times New Roman', Times, serif;
+    -webkit-user-select:none;
+    user-select: none
+    
 }
 
 /* ====================================================================== */

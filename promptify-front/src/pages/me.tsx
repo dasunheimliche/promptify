@@ -60,8 +60,6 @@ export default function Me() {
   const [cardList, setCardList]    = useState<Card[] | undefined>(undefined)
   const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
 
-  const client = useApolloClient()
-
   // CUSTOM HOOKS
   const router = useRouter()
 
@@ -121,17 +119,17 @@ export default function Me() {
     <div className={style.main}>
       {showMenu !== "none" && 
         <div className={style[`opt-mode`]}>
-          {showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}      setShowMenu={setShowMenu}  setMain={setMain}/>}
-          {showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}                   />}
-          {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}                   />}
+          {showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}      setShowMenu={setShowMenu}  setMain={setMain}  setMe={setMe}/>}
+          {showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}  setTopic={setTopic} />}
+          {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}  setTopic={setTopic} />}
         </div>
       }
       {aiList === undefined && <div className={style.loading}></div>}
-      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} lista={lista} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile} setLista={setLista} setTopic={setTopic}/>
-      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS} lista={lista} setLista={setLista} setCardList={setCardList}/>
+      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} lista={lista} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile} setLista={setLista} setTopic={setTopic} />
+      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS} lista={lista} setLista={setLista} setCardList={setCardList} setMe={setMe}/>
       <div className={style[`main-content`]} >
         <MainContentMenu topic={topic} />
-        <MainContentGrid cardList={cardList} currentCard={currCard} profile={profile} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>
+        <MainContentGrid cardList={cardList} currentCard={currCard} profile={profile} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>
       </div>
       {/* {(currCard !== undefined && showPS == true) && <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS}/>} */}
       <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS} setCurrentCard={setCurrentCard}/>

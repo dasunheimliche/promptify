@@ -20,6 +20,7 @@ interface MainContentGridProps {
     setShowMenu: Dispatch<string>
     setCurrentCard: Dispatch<Card | undefined>
     setCardList: Dispatch<Card[]>
+    setTopic: Dispatch<Topic>
 }
 
 interface getCardsData {
@@ -30,7 +31,7 @@ interface getCardsVariables {
     list: string[] | undefined
 }
 
-const MainContentGrid = ({cardList, currentCard, main, topic, columns, profile, setShowMenu, setCurrentCard, setShowPS, setCardList }: MainContentGridProps)=> {
+const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList, setTopic }: MainContentGridProps)=> {
     
     let [changed, setChanged] = useState<boolean>(false)
     
@@ -53,7 +54,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, profile, 
             return
         }
         const newCardList = cardList.filter(c => c.fav !== true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>).reverse()
     }
 
     const loadFavPrompts = () => {
@@ -61,7 +62,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, profile, 
             return
         }
         const newCardList = cardList.filter(c => c.fav === true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS}/>).reverse()
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>).reverse()
     }
 
     const theresfavs = ()=> {

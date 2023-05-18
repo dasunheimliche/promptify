@@ -226,11 +226,11 @@
 
 .delete-alert-container {
     background-color: white;
-    padding: 25px;
+    padding: 15px;
     color: black;
-    font-size: 20px;
-    border-radius: 15px;
-    width: 300px;
+    font-size: 17px;
+    border-radius: 10px;
+    width: 250px;
     position: relative;
   
     display: flex;
@@ -251,6 +251,18 @@
 .delete-alert-buttons button {
     all: unset;
     cursor: pointer;
+    color: white;
+    font-size: 12px;
+    padding: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 5px;
+
+    background-color: rgb(33, 33, 33);
+}
+
+#delete {
+    background-color: rgb(209, 21, 0);
 }
 
 /* ====================================================================================== */
@@ -503,7 +515,7 @@
         height: 50px;
     }
     
-    .delete-background {
+    /* .delete-background {
         min-width: 100%;
         min-height: 100%;
         top: 0;
@@ -522,7 +534,7 @@
         gap: 8px;
         font-size: 14px;
         width: 100%;
-    }
+    } */
 }
 
 @media (max-width: 1366px) {
@@ -639,7 +651,7 @@
         height: 43px;
     }
     
-    .delete-background {
+    /* .delete-background {
         min-width: 100%;
         min-height: 100%;
         top: 0;
@@ -658,7 +670,7 @@
         gap: 7px;
         font-size: 12px;
         width: 100%;
-    }
+    } */
 }
 
 @media (max-width: 912px) and (orientation: portrait) {

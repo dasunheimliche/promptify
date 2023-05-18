@@ -14,9 +14,10 @@ interface PromptProps {
     setCurrentCard: Dispatch<Card | undefined>
     setCardList: Dispatch<Card[]>
     setShowPS: Dispatch<boolean>
+    setTopic: Dispatch<Topic>
 }
 
-const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCardList, setShowPS} : PromptProps)=> {
+const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCardList, setShowPS, setTopic} : PromptProps)=> {
     // STATE
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
     const [edit,        setEdit]        = useState<boolean>(false)
@@ -40,10 +41,20 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
     const deleteCardfunc = async (cardId:string, topicId:string)=> {
         const deleted = await deleteCard({variables: {cardId, topicId}})
 
+        if (!topic) {
+            return
+        }
+
         if(deleted) {
             const newCardList = cardList.filter(arrayCard => arrayCard.id !== card.id)
             setCardList(newCardList)
         }
+
+        let t = {...topic}
+        let c = t.cards?.filter(id => id !== topicId)
+        t.cards = c
+
+        setTopic(t)
 
     }
 

@@ -75,6 +75,7 @@ const Topic = ({main, sec, lista, topic, setTopic, setLista, deleteTopicfunc, ad
 
         const newTopicList = [...lista];
         newTopicList[topicIndex] = newTopic.data.addTopicToFavs
+        console.log("ADD FAV SET LISTA", newTopicList)
         setLista(newTopicList)
     }
 

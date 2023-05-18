@@ -18,10 +18,10 @@ const DeleteAlert = ({setDeleteAlert, deleteHandler, loading} : DeleteArgs)=> {
     return(
         <div className={style[`delete-background`]}>
             <div className={style[`delete-alert-container`]}>
-                <div>Estas seguro de eliminar este elemento?</div>
+                <div>Are you sure you want to delete this element?</div>
                 <div className={style[`delete-alert-buttons`]}>
                     <button onClick={()=>setDeleteAlert("none")}>CANCEL</button>
-                    <button onClick={loading? doNothing : deleteHandler}>ACCEPT</button>
+                    <button id={style.delete} onClick={loading? doNothing : deleteHandler}>DELETE</button>
                 </div>
             </div>                
         </div>

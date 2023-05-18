@@ -20,10 +20,10 @@ interface SecSideBarProps {
     setMain: Dispatch<AI>
     setToken: Dispatch<string | undefined>
     setShowSS: Dispatch<boolean>
+    setMe: Dispatch<User>
     
     lista: Topic[] | undefined
     setLista: Dispatch<Topic[] | undefined>
-
     setCardList: Dispatch<Card[] | undefined>
 } 
 interface topicListData {
@@ -42,7 +42,7 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setToken, setShowSS, lista, setLista, setCardList}: SecSideBarProps)=> {
+const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setMe, setShowSS, lista, setLista, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic]    = useState<string>("")
     const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
@@ -68,14 +68,17 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         variables: { list: main?.topics }
     });
 
+    console.log("MAIN TOPICS FOR TOPIC QUERY", main?.topics)
 
     // USE EFFECT    
     const inputRef = useRef<HTMLInputElement>(null)
+
     useEffect(()=> {
         if (data) {
+            console.log("USE EFFECT DATA TOPIC LIST", data.getTopics)
             setLista(data.getTopics)
         }
-    }, [data])
+    }, [data?.getTopics])
 
     useEffect(()=> {
         inputRef.current?.focus()
@@ -101,6 +104,9 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         if (!userId || !aiId) {
             return
         }
+        if (!me) {
+            return
+        }
 
         await deleteAi({variables: {userId, aiId}})
         if (!aiList) return
@@ -112,6 +118,11 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             setMain(newAiList[0])
             setDeleteAlert("none")
         }
+
+        let u = {...me}
+        let a = u.allPrompts?.filter(id=> id != aiId)
+        u.allPrompts = a
+        setMe(u)
     }
 
     const deleteAiHandler = async ()=> {
@@ -121,9 +132,9 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
     const deleteTopicfunc = async (aiId:string, topicId:string)=> {
 
-        if (!topic) {
-            return
-        }
+        // if (!topic) {
+        //     return
+        // }
 
         await deleteTopic({variables: {aiId, topicId}})
 
@@ -131,9 +142,22 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             return
         }
 
+        if (!main) {
+            return
+        }
+
+        let m = {...main}
+        let t = m.topics?.filter(id => id !== topicId)
+        m.topics = t
+
+        setMain(m)
+
         const newTopic = lista.filter(arrayTopic => arrayTopic.id !== topicId)
         setLista(newTopic)
-        setTopic(newTopic[0])
+
+        if (topic?.id === topicId) {
+            setTopic(newTopic[0])
+        }
     }
 
     const loadSections = ()=>{
@@ -236,6 +260,11 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         let copied = [...lista, newTopic.data.createTopic]
         setLista(copied)
         setTopic(newTopic.data.createTopic)
+        setAddTopic("")
+
+        let m = {...main}
+        m.topics = m.topics?.concat(newTopic.data.createTopic.id)
+        setMain(m)
 
         if (copied) {
 
@@ -245,6 +274,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             setShow(false)
 
         }
+
     }   
 
     const addToFavs = async()=> {
@@ -306,7 +336,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} loading={DAloading}/>}
             {profile && 
                 <div className={style['profile-card']}>
-                    <div className={style['profile-pic']}></div>
+                    {/* <div className={style['profile-pic']}></div> */}
                     <div className={style['profile-name']}>{me?.name}</div>
                     <button className={style['sign-off']} onClick={signOff} type='button' title='Sign off'>Sign Off</button>
                 </div>
@@ -328,7 +358,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                     <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
                 </div>
                 {<form className={show ? style[`add-form`] : `${style['add-form']} ${style['hidden-form']}`} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
-                    <input placeholder='topic' onChange={e=>setAddTopic(e.target.value)} minLength={1} required></input>
+                    <input placeholder='topic' value={addTopic} onChange={e=>setAddTopic(e.target.value)} minLength={1} required></input>
                     <button type='submit'>ADD</button>
                 </form>}
             </div>}

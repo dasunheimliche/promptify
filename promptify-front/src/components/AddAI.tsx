@@ -11,6 +11,7 @@ interface AddAIProps {
     setShowMenu: Dispatch<string>
     setAiList: Dispatch<AI[]>
     setMain: Dispatch<AI>
+    setMe: Dispatch<User>
 }
 
 interface addAiData {
@@ -24,7 +25,7 @@ interface addAiVariables {
     }
 }
 
-const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  => {
+const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIProps)  => {
 
     // STATES
     const [name, setName] = useState<string>("")
@@ -32,9 +33,6 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
 
     // MUTATIONS
     const [ createAi, { data, loading, error } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
-
-    console.log("LOADING MUTATION", loading, error)
-
 
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
@@ -50,7 +48,6 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
 
         const variables = {userId: me.id, ai: {name, abb}}
         const newAI = await createAi({variables: variables})
-        console.log("NEW AI", newAI)
 
         if (!newAI.data) {
             return
@@ -63,6 +60,10 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain } : AddAIProps)  =>
         } else {
             copia = [newAI.data.createAi]
         }
+
+        let u = {...me}
+        u.allPrompts = u.allPrompts?.concat(newAI.data.createAi.id)
+        setMe(u)
 
         setAiList(copia)
         setMain(newAI.data.createAi)

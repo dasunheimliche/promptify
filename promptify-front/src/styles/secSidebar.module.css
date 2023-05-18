@@ -358,15 +358,17 @@
 
 .profile-name {
     margin-top: 15px;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 .sign-off {
     all: unset;
     cursor: pointer;
-    margin-top: 15px;
+    margin-top: 35px;
     padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
 
     background-color: white;
     color: black;
@@ -685,13 +687,14 @@
     
     .profile-name {
         margin-top: 12px;
+        font-size: 17px;
     }
     
     .sign-off {
-        margin-top: 12px;
+        margin-top: 29px;
         padding: 4px;
-        padding-left: 7px;
-        padding-right: 7px;
+        padding-left: 8px;
+        padding-right: 8px;
         border-radius: 11px;
     }
 }
@@ -859,13 +862,15 @@
     
     .profile-name {
         margin-top: 11px;
+        font-size: 15px;
+
     }
     
     .sign-off {
-        margin-top: 11px;
+        margin-top: 25px;
         padding: 4px;
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 7px;
+        padding-right: 7px;
         border-radius: 9px;
     }
 }

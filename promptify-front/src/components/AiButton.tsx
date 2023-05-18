@@ -9,7 +9,6 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, se
         // console.log("CLICKED AI")
         setMain(ai)
         setProfile(false)
-        console.log("LISTAAAA EN AI BUTTON", lista)
 
         // if (lista) {
         //     setTopic(lista[0])

@@ -9,6 +9,7 @@ interface AddPromptProps {
     topic: Topic | undefined
     cardList: Card[] | undefined
     setCardList: Dispatch<Card[]>
+    setTopic: Dispatch<Topic>
 }
 
 interface addCardData {
@@ -29,7 +30,7 @@ interface addCardVariables {
     }
 }
 
-const AddPrompt = ({cardList, topic, setCardList, setShowMenu} : AddPromptProps)=> {
+const AddPrompt = ({cardList, topic, setCardList, setShowMenu, setTopic} : AddPromptProps)=> {
 
     const [title, setName] = useState<string>("")
     const [content, setContent] = useState<string>("")
@@ -73,6 +74,10 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu} : AddPromptProps)
         if (!copied) return
 
         setCardList(copied)
+
+        let t = {...topic}
+        t.cards = t.cards?.concat(newCard.data.createCard.id)
+        setTopic(t)
     }
 
     const doNothing = (e:any) => {
