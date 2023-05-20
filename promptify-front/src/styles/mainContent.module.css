@@ -68,6 +68,8 @@
 }
 
 .grid-favs {
+    margin-top: 11px;
+
     font-family: 'Lexend Deca', sans-serif;
     margin-bottom: 10px;
     font-size: 21px;
@@ -282,6 +284,7 @@
       
     
     .grid-favs {
+        margin-top: 9px;
         margin-bottom: 8px;
         font-size: 17px;
     }
@@ -358,6 +361,7 @@
       
     
     .grid-favs {
+        margin-top: 8px;
         margin-bottom: 7px;
         font-size: 15px;
     }
@@ -437,6 +441,7 @@
     }
 
     .grid-favs {
+        margin-top: 12px;
         margin-bottom: 0px;
     }
 
