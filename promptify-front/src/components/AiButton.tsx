@@ -1,52 +1,50 @@
 import { AI } from '../types'
 import style from '../styles/mainSidebar.module.css'
+import { useEffect, useState } from 'react'
 
 const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setLista, setTopic, lista } : any)=> {
 
-    
+    // console.log("MAIN IN BUTTON", main)
+    // console.log("AI IN BUTTON", ai)
+    // console.log("LISTA IN BUTTON", lista)
+
+
+
+
 
     const clickHandler = (ai: AI)=> {
-        // console.log("CLICKED AI")
+        
+
+        // if (ai.id === main?.id) {
+        //     setShowSS(!showSS)
+        //     return
+        // }
+
         setMain(ai)
+        
+
+
         setProfile(false)
 
-        // if (lista) {
-        //     setTopic(lista[0])
-        // }
-
-        // if (!main || !ai) {
-        //     return null
-        // }
-
         if (showSS && profile) {
-            // setProfile(false)
             return
         }
 
-        if (showSS && (ai.name !== main.name)) {
+        if (showSS && (ai.name !== main?.name)) {
             setLista(undefined)
-            // setProfile(false)
             return
         }
 
-        if (showSS && (ai.name === main.name)) {
-            // setProfile(false)
+        if (showSS && (ai.name === main?.name)) {
             setShowSS(false)
             return
         }
 
         if (!showSS) {
-            // setProfile(false)
             setShowSS(true)
         }
 
-        // if (ai.name === main.name && !profile) {
-        //     setShowSS(!showSS)
-        // } else {
-        //     setShowSS(true)
-        // }
         
-        // refetch()
 
     }
 

@@ -28,13 +28,12 @@ interface meData {
 
 export default function Me() {
 
-  // const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
 
   let tkn
   if (typeof window !== "undefined") {
     tkn = sessionStorage.getItem('user-token')
   }
-
+  const client = useApolloClient()
 
   // STATES THAT CONTROLS ACTIVATED ITEMS
   const [main,     setMain]        = useState<AI    | undefined>(undefined)
@@ -85,8 +84,12 @@ export default function Me() {
     }
   }, [data])
 
+  const reef = async()=> {
+    await refetch()
+  }
+
   useEffect(()=> {
-    refetch()
+    reef()
     if (!token) {
         router.push("/login")
     } 

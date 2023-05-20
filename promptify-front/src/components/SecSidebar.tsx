@@ -68,14 +68,22 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         variables: { list: main?.topics }
     });
 
-    console.log("MAIN TOPICS FOR TOPIC QUERY", main?.topics)
 
     // USE EFFECT    
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const reff = async()=> {
+        await refetch()
+    }
+
+    useEffect(()=> {
+        reff()
+    }, [showSS, lista])
+
+    
+
     useEffect(()=> {
         if (data) {
-            console.log("USE EFFECT DATA TOPIC LIST", data.getTopics)
             setLista(data.getTopics)
         }
     }, [data?.getTopics])
@@ -165,14 +173,14 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             return
         }
 
-        const clickHandler = (sec: Topic)=> {
+        const clickHandler = async(sec: Topic)=> {
 
             if (topic?.id !== sec.id) {
                 setCardList(undefined)
             }
 
             setTopic(sec)
-            refetch()
+            await refetch()
             
             if (isMobile) {
                 setShowSS(false)
@@ -180,6 +188,9 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             
         }
         const newTopicList = lista?.filter(t=> t?.fav === false )
+
+        console.log("NEW TOPIC LIST ON LOAD TOPICS", newTopicList)
+        console.log("MAIN ON LOAD TOPCS", main)
 
         return newTopicList?.map((sec:Topic, i:number) => 
             <TopicComponent 
@@ -206,14 +217,14 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             return
         }
 
-        const clickHandler = (sec: Topic)=> {
+        const clickHandler = async(sec: Topic)=> {
             setTopic(sec)
 
             if (topic?.id !== sec.id) {
                 setCardList(undefined)
             }
 
-            refetch()
+            await refetch()
             
 
             if (isMobile) {
@@ -221,6 +232,9 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             }
         }
         const newTopicList = lista?.filter(t=> t?.fav !== false )
+
+        console.log("NEW TOPIC LIST ON LOAD TOPICS", newTopicList)
+        console.log("MAIN ON LOAD TOPCS", main)
 
         return newTopicList?.map((sec:Topic, i:number) => 
             <TopicComponent 
@@ -304,9 +318,8 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         const newAi = await editAi({variables:{aiId:main.id, newName:newTitle}})
         const aiIndex = aiList?.findIndex(ai=> ai.id === main.id)
         const newMain = {...main, name: newAi.data.editAi.name}
-
         const newAiList = [...aiList]
-        newAiList[aiIndex] = newAi.data.editAi.name
+        newAiList[aiIndex] = newAi.data.editAi
         setMain(newMain)
         setAiList(newAiList)
         setEdit(!edit)
