@@ -29,9 +29,15 @@ interface SecSideBarProps {
 interface topicListData {
     getTopics: Topic[]
 }
+// interface topicListVariables {
+//     list: string[] | undefined
+// }
 interface topicListVariables {
-    list: string[] | undefined
+    mainId: string | undefined
 }
+
+
+
 interface addAiData {
     createTopic: Topic
 }
@@ -64,8 +70,12 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
     // USE QUERY
 
+    // const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
+    //     variables: { list: main?.topics }
+    // });
+
     const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-        variables: { list: main?.topics }
+        variables: { mainId: main?.id }
     });
 
 

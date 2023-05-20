@@ -113,9 +113,12 @@ const typeDefs = `
     	hello: String
 		me: User
 		getInvalidUsernames: [String]!
-		getAis(list: [ID]!): [AI]
-		getTopics(list: [ID]!): [Topic]
-		getCards(list: [ID]!): [Card]
+		# getAis(list: [ID]!): [AI]
+		getAis(meId: ID!): [AI]
+		# getTopics(list: [ID]!): [Topic]
+		getTopics(mainId: ID!): [Topic]
+		# getCards(list: [ID]!): [Card]
+		getCards(topicId: ID!): [Card]
 	}
 
 	# MUTATIONS _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -215,22 +218,31 @@ const resolvers = {
 
 			if (!curr) return null;
 
-			const { list } = args;
-			const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
+			// const { list } = args;
+			// const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
 
-			const ais = await AiCollection.find({_id: {$in: idList}});
+			// const ais = await AiCollection.find({_id: {$in: idList}});
 
+			// return ais;
+
+			const {meId} = args;
+			console.log("AI ID", meId);
+			const ais = await AiCollection.find({userId: new mongoose.Types.ObjectId(meId)});
 			return ais;
 		},
 		getTopics: async (_root:any, args:any, _context:any) => { // eslint-disable-line
 			const curr = await _context.currentUser();
 			if (!curr) return null;
 
-			const { list } = args;
-			const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
+			// const { list } = args;
+			// const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
 
-			const topics = await TopicCollection.find({_id: {$in: idList}});
+			// const topics = await TopicCollection.find({_id: {$in: idList}});
 
+			// return topics;
+
+			const {mainId} = args;
+			const topics = await TopicCollection.find({aiId: new mongoose.Types.ObjectId(mainId)});
 			return topics;
 
 		},
@@ -238,13 +250,16 @@ const resolvers = {
 			const curr = await _context.currentUser();
 			if (!curr) return null;
 
-			const { list } = args;
-			const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
+			// const { list } = args;
+			// const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
 
-			const cards = await CardCollection.find({_id: {$in: idList}});
+			// const cards = await CardCollection.find({_id: {$in: idList}});
 
+			// return cards;
+
+			const { topicId } = args;
+			const cards = await CardCollection.find({topicId: new mongoose.Types.ObjectId(topicId)});
 			return cards;
-
 		}
 	},
 	Mutation: {

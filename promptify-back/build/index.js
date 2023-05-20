@@ -108,9 +108,12 @@ const typeDefs = `
     	hello: String
 		me: User
 		getInvalidUsernames: [String]!
-		getAis(list: [ID]!): [AI]
-		getTopics(list: [ID]!): [Topic]
-		getCards(list: [ID]!): [Card]
+		# getAis(list: [ID]!): [AI]
+		getAis(meId: ID!): [AI]
+		# getTopics(list: [ID]!): [Topic]
+		getTopics(mainId: ID!): [Topic]
+		# getCards(list: [ID]!): [Card]
+		getCards(topicId: ID!): [Card]
 	}
 
 	# MUTATIONS _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -206,27 +209,37 @@ const resolvers = {
             const curr = yield _context.currentUser();
             if (!curr)
                 return null;
-            const { list } = args;
-            const idList = list.map((str) => new mongoose_1.default.Types.ObjectId(str));
-            const ais = yield Ai_1.default.find({ _id: { $in: idList } });
+            // const { list } = args;
+            // const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
+            // const ais = await AiCollection.find({_id: {$in: idList}});
+            // return ais;
+            const { meId } = args;
+            console.log("AI ID", meId);
+            const ais = yield Ai_1.default.find({ userId: new mongoose_1.default.Types.ObjectId(meId) });
             return ais;
         }),
         getTopics: (_root, args, _context) => __awaiter(void 0, void 0, void 0, function* () {
             const curr = yield _context.currentUser();
             if (!curr)
                 return null;
-            const { list } = args;
-            const idList = list.map((str) => new mongoose_1.default.Types.ObjectId(str));
-            const topics = yield Topic_1.default.find({ _id: { $in: idList } });
+            // const { list } = args;
+            // const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
+            // const topics = await TopicCollection.find({_id: {$in: idList}});
+            // return topics;
+            const { mainId } = args;
+            const topics = yield Topic_1.default.find({ aiId: new mongoose_1.default.Types.ObjectId(mainId) });
             return topics;
         }),
         getCards: (_root, args, _context) => __awaiter(void 0, void 0, void 0, function* () {
             const curr = yield _context.currentUser();
             if (!curr)
                 return null;
-            const { list } = args;
-            const idList = list.map((str) => new mongoose_1.default.Types.ObjectId(str));
-            const cards = yield Card_1.default.find({ _id: { $in: idList } });
+            // const { list } = args;
+            // const idList = list.map((str: string) => new mongoose.Types.ObjectId(str));
+            // const cards = await CardCollection.find({_id: {$in: idList}});
+            // return cards;
+            const { topicId } = args;
+            const cards = yield Card_1.default.find({ topicId: new mongoose_1.default.Types.ObjectId(topicId) });
             return cards;
         })
     },

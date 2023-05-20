@@ -26,14 +26,24 @@ interface MainSideBarProps {
 interface aiListData {
     getAis: AI[]
 }
+// interface aiListVariables {
+//     list: string[] | undefined
+// }
+
 interface aiListVariables {
-    list: string[] | undefined
+    meId: string | undefined
 }
+
+
 
 const MainSidebar = ({ aiList, main, showSS, me, profile, lista, setMain, setShowMenu, setShowSS, setAiList, setProfile, setLista, setTopic}: MainSideBarProps)=> {
 
+    // const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
+    //     variables: {list: me?.allPrompts}
+    // });
+
     const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
-        variables: {list: me?.allPrompts}
+        variables: {meId: me?.id}
     });
     
     useEffect(()=> {

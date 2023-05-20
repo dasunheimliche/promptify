@@ -191,9 +191,22 @@ export const INVALID_USERNAMES = gql`
     }
 `
 
+// export const GET_AIS = gql`
+//     query($list: [ID]!) {
+//         getAis(list: $list) {
+//             id
+//             userId
+//             name
+//             abb
+//             fav
+//             topics
+//         }
+//   }
+// `
+
 export const GET_AIS = gql`
-    query($list: [ID]!) {
-        getAis(list: $list) {
+    query($meId: ID!) {
+        getAis(meId: $meId) {
             id
             userId
             name
@@ -204,9 +217,22 @@ export const GET_AIS = gql`
   }
 `
 
+// export const GET_TOPICS = gql`
+// query($list: [ID]!) {
+//     getTopics(list: $list) {
+//         id
+//         aiId
+//         userId
+//         name
+//         fav
+//         cards
+//     }
+// }
+// `
+
 export const GET_TOPICS = gql`
-query($list: [ID]!) {
-    getTopics(list: $list) {
+query($mainId: ID!) {
+    getTopics(mainId: $mainId) {
         id
         aiId
         userId
@@ -217,9 +243,25 @@ query($list: [ID]!) {
 }
 `
 
+// export const GET_CARDS = gql`
+// query($list: [ID]!) {
+//     getCards(list: $list) {
+//         id
+//         topicId
+//         aiId
+//         userId
+//         title
+//         fav
+//         prompts {
+//             content
+//             title
+//         }
+//     }
+//   }
+// `
 export const GET_CARDS = gql`
-query($list: [ID]!) {
-    getCards(list: $list) {
+query($topicId: ID!) {
+    getCards(topicId: $topicId) {
         id
         topicId
         aiId
@@ -233,4 +275,3 @@ query($list: [ID]!) {
     }
   }
 `
-

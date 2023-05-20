@@ -27,17 +27,33 @@ interface getCardsData {
     getCards: Card[]
 }
 
+// interface getCardsVariables {
+//     list: string[] | undefined
+// }
 interface getCardsVariables {
-    list: string[] | undefined
+    topicId: string | undefined
 }
 
 const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList, setTopic }: MainContentGridProps)=> {
     
     let [changed, setChanged] = useState<boolean>(false)
     
-    const { loading: cardLoading, error: cardError, data: cardData } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
-        variables: {list:topic?.cards}
+    // const { loading: cardLoading, error: cardError, data: cardData } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+    //     variables: {list:topic?.cards}
+    // });
+
+    const { loading: cardLoading, error: cardError, data: cardData, refetch } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+        variables: {topicId:topic?.id}
     });
+
+
+    const reffff = async()=> {
+        await refetch()
+    }
+
+    useEffect(()=> {
+        reffff()
+    }, [main])
     
     useEffect(()=> {
         setChanged(!changed)
@@ -48,6 +64,8 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
             setCardList(cardData.getCards)
         }
     }, [cardData]) //eslint-disable-line
+
+    
 
     const loadPrompts = () => {
         if (!main || !cardList) {
