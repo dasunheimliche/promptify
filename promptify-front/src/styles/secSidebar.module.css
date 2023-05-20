@@ -202,15 +202,16 @@
     display: flex;
     width: 93%;
     border-radius: 19px;
+    border-radius: 3px;
     /* border: 1px solid rgba(245, 245, 245, 0.268); */
     position: relative;
     overflow: hidden;
     margin-bottom: 25px;
 
 
-    height: 44px;
-    min-height: 44px;
-    max-height: 44px;
+    height: 41px;
+    min-height: 41px;
+    max-height: 41px;
     transition-property: min-height, max-height, height;
     transition-duration: 0.3s;
 }
@@ -227,7 +228,7 @@
 .add-form input {
     all: unset;
     background-color: white;
-    height: 44px;
+    height: 41px;
     width: 100%;
     padding-left: 15px;
     color: rgba(0, 0, 0, 0.71);
@@ -618,18 +619,18 @@
     
     .add-form {
         width: 93%;
-        border-radius: 6px;
+        border-radius: 2px;
         margin-bottom: 21px;
 
-        height: 37px;
-        min-height: 37px;
-        max-height: 37px;
+        height: 34px;
+        min-height: 34px;
+        max-height: 34px;
         transition-property: min-height, max-height, height;
         transition-duration: 0.3s;
     }
     
     .add-form input {
-        height: 37px;
+        height: 34px;
         width: 100%;
         padding-left: 12px;
         font-size: 14px;
@@ -797,18 +798,18 @@
     
     .add-form {
         width: 93%;
-        border-radius: 5px;
+        border-radius: 2px;
         margin-bottom: 18px;
 
-        height: 31px;
-        min-height: 31px;
-        max-height: 31px;
+        height: 29px;
+        min-height: 29px;
+        max-height: 29px;
         transition-property: min-height, max-height, height;
         transition-duration: 0.3s;
     }
     
     .add-form input {
-        height: 31px;
+        height: 29px;
         width: 100%;
         padding-left: 11px;
         font-size: 12px;
@@ -942,11 +943,11 @@
         display: flex;
         width: 90%;
         height: 40px;
-        border-radius: 17px;
+        border-radius: 3px;
 
-        height: 39px;
-        min-height: 39px;
-        max-height: 39px;
+        height: 37px;
+        min-height: 37px;
+        max-height: 37px;
         transition-property: min-height, max-height, height;
         transition-duration: 0.3s;
     }
@@ -961,7 +962,7 @@
     }
 
     .add-form input {
-        height: 39px;
+        height: 37px;
         font-size: 13px;
     }
 

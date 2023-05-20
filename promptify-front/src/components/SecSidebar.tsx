@@ -183,14 +183,14 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             return
         }
 
-        const clickHandler = async(sec: Topic)=> {
+        const clickHandler = (sec: Topic)=> {
 
             if (topic?.id !== sec.id) {
                 setCardList(undefined)
             }
 
             setTopic(sec)
-            await refetch()
+            refetch()
             
             if (isMobile) {
                 setShowSS(false)
@@ -227,14 +227,14 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             return
         }
 
-        const clickHandler = async(sec: Topic)=> {
+        const clickHandler = (sec: Topic)=> {
             setTopic(sec)
 
             if (topic?.id !== sec.id) {
                 setCardList(undefined)
             }
 
-            await refetch()
+            refetch()
             
 
             if (isMobile) {

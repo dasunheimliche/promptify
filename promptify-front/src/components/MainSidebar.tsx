@@ -26,9 +26,6 @@ interface MainSideBarProps {
 interface aiListData {
     getAis: AI[]
 }
-// interface aiListVariables {
-//     list: string[] | undefined
-// }
 
 interface aiListVariables {
     meId: string | undefined
@@ -37,10 +34,6 @@ interface aiListVariables {
 
 
 const MainSidebar = ({ aiList, main, showSS, me, profile, lista, setMain, setShowMenu, setShowSS, setAiList, setProfile, setLista, setTopic}: MainSideBarProps)=> {
-
-    // const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
-    //     variables: {list: me?.allPrompts}
-    // });
 
     const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
         variables: {meId: me?.id}
@@ -58,7 +51,7 @@ const MainSidebar = ({ aiList, main, showSS, me, profile, lista, setMain, setSho
 
     useEffect(()=> {
         refff()
-    }, [me, lista]) // eslint-disable-line
+    }, [me]) // eslint-disable-line
 
 
     
