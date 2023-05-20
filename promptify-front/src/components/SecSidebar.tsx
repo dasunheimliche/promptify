@@ -83,7 +83,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     const inputRef = useRef<HTMLInputElement>(null)
 
     const reff = async()=> {
-        await refetch()
+        refetch()
     }
 
     useEffect(()=> {

@@ -48,7 +48,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
 
 
     const reffff = async()=> {
-        await refetch()
+        refetch()
     }
 
     useEffect(()=> {

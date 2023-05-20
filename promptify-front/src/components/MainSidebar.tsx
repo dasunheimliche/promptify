@@ -46,10 +46,11 @@ const MainSidebar = ({ aiList, main, showSS, me, profile, lista, setMain, setSho
     }, [aiData]) // eslint-disable-line
 
     const refff = async()=> {
-        await aiRefetch()
+        aiRefetch()
     }
 
     useEffect(()=> {
+
         refff()
     }, [me]) // eslint-disable-line
 
