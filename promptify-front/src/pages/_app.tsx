@@ -2,6 +2,7 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink  } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context'
+import Head from 'next/head';
 
 const authLink = setContext((_, { headers }) => {
   const token = sessionStorage.getItem('user-token')
@@ -26,6 +27,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={client}>
+        <Head>
+          <title>{"Promptify"}</title>
+        </Head>
         <Component {...pageProps} />
     </ApolloProvider>
   )
