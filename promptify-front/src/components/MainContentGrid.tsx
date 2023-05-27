@@ -53,7 +53,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
 
     useEffect(()=> {
         reffff()
-    }, [main])
+    }, [main, cardList])
     
     useEffect(()=> {
         setChanged(!changed)
