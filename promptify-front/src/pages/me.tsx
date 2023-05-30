@@ -1,6 +1,18 @@
-import { useEffect, useState } from "react";
-import React from "react";
+/* REACT IMPORTS */
+import React, { useEffect, useState } from "react";
 
+/* NEXTJS IMPORTS */
+import { useRouter } from "next/router"
+
+/* GRAPHQL/APOLLO IMPORTS */
+import { useQuery, useApolloClient } from "@apollo/client"
+import { ME } from '@/queries'
+
+/* TYPES */
+
+import { User, Topic, Card, AI } from '../types'
+
+/* COMPONENTES */
 import MainSidebar from "@/components/MainSidebar";
 import SecSidebar from "@/components/SecSidebar";
 import PromptSidebar from "@/components/PromptSidebar";
@@ -12,14 +24,7 @@ import AddAI from "@/components/AddAI";
 import AddPrompt from "@/components/AddPrompt";
 import AddStack from "@/components/AddStack";
 
-import { User, Topic, Card, AI } from '../types'
-
-import { useAuth } from "@/contexts/Authcontext"
-import { useRouter } from "next/router"
-import { useQuery, useApolloClient } from "@apollo/client"
-
-import { ME } from '@/queries'
-
+/* STYLES */
 import style from '../styles/me.module.css'
 
 interface meData {
@@ -44,26 +49,26 @@ export default function Me() {
 
   // STATES WHICH CONTROLS VISIVILITY
 
-  const [showMenu, setShowMenu]    = useState<string>("none")
-  const [showSS,   setShowSS]      = useState<boolean>(true)
-  const [showPS,   setShowPS]      = useState<boolean>(false)
+  const [showMenu, setShowMenu] = useState<string>("none")
+  const [showSS,   setShowSS]   = useState<boolean>(true)
+  const [showPS,   setShowPS]   = useState<boolean>(false)
   
-  const [columns,  setColumns] = useState<number>(3)
+  const [columns,  setColumns]  = useState<number>(3)
   
   // STATE WHICH SETS CURRENT USER
-  const [me,       setMe]          = useState<User   | undefined>(undefined);
-  const [token, setToken]          = useState<string | undefined>(tkn? tkn : undefined)
+  const [me,       setMe]       = useState<User   | undefined>(undefined);
+  const [token,    setToken]    = useState<string | undefined>(tkn? tkn : undefined)
 
   // STATES WICH CONTROLS ITEM LISTS
-  const [aiList,   setAiList]      = useState<AI[]   | undefined>(undefined)
-  const [cardList, setCardList]    = useState<Card[] | undefined>(undefined)
-  const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
+  const [aiList,   setAiList]   = useState<AI[]   | undefined>(undefined)
+  const [cardList, setCardList] = useState<Card[] | undefined>(undefined)
+  const [lista,    setLista]    = useState<Topic[] | undefined>(undefined)
 
   // CUSTOM HOOKS
   const router = useRouter()
 
   // QUERIES
-  const {loading, error, data, refetch } = useQuery<meData>(ME)  
+  const {data, refetch } = useQuery<meData>(ME)  
 
   // USE EFFECTS
 
@@ -96,19 +101,12 @@ export default function Me() {
   }, [token]) // eslint-disable-line
 
   useEffect(()=> {
-    if (showPS === true && showSS === true) {
-      setTimeout(()=> {
-        setColumns(2)
-      }, 0)
-    } else if (showPS === false && showSS === false)  {
-      setTimeout(()=> {
-        setColumns(4)
-      }, 0)
-      
+    if (showPS && showSS) {
+      setColumns(2)
+    } else if (!showPS && !showSS)  {
+      setColumns(4)
     } else {
-      setTimeout(()=> {
-        setColumns(3)
-      }, 0)
+      setColumns(3)
     }
   }, [showPS, showSS])
 
@@ -134,7 +132,6 @@ export default function Me() {
         <MainContentMenu topic={topic} />
         <MainContentGrid cardList={cardList} currentCard={currCard} profile={profile} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>
       </div>
-      {/* {(currCard !== undefined && showPS == true) && <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS}/>} */}
       <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS} setCurrentCard={setCurrentCard}/>
     </div>
   )

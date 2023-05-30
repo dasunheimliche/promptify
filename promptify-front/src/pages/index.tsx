@@ -1,6 +1,5 @@
-import  { useState, useContext, useEffect} from "react"
+import  { useState} from "react"
 import Link from "next/link"
-import { AuthContext, useAuth } from "@/contexts/Authcontext"
 import { useRouter } from "next/router"
 
 const Home = ()=> {
@@ -10,9 +9,7 @@ const Home = ()=> {
     tkn = sessionStorage.getItem('user-token')
   }
 
-  const [token]          = useState<string | undefined>(tkn? tkn : undefined)
-
-  // const {token, setToken} = useAuth()
+  const [token] = useState<string | undefined>(tkn? tkn : undefined)
 
   const router = useRouter()
 

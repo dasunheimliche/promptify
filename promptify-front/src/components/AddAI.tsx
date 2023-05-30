@@ -32,7 +32,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIPro
     const [abb, setAbb] = useState<string>("")
 
     // MUTATIONS
-    const [ createAi, { data, loading, error } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
+    const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
 
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
@@ -42,6 +42,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIPro
 
     const addAI = async (e: React.FormEvent<HTMLDivElement>)=> {
         e.preventDefault()
+        
         if (!me) {
             return
         }
