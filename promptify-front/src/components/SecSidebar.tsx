@@ -18,12 +18,11 @@ interface SecSideBarProps {
     setAiList: Dispatch<AI[]>
     setTopic: Dispatch<Topic>
     setMain: Dispatch<AI>
-    setToken: Dispatch<string | undefined>
     setShowSS: Dispatch<boolean>
     setMe: Dispatch<User>
     
-    lista: Topic[] | undefined
-    setLista: Dispatch<Topic[] | undefined>
+    topicList: Topic[] | undefined
+    setTopicList: Dispatch<Topic[] | undefined>
     setCardList: Dispatch<Card[] | undefined>
 } 
 interface topicListData {
@@ -48,12 +47,10 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setMe, setShowSS, lista, setLista, setCardList}: SecSideBarProps)=> {
+const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setMe, setShowSS, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic]    = useState<string>("")
     const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
-
-    // const [lista,       setLista]       = useState<Topic[] | undefined>(undefined)
 
     const [edit,        setEdit]        = useState<boolean>(false) 
     const [newTitle,    setNewTitle]    = useState<string | undefined>(main?.name)
@@ -88,13 +85,13 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
     useEffect(()=> {
         reff()
-    }, [showSS, lista])
+    }, [showSS, topicList])
 
     
 
     useEffect(()=> {
         if (data) {
-            setLista(data.getTopics)
+            setTopicList(data.getTopics)
         }
     }, [data?.getTopics])
 
@@ -150,13 +147,9 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
     const deleteTopicfunc = async (aiId:string, topicId:string)=> {
 
-        // if (!topic) {
-        //     return
-        // }
-
         await deleteTopic({variables: {aiId, topicId}})
 
-        if (!lista) {
+        if (!topicList) {
             return
         }
 
@@ -170,8 +163,8 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
         setMain(m)
 
-        const newTopic = lista.filter(arrayTopic => arrayTopic.id !== topicId)
-        setLista(newTopic)
+        const newTopic = topicList.filter(arrayTopic => arrayTopic.id !== topicId)
+        setTopicList(newTopic)
 
         if (topic?.id === topicId) {
             setTopic(newTopic[0])
@@ -197,17 +190,14 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             }
             
         }
-        const newTopicList = lista?.filter(t=> t?.fav === false )
-
-        console.log("NEW TOPIC LIST ON LOAD TOPICS", newTopicList)
-        console.log("MAIN ON LOAD TOPCS", main)
+        const newTopicList = topicList?.filter(t=> t?.fav === false )
 
         return newTopicList?.map((sec:Topic, i:number) => 
             <TopicComponent 
                 key={i}
                 main={main}
                 sec={sec}
-                lista={lista}
+                topicList={topicList}
                 topic={topic}
                 deleteAlert={deleteAlert}
                 deleteTopicfunc={deleteTopicfunc}
@@ -215,7 +205,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 addTopicToFavs={addTopicToFavs}
                 ATTFloading={ATTFloading}
                 clickHandler={clickHandler}
-                setLista={setLista}
+                setTopicList={setTopicList}
                 setTopic={setTopic}
                 setDeleteAlert={setDeleteAlert}
             />
@@ -241,7 +231,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 setShowSS(false)
             }
         }
-        const newTopicList = lista?.filter(t=> t?.fav !== false )
+        const newTopicList = topicList?.filter(t=> t?.fav !== false )
 
         console.log("NEW TOPIC LIST ON LOAD TOPICS", newTopicList)
         console.log("MAIN ON LOAD TOPCS", main)
@@ -251,7 +241,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 key={i}
                 main={main}
                 sec={sec}
-                lista={lista}
+                topicList={topicList}
                 topic={topic}
                 deleteAlert={deleteAlert}
                 deleteTopicfunc={deleteTopicfunc}
@@ -259,7 +249,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 addTopicToFavs={addTopicToFavs}
                 ATTFloading={ATTFloading}
                 clickHandler={clickHandler}
-                setLista={setLista}
+                setTopicList={setTopicList}
                 setTopic={setTopic}
                 setDeleteAlert={setDeleteAlert}
             />
@@ -277,12 +267,12 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
         const newTopic = await createTopic({variables: variables})
 
-        if (!lista || !newTopic.data) {
+        if (!topicList || !newTopic.data) {
             return
         }
 
-        let copied = [...lista, newTopic.data.createTopic]
-        setLista(copied)
+        let copied = [...topicList, newTopic.data.createTopic]
+        setTopicList(copied)
         setTopic(newTopic.data.createTopic)
         setAddTopic("")
 
@@ -336,7 +326,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     }
 
     const theresFavs = ()=> {
-        return lista?.some(c => c.fav === true)
+        return topicList?.some(c => c.fav === true)
     }
 
     const setEditHandler = ()=> {
@@ -389,7 +379,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 {theresFavs() && <div className={style['favs-title']}>Favourites</div>}
                 {theresFavs() && <div className={style.topics}>{loadFavSections()}</div>}
                 {theresFavs() && <div className="divisor"></div>}
-                {lista === undefined && <div className={style.loading}></div>}
+                {topicList === undefined && <div className={style.loading}></div>}
                 {<div className={style.topics}>{loadSections()}</div>} 
             </div>}
         </div>

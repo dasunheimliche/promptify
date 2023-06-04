@@ -41,37 +41,36 @@ export default function Me() {
   const client = useApolloClient()
 
   // STATES THAT CONTROLS ACTIVATED ITEMS
-  const [main,     setMain]        = useState<AI    | undefined>(undefined)
-  const [topic,    setTopic]       = useState<Topic | undefined>(undefined)
+  const [main,     setMain       ] = useState<AI    | undefined>(undefined)
+  const [topic,    setTopic      ] = useState<Topic | undefined>(undefined)
   const [currCard, setCurrentCard] = useState<Card  | undefined>(undefined)
 
-  const [profile, setProfile] = useState<boolean>(true)
+  const [profile,  setProfile    ] = useState<boolean>(true)
 
   // STATES WHICH CONTROLS VISIVILITY
 
   const [showMenu, setShowMenu] = useState<string>("none")
-  const [showSS,   setShowSS]   = useState<boolean>(true)
-  const [showPS,   setShowPS]   = useState<boolean>(false)
+  const [showSS,   setShowSS  ] = useState<boolean>(true)
+  const [showPS,   setShowPS  ] = useState<boolean>(false)
   
-  const [columns,  setColumns]  = useState<number>(3)
+  const [columns,  setColumns ] = useState<number>(3)
   
   // STATE WHICH SETS CURRENT USER
   const [me,       setMe]       = useState<User   | undefined>(undefined);
   const [token,    setToken]    = useState<string | undefined>(tkn? tkn : undefined)
 
   // STATES WICH CONTROLS ITEM LISTS
-  const [aiList,   setAiList]   = useState<AI[]   | undefined>(undefined)
-  const [cardList, setCardList] = useState<Card[] | undefined>(undefined)
-  const [lista,    setLista]    = useState<Topic[] | undefined>(undefined)
+  const [aiList,   setAiList    ] = useState<AI[]    | undefined>(undefined)
+  const [cardList, setCardList  ] = useState<Card[]  | undefined>(undefined)
+  const [topicList, setTopicList] = useState<Topic[] | undefined>(undefined)
 
-  // CUSTOM HOOKS
+  // HOOKS
   const router = useRouter()
 
   // QUERIES
   const {data, refetch } = useQuery<meData>(ME)  
 
   // USE EFFECTS
-
 
   useEffect(()=> {
     const token: string | null = sessionStorage.getItem('user-token')
@@ -129,36 +128,36 @@ export default function Me() {
       {aiList === undefined && <div className={style.loading}></div>}
 
       <MainSidebar 
-        me          = {me         } 
-        main        = {main       }
-        profile     = {profile    }
-        aiList      = {aiList     }   
-        lista       = {lista      } 
-        showSS      = {showSS     } 
-        setMain     = {setMain    }
-        setTopic    = {setTopic   } 
-        setProfile  = {setProfile }  
-        setAiList   = {setAiList  } 
-        setLista    = {setLista   }
-        setShowSS   = {setShowSS  } 
-        setShowMenu = {setShowMenu} 
+        me           = {me          } 
+        main         = {main        }
+        profile      = {profile     }
+        aiList       = {aiList      }   
+        topicList    = {topicList   } 
+        showSS       = {showSS      } 
+        setMain      = {setMain     }
+        setTopic     = {setTopic    } 
+        setProfile   = {setProfile  }  
+        setAiList    = {setAiList   } 
+        setTopicList = {setTopicList}
+        setShowSS    = {setShowSS   } 
+        setShowMenu  = {setShowMenu } 
       />
       <SecSidebar 
-        me          = {me         } 
-        main        = {main       } 
-        topic       = {topic      } 
-        profile     = {profile    } 
-        aiList      = {aiList     } 
-        lista       = {lista      }
-        showSS      = {showSS     } 
-        setMe       = {setMe      }
-        setMain     = {setMain    }
-        setTopic    = {setTopic   }
-        setAiList   = {setAiList  } 
-        setLista    = {setLista   } 
-        setCardList = {setCardList} 
-        setShowSS   = {setShowSS  } 
-        signOff     = {signOff    }
+        me           = {me          } 
+        main         = {main        } 
+        topic        = {topic       } 
+        profile      = {profile     } 
+        aiList       = {aiList      } 
+        topicList    = {topicList   }
+        showSS       = {showSS      } 
+        setMe        = {setMe       }
+        setMain      = {setMain     }
+        setTopic     = {setTopic    }
+        setAiList    = {setAiList   } 
+        setTopicList = {setTopicList} 
+        setCardList  = {setCardList } 
+        setShowSS    = {setShowSS   } 
+        signOff      = {signOff     }
       />
       <div className={style[`main-content`]} >
         <MainContentMenu topic={topic} />

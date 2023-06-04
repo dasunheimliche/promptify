@@ -15,8 +15,10 @@ interface EditPRomptProps {
     setEdit: Dispatch<boolean>
 }
 
-const EditPrompt = ({card, currentCard, cardList, edit, setEdit, setCardList, setCurrentCard} : EditPRomptProps)=> {
-    const [mode, setMode] = useState<string>(card.prompts.length > 1? "stack" : "prompt")
+type mode = "stack" | "prompt"
+
+const EditPrompt = ({card, currentCard, cardList, setEdit, setCardList, setCurrentCard} : EditPRomptProps)=> {
+    const [mode, setMode] = useState<mode>(card.prompts.length > 1? "stack" : "prompt")
 
     // ESTADOS
     const [newTitle, setNewTitle] = useState<string>(card.title)
@@ -123,19 +125,24 @@ const EditPrompt = ({card, currentCard, cardList, edit, setEdit, setCardList, se
     return(
         <div className={style[`delete-background`]}>
             <div className={style.popup} onSubmit={confirmEdit}>
+
                 <div className={style.header}>
                     <div className={style[`header-first`]}>
                         <div className={style[`header-title`]}>{mode === "prompt"? "Edit Prompt" : "Edit Stack"}</div>
                         <div className="p" onClick={setModeHandler}>{mode === "prompt"? "To stack" : "To prompt"}</div>
                     </div>
+
                     <div className={`${style[`header-close`]} p`} onClick={close}>x</div>
                 </div>
+
                 <form action="" className={style.form}>
                     <label className={style.title}>{mode === "prompt"? "Title" : "Stack title"}</label>
                     <input value={newTitle} type="text" placeholder="title" onChange={e=>setNewTitle(e.target.value)} minLength={1} required/>
+                    
                     <div className={style[`prompt-container`]}>
                         {mode === "stack" &&
                             <div className={style[`stack-header`]}>
+
                                 <label className={style.title}>
                                     {`PROMPT `}
                                     <div className={style.playback}>
@@ -144,6 +151,7 @@ const EditPrompt = ({card, currentCard, cardList, edit, setEdit, setCardList, se
                                         <div className={style.goForward} onClick={goForward}></div>
                                     </div>
                                 </label>
+
                                 <div className={style.options}>
                                     {newPrompts.length !== 1 && <div className={style.delete} onClick={deletePrompt}></div>}
                                     <div className={style.addPrompt} onClick={addNewPrompt} >Add + </div>
@@ -157,6 +165,7 @@ const EditPrompt = ({card, currentCard, cardList, edit, setEdit, setCardList, se
                         {mode === "stack" && <label className={style.title}>{"Prompt Content:"}</label>}
                         <textarea value={newPrompts[index]?.content}  placeholder="Write your prompt" onChange={editPromptContent} minLength={1} required/>
                     </div>
+
                     <div className={style.buttons}>
                         <button onClick={loading? doNothing : editCardHandler}>Save</button>
                     </div>

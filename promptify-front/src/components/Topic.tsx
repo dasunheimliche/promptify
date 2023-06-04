@@ -15,7 +15,7 @@ interface addTopicVariables {
 interface TopicProps {
     main: AI
     sec: Topic
-    lista: Topic[] | undefined
+    topicList: Topic[] | undefined
     deleteAlert: string
     topic: Topic | undefined
 
@@ -25,13 +25,13 @@ interface TopicProps {
     addTopicToFavs: any
     clickHandler: (sec: Topic)=>void
 
-    setLista: Dispatch<Topic[]>
+    setTopicList: Dispatch<Topic[]>
     setDeleteAlert: Dispatch<string>
     setTopic: Dispatch<Topic>
 
 }
 
-const Topic = ({main, sec, lista, topic, setTopic, setLista, deleteTopicfunc, addTopicToFavs, setDeleteAlert, deleteAlert, clickHandler, DTloading, ATTFloading } : TopicProps)=> {
+const Topic = ({main, sec, topicList, topic, setTopic, setTopicList, deleteTopicfunc, addTopicToFavs, setDeleteAlert, deleteAlert, clickHandler, DTloading, ATTFloading } : TopicProps)=> {
 
     const [edit, setEdit] = useState<boolean>(false)
     const [newName, setNewName] = useState<string>(sec.name)
@@ -50,16 +50,16 @@ const Topic = ({main, sec, lista, topic, setTopic, setLista, deleteTopicfunc, ad
     },[edit])
 
     const editTopicHandler = async() => {
-        if (!lista || !main || !newName) {
+        if (!topicList || !main || !newName) {
             return
         }
         const newTopic = await editTopic({variables:{topicId:sec.id, newName:newName}})
-        const aiIndex = lista?.findIndex(t=> t.id === sec.id)
+        const aiIndex = topicList?.findIndex(t=> t.id === sec.id)
         const newMainTopic = {...sec, name: newTopic.data.editTopic.name}
 
-        const newList = [...lista]
+        const newList = [...topicList]
         newList[aiIndex] = newTopic.data.editTopic.name
-        setLista(newList)
+        setTopicList(newList)
         setEdit(!edit)
         if (sec.id === topic?.id) {
             setTopic(newMainTopic)
@@ -67,16 +67,15 @@ const Topic = ({main, sec, lista, topic, setTopic, setLista, deleteTopicfunc, ad
     }
 
     const addToFav = async()=> {
-        if (!lista) {
+        if (!topicList) {
             return
         }
         const newTopic = await addTopicToFavs({variables:{topicId: sec.id}})
-        const topicIndex = lista.findIndex((t: Topic) => t.id === sec?.id)
+        const topicIndex = topicList.findIndex((t: Topic) => t.id === sec?.id)
 
-        const newTopicList = [...lista];
+        const newTopicList = [...topicList];
         newTopicList[topicIndex] = newTopic.data.addTopicToFavs
-        console.log("ADD FAV SET LISTA", newTopicList)
-        setLista(newTopicList)
+        setTopicList(newTopicList)
     }
 
     const doNothing = (e:any)=> {

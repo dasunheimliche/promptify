@@ -38,7 +38,7 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu, setTopic} : AddPro
     const [promptTitle, setPromptTitle] = useState<string>("")
     const [promptContent, setPromptContent] = useState<string>("")
 
-    const [ createCard, { error, data, loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
+    const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
 
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
@@ -46,55 +46,53 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu, setTopic} : AddPro
         setShowMenu("none")
     }
 
-    const addToStack = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
-        e.preventDefault()
-        setCount(count + 1)
-        let newPrompt = {title: promptTitle, content: promptContent}
-        if (stack) {
-            setStack( [...stack, newPrompt])
-        } else {
-            setStack([newPrompt])
-        }
-        setPromptTitle("")
-        setPromptContent("")
-    }
+    const addToStack = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        const newPrompt = { title: promptTitle, content: promptContent };
+        const updatedStack = stack ? [...stack, newPrompt] : [newPrompt];
+        
+        setCount(count + 1);
+        setStack(updatedStack);
+        setPromptTitle("");
+        setPromptContent("");
+    };
 
-    const addPrompt = async(e: React.FormEvent<HTMLDivElement>) => {
-        e.preventDefault()
-
-        if (!topic || !stack || !cardList ) {
-            return
-        }
-
-        const variables = {topicId: topic.id, aiId: topic.aiId, card: {
-            title: stackTitle,
-            prompts: stack
-        }}
+    const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
+        e.preventDefault();
     
-        const newCard = await createCard({variables: variables})
-
-        if (!newCard.data) {
-            return
+        if (!topic || !stack || !cardList) {
+            return;
         }
-
-        let copied
-
-        if (!cardList) {
-            copied = [newCard.data.createCard]
-        } else {
-            copied = [...cardList, newCard.data.createCard]
-
+    
+        const variables = {
+            topicId: topic.id,
+            aiId: topic.aiId,
+            card: {
+                title: stackTitle,
+                prompts: stack,
+            },
+        };
+    
+        try {
+            const newCard = await createCard({ variables });
+    
+            if (!newCard.data) {
+                return;
+            }
+    
+            let copied = cardList ? [...cardList, newCard.data.createCard] : [newCard.data.createCard];
+    
+            setCardList(copied);
+    
+            let t = { ...topic };
+            t.cards = t.cards ? [...t.cards, newCard.data.createCard.id] : [newCard.data.createCard.id];
+            setTopic(t);
+    
+            setShowMenu("none");
+        } catch (error) {
+            console.error("Error:", error);
         }
-
-        if (!copied) return
-
-        setCardList(copied)
-
-        let t = {...topic}
-        t.cards = t.cards?.concat(newCard.data.createCard.id)
-        setTopic(t)
-        setShowMenu("none")
-    }
+    };
 
     const doNothing = (e:any)=> {
         e.preventDefault()

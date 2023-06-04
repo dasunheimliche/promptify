@@ -6,12 +6,12 @@ import { ADD_AI } from '@/queries'
 import style from '../styles/popups.module.css'
 
 interface AddAIProps {
-    me: User | undefined
-    aiList: AI[] | undefined
-    setShowMenu: Dispatch<string>
-    setAiList: Dispatch<AI[]>
-    setMain: Dispatch<AI>
-    setMe: Dispatch<User>
+    me          : User | undefined
+    aiList      : AI[] | undefined
+    setShowMenu : Dispatch<string>
+    setAiList   : Dispatch<AI[]>
+    setMain     : Dispatch<AI>
+    setMe       : Dispatch<User>
 }
 
 interface addAiData {
@@ -29,7 +29,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIPro
 
     // STATES
     const [name, setName] = useState<string>("")
-    const [abb, setAbb] = useState<string>("")
+    const [abb,  setAbb ] = useState<string>("")
 
     // MUTATIONS
     const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
@@ -40,36 +40,36 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIPro
         setShowMenu("none")
     }
 
-    const addAI = async (e: React.FormEvent<HTMLDivElement>)=> {
-        e.preventDefault()
-        
+    const addAI = async (e: React.FormEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    
         if (!me) {
-            return
+            return;
         }
-
-        const variables = {userId: me.id, ai: {name, abb}}
-        const newAI = await createAi({variables: variables})
-
-        if (!newAI.data) {
-            return
+    
+        const variables = {
+            userId: me.id,
+            ai: { name, abb },
+        };
+    
+        try {
+            const { data: newAI } = await createAi({ variables });
+        
+            if (newAI) {
+                const updatedAiList: AI[] = aiList ? [...aiList, newAI.createAi] : [newAI.createAi];
+        
+                const updatedMe: User = { ...me };
+                updatedMe.allPrompts = updatedMe.allPrompts?.concat(newAI.createAi.id);
+        
+                setMe(updatedMe);
+                setAiList(updatedAiList);
+                setMain(newAI.createAi);
+                setShowMenu("none");
+            }
+        } catch (error) {
+            console.error(error);
         }
-
-        let copia : AI[]
-
-        if (aiList) {
-            copia = [...aiList, newAI.data.createAi]
-        } else {
-            copia = [newAI.data.createAi]
-        }
-
-        let u = {...me}
-        u.allPrompts = u.allPrompts?.concat(newAI.data.createAi.id)
-        setMe(u)
-
-        setAiList(copia)
-        setMain(newAI.data.createAi)
-        setShowMenu("none")
-    }
+    };
 
     const doNothing = (e: React.FormEvent<HTMLDivElement>)=> {
         e.preventDefault()

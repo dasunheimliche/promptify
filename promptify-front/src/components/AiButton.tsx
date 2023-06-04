@@ -1,29 +1,11 @@
 import { AI } from '../types'
 import style from '../styles/mainSidebar.module.css'
-import { useEffect, useState } from 'react'
 
-const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setLista, setTopic, lista } : any)=> {
-
-    // console.log("MAIN IN BUTTON", main)
-    // console.log("AI IN BUTTON", ai)
-    // console.log("LISTA IN BUTTON", lista)
-
-
-
-
+const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, setTopicList } : any)=> {
 
     const clickHandler = (ai: AI)=> {
-        
-
-        // if (ai.id === main?.id) {
-        //     setShowSS(!showSS)
-        //     return
-        // }
 
         setMain(ai)
-        
-
-
         setProfile(false)
 
         if (showSS && profile) {
@@ -31,7 +13,7 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, se
         }
 
         if (showSS && (ai.name !== main?.name)) {
-            setLista(undefined)
+            setTopicList(undefined)
             return
         }
 
@@ -43,9 +25,6 @@ const AiButton = ({ai, main, profile, setMain, setShowSS, showSS, setProfile, se
         if (!showSS) {
             setShowSS(true)
         }
-
-        
-
     }
 
     return(
