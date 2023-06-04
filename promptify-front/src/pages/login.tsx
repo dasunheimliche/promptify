@@ -21,23 +21,24 @@ interface loginVariables {
 }
 
 const Login = ()=> {
-    let tkn
+    let tkn 
     if (typeof window !== "undefined") {
-      tkn = sessionStorage.getItem('user-token')
+        tkn = sessionStorage.getItem('user-token')
     }
 
-    const [token, setToken]          = useState<string | undefined>(tkn? tkn : undefined)
+    
 
     //  STATES
+    const [token,    setToken   ] = useState<string | undefined>(tkn? tkn : undefined)
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    let [ok, setOk] = useState<boolean>(true)
+    const [ok,       setOk      ] = useState<boolean>(true)
 
     // CUSTOM STATES
     const router = useRouter()
 
     // USE MUTATION
-    const [ login, {error: mutationError, data, loading} ] = useMutation<loginData, loginVariables>(LOGIN, {
+    const [ login, {data} ] = useMutation<loginData, loginVariables>(LOGIN, {
         onError: (error) => {
             if (error.graphQLErrors && error.graphQLErrors.length > 0) {
                 setOk(false)
@@ -65,7 +66,7 @@ const Login = ()=> {
     }, [data]) // eslint-disable-line
 
     // EVENT HANDLERS
-    const submit = async (event:React.FormEvent<HTMLFormElement>) => {
+    const submit = async(event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         await login({ variables: { username, password } })
     }
@@ -88,8 +89,12 @@ const Login = ()=> {
 
                         <input required type='text'     onChange={(e)=> setUsername(e.target.value)} placeholder={'username'} />
                         <input required type='password' onChange={(e)=> setPassword(e.target.value)} placeholder={'password'} />
+
                         {!ok && <div className={style.failedLogin}></div>}
-                        <button type='submit' className="p" >Log in</button>
+                        
+                        <button type='submit' className="p" >
+                            Log in
+                        </button>
                         <button type='button' className="p" onClick={demoSubmit}>
                             Demo
                         </button>

@@ -74,7 +74,7 @@ export default function Me() {
 
 
   useEffect(()=> {
-    const token = sessionStorage.getItem('user-token')
+    const token: string | null = sessionStorage.getItem('user-token')
     if (token === null) {
       return
     }    
@@ -125,12 +125,56 @@ export default function Me() {
           {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}  setTopic={setTopic} />}
         </div>
       }
+
       {aiList === undefined && <div className={style.loading}></div>}
-      <MainSidebar aiList={aiList} me={me} main={main} showSS={showSS} profile={profile} lista={lista} setMain={setMain} setAiList={setAiList} setShowMenu={setShowMenu} setShowSS={setShowSS} setProfile={setProfile} setLista={setLista} setTopic={setTopic} />
-      <SecSidebar me={me} main={main} aiList={aiList} topic={topic} showSS={showSS} signOff={signOff} setToken={setToken} setTopic={setTopic} setAiList={setAiList} setMain={setMain} profile={profile} setShowSS={setShowSS} lista={lista} setLista={setLista} setCardList={setCardList} setMe={setMe}/>
+
+      <MainSidebar 
+        me          = {me         } 
+        main        = {main       }
+        profile     = {profile    }
+        aiList      = {aiList     }   
+        lista       = {lista      } 
+        showSS      = {showSS     } 
+        setMain     = {setMain    }
+        setTopic    = {setTopic   } 
+        setProfile  = {setProfile }  
+        setAiList   = {setAiList  } 
+        setLista    = {setLista   }
+        setShowSS   = {setShowSS  } 
+        setShowMenu = {setShowMenu} 
+      />
+      <SecSidebar 
+        me          = {me         } 
+        main        = {main       } 
+        topic       = {topic      } 
+        profile     = {profile    } 
+        aiList      = {aiList     } 
+        lista       = {lista      }
+        showSS      = {showSS     } 
+        setMe       = {setMe      }
+        setMain     = {setMain    }
+        setTopic    = {setTopic   }
+        setAiList   = {setAiList  } 
+        setLista    = {setLista   } 
+        setCardList = {setCardList} 
+        setShowSS   = {setShowSS  } 
+        signOff     = {signOff    }
+      />
       <div className={style[`main-content`]} >
         <MainContentMenu topic={topic} />
-        <MainContentGrid cardList={cardList} currentCard={currCard} profile={profile} setCardList={setCardList} main={main} columns={columns} topic={topic && topic} setShowMenu={setShowMenu} setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>
+        <MainContentGrid 
+          main           = {main          } 
+          topic          = {topic && topic} 
+          currentCard    = {currCard      } 
+          profile        = {profile       } 
+          cardList       = {cardList      } 
+          columns        = {columns       } 
+          setTopic       = {setTopic      }
+          setCurrentCard = {setCurrentCard} 
+          setCardList    = {setCardList   } 
+          setShowPS      = {setShowPS     } 
+          setShowMenu    = {setShowMenu   }
+        />
       </div>
       <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS} setCurrentCard={setCurrentCard}/>
     </div>
