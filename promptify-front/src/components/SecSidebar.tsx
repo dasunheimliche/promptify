@@ -1,7 +1,7 @@
 import { useState, Dispatch, useEffect, useRef } from 'react'
 import { useRouter } from "next/router"
 
-import { AI, Topic, User, Card } from '../types'
+import { AI, Topic, User, Card, Mains } from '../types'
 
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
@@ -13,15 +13,14 @@ import style from '../styles/secSidebar.module.css'
 
 interface SecSideBarProps {
     me: User | undefined
-    main: AI | undefined
-    topic: Topic | undefined
+
+    mains: Mains
     showSS: boolean
     aiList: AI[] | undefined
-    profile: boolean
     signOff: ()=> void
     setAiList: Dispatch<AI[]>
-    setTopic: Dispatch<Topic>
-    setMain: Dispatch<AI>
+    setMains: Dispatch<Mains>
+
     setShowSS: Dispatch<boolean>
     setMe: Dispatch<User>
     
@@ -51,13 +50,13 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopic, setAiList, setMain, setMe, setShowSS, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
+const SecSidebar = ({me, mains, aiList, showSS, signOff,  setMains, setAiList, setMe, setShowSS, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic]    = useState<string>("")
     const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
 
     const [edit,        setEdit]        = useState<boolean>(false) 
-    const [newTitle,    setNewTitle]    = useState<string | undefined>(main?.name)
+    const [newTitle,    setNewTitle]    = useState<string | undefined>(mains.main?.name)
 
     const router = useRouter()
 
@@ -76,7 +75,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     // });
 
     const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-        variables: { mainId: main?.id }
+        variables: { mainId: mains.main?.id }
     });
 
 
@@ -105,8 +104,8 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
     useEffect(()=> {
         setEdit(false)
-        setNewTitle(main?.name)
-    },[main])
+        setNewTitle(mains.main?.name)
+    },[mains.main])
 
     // MUTATIONS
 
@@ -134,7 +133,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         if (newAiList.length === 0) {
             return
         } else {
-            setMain(newAiList[0])
+            setMains({...mains, main: newAiList[0]})
             setDeleteAlert("none")
         }
 
@@ -145,7 +144,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     }
 
     const deleteAiHandler = async ()=> {
-        await deleteAifunc(main?.userId, main?.id)
+        await deleteAifunc(mains.main?.userId, mains.main?.id)
         setDeleteAlert("none")
     }
 
@@ -157,36 +156,36 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
             return
         }
 
-        if (!main) {
+        if (!mains.main) {
             return
         }
 
-        let m = {...main}
+        let m = {...mains.main}
         let t = m.topics?.filter(id => id !== topicId)
         m.topics = t
 
-        setMain(m)
+        setMains({...mains, main: m})
 
         const newTopic = topicList.filter(arrayTopic => arrayTopic.id !== topicId)
         setTopicList(newTopic)
 
-        if (topic?.id === topicId) {
-            setTopic(newTopic[0])
+        if (mains.topic?.id === topicId) {
+            setMains({...mains, topic: newTopic[0]})
         }
     }
 
     const loadSections = ()=>{
-        if (!main) {
+        if (!mains.main) {
             return
         }
 
         const clickHandler = (sec: Topic)=> {
 
-            if (topic?.id !== sec.id) {
+            if (mains.topic?.id !== sec.id) {
                 setCardList(undefined)
             }
 
-            setTopic(sec)
+            setMains({...mains, topic: sec})
             refetch()
             
             if (isMobile) {
@@ -199,10 +198,9 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         return newTopicList?.map((sec:Topic, i:number) => 
             <TopicComponent 
                 key={i}
-                main={main}
                 sec={sec}
                 topicList={topicList}
-                topic={topic}
+                mains={mains}
                 deleteAlert={deleteAlert}
                 deleteTopicfunc={deleteTopicfunc}
                 DTloading={DTloading}
@@ -210,21 +208,21 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 ATTFloading={ATTFloading}
                 clickHandler={clickHandler}
                 setTopicList={setTopicList}
-                setTopic={setTopic}
+                setMains={setMains}
                 setDeleteAlert={setDeleteAlert}
             />
         )
     }
 
     const loadFavSections = ()=>{
-        if (!main) {
+        if (!mains.main) {
             return
         }
 
         const clickHandler = (sec: Topic)=> {
-            setTopic(sec)
+            setMains({...mains, topic: sec})
 
-            if (topic?.id !== sec.id) {
+            if (mains.topic?.id !== sec.id) {
                 setCardList(undefined)
             }
 
@@ -237,16 +235,12 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
         }
         const newTopicList = topicList?.filter(t=> t?.fav !== false )
 
-        console.log("NEW TOPIC LIST ON LOAD TOPICS", newTopicList)
-        console.log("MAIN ON LOAD TOPCS", main)
-
         return newTopicList?.map((sec:Topic, i:number) => 
             <TopicComponent 
                 key={i}
-                main={main}
                 sec={sec}
                 topicList={topicList}
-                topic={topic}
+                mains={mains}
                 deleteAlert={deleteAlert}
                 deleteTopicfunc={deleteTopicfunc}
                 DTloading={DTloading}
@@ -254,7 +248,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                 ATTFloading={ATTFloading}
                 clickHandler={clickHandler}
                 setTopicList={setTopicList}
-                setTopic={setTopic}
+                setMains={setMains}
                 setDeleteAlert={setDeleteAlert}
             />
         )
@@ -263,11 +257,11 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     const addTopicHandler = async (e: React.FormEvent<HTMLFormElement>)=> {
         e.preventDefault()
 
-        if (!main  || !data) {
+        if (!mains.main  || !data) {
             return
         }
 
-        const variables = {aiId: main?.id, topic: {name: addTopic}}
+        const variables = {aiId: mains.main?.id, topic: {name: addTopic}}
 
         const newTopic = await createTopic({variables: variables})
 
@@ -277,16 +271,17 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
 
         let copied = [...topicList, newTopic.data.createTopic]
         setTopicList(copied)
-        setTopic(newTopic.data.createTopic)
+        setMains({...mains, topic: newTopic.data.createTopic})
         setAddTopic("")
 
-        let m = {...main}
+        let m = {...mains.main}
         m.topics = m.topics?.concat(newTopic.data.createTopic.id)
-        setMain(m)
+
+        setMains({...mains, main: m})
 
         if (copied) {
 
-            if (!main) {
+            if (!mains.main) {
                 return
             } 
             setShow(false)
@@ -296,35 +291,35 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     }   
 
     const addToFavs = async()=> {
-        if (!aiList || !main) {
+        if (!aiList || !mains.main) {
             return
         }
-        const newAi = await addAiToFavs({variables:{aiId: main.id}})
-        const aiIndex = aiList?.findIndex(ai=> ai.id === main.id)
-        const newMain = {...main, fav: !main.fav}
+        const newAi = await addAiToFavs({variables:{aiId: mains.main.id}})
+        const aiIndex = aiList?.findIndex(ai=> ai.id === mains.main?.id)
+        const newMain = {...mains.main, fav: !mains.main.fav}
         
         const newAiList = [...aiList]
         newAiList[aiIndex] = newAi.data.addAiToFavs
-        setMain(newMain)
+        setMains({...mains, main: newMain})
         setAiList(newAiList)
     }
 
     const editAiHandler = async() => {
-        if (!aiList || !main || !newTitle) {
+        if (!aiList || !mains.main || !newTitle) {
             return
         }
 
-        if (main.name === newTitle) {
+        if (mains.main.name === newTitle) {
             setEdit(!edit)
             return
         }
 
-        const newAi = await editAi({variables:{aiId:main.id, newName:newTitle}})
-        const aiIndex = aiList?.findIndex(ai=> ai.id === main.id)
-        const newMain = {...main, name: newAi.data.editAi.name}
+        const newAi = await editAi({variables:{aiId: mains.main.id, newName:newTitle}})
+        const aiIndex = aiList?.findIndex(ai=> ai.id === mains.main?.id)
+        const newMain = {...mains.main, name: newAi.data.editAi.name}
         const newAiList = [...aiList]
         newAiList[aiIndex] = newAi.data.editAi
-        setMain(newMain)
+        setMains({...mains, main: newMain})
         setAiList(newAiList)
         setEdit(!edit)
     }
@@ -346,25 +341,25 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     return (
         <div style={!showSS? {} : {}} className={showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} loading={DAloading}/>}
-            {profile && 
+            {mains.profile && 
                 <div className={style['profile-card']}>
                     {/* <div className={style['profile-pic']}></div> */}
                     <div className={style['profile-name']}>{me?.name}</div>
                     <button className={style['sign-off']} onClick={signOff} type='button' title='Sign off'>Sign Off</button>
                 </div>
             }
-            {!profile && <div className={style[`ai-container`]}>
-                {!edit && <div className={style[`ai-title`]}>{main && main.name}</div>}
+            {!mains.profile && <div className={style[`ai-container`]}>
+                {!edit && <div className={style[`ai-title`]}>{mains.main && mains.main.name}</div>}
                 {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)} minLength={1}></input>}
-                {main && <div className={style[`ai-opt`]}>
+                {mains.main && <div className={style[`ai-opt`]}>
                     {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
                     {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
-                    {!edit && <div className={main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
+                    {!edit && <div className={mains.main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
                     {edit && <div className={`${style.yes} p`} onClick={EAloading? doNothing : editAiHandler}>✓</div>}
                     {edit && <div className={`${style.not} p`} onClick={()=>setEdit(!edit)}>✕</div>}
                 </div>}
             </div>}
-            {!profile && <div className={style.addContainer}>
+            {!mains.profile && <div className={style.addContainer}>
                 <div className={style[`add-header`]}>
                     <span className={style[`add-title`]}>Topics</span>
                     <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
@@ -374,7 +369,7 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
                     <button type='submit'>ADD</button>
                 </form>}
             </div>}
-            {!profile && <div className={style[`topics-wrapper`]}>
+            {!mains.profile && <div className={style[`topics-wrapper`]}>
                 {theresFavs() && <div className={style['favs-title']}>Favourites</div>}
                 {theresFavs() && <div className={style.topics}>{loadFavSections()}</div>}
                 {theresFavs() && <div className="divisor"></div>}

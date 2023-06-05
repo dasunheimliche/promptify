@@ -51,3 +51,10 @@ export interface Card {
 export interface Token {
 	value: string
 }
+
+export interface Mains {
+    main: AI | undefined
+    topic: Topic | undefined
+    currCard: Card | undefined
+    profile: boolean
+}

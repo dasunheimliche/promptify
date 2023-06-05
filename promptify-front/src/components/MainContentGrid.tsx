@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useState } from 'react'
 
-import { Card, AI, Topic } from '../types'
+import { Card, Mains } from '../types'
 
 import { useQuery } from '@apollo/client';
 import { GET_CARDS } from '@/queries'
@@ -11,17 +11,13 @@ import AddCardButton from './AddCardButton'
 import style from '../styles/mainContent.module.css'
 
 interface MainContentGridProps {
-    main: AI | undefined
-    topic: Topic | undefined
-    currentCard: Card | undefined
+    mains: Mains
     cardList: Card[] | undefined
     columns: number
-    profile: boolean
     setShowPS: Dispatch<boolean>
     setShowMenu: Dispatch<string>
-    setCurrentCard: Dispatch<Card | undefined>
     setCardList: Dispatch<Card[]>
-    setTopic: Dispatch<Topic>
+    setMains: Dispatch<Mains>
 }
 
 interface getCardsData {
@@ -32,12 +28,12 @@ interface getCardsVariables {
     topicId: string | undefined
 }
 
-const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList, setTopic }: MainContentGridProps)=> {
+const MainContentGrid = ({cardList, mains, columns, setShowMenu, setShowPS, setCardList, setMains }: MainContentGridProps)=> {
     
     let [changed, setChanged] = useState<boolean>(false)
 
     const { loading: cardLoading, error: cardError, data: cardData, refetch } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
-        variables: {topicId:topic?.id}
+        variables: {topicId:mains.topic?.id}
     });
 
 
@@ -47,7 +43,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
 
     useEffect(()=> {
         reffff()
-    }, [main, cardList])
+    }, [mains.main, cardList])
     
     useEffect(()=> {
         setChanged(!changed)
@@ -62,19 +58,19 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
     
 
     const loadPrompts = () => {
-        if (!main || !cardList) {
+        if (!mains.main || !cardList) {
             return
         }
         const newCardList = cardList.filter(c => c.fav !== true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>).reverse()
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} setCardList={setCardList} mains={mains} setShowPS={setShowPS} setMains={setMains}/>).reverse()
     }
 
     const loadFavPrompts = () => {
-        if (!main || !cardList) {
+        if (!mains.main || !cardList) {
             return
         }
         const newCardList = cardList.filter(c => c.fav === true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} currentCard={currentCard} cardList={cardList} setCardList={setCardList} topic={topic}  setCurrentCard={setCurrentCard} setShowPS={setShowPS} setTopic={setTopic}/>).reverse()
+        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} setCardList={setCardList} mains={mains} setShowPS={setShowPS} setMains={setMains}/>).reverse()
     }
 
     const theresfavs = ()=> {
@@ -92,7 +88,7 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
             <div  id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid} ${style['no-favs']}` : `${style.grid} ${style['no-favs']} ${style.changed2}`}> 
                 {loadPrompts()}
             </div>
-            {topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}
+            {mains.topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}
         </div>
     )
 }

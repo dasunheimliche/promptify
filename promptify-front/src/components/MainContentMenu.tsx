@@ -1,17 +1,17 @@
-import { Topic } from '../types'
+import { Mains } from '../types'
 import style from '../styles/mainContent.module.css'
 
 
 interface MainContentMenu {
-    topic: Topic | undefined
+    mains: Mains
 }
 
 
-const MainContentMenu = ({topic} : MainContentMenu )=> {
+const MainContentMenu = ({mains} : MainContentMenu )=> {
 
     return (
         <div className={style.header}>
-            <div className={style[`header-title`]}>{topic?.name}</div>
+            <div className={style[`header-title`]}>{mains.topic?.name}</div>
         </div>
     )
 }

@@ -4,7 +4,7 @@ import { Dispatch, useState, useRef, useEffect } from "react"
 import { useMutation } from '@apollo/client'
 import { EDIT_TOPIC } from "@/queries"
 
-import { Topic, AI } from "@/types"
+import { Topic, AI, Mains } from "@/types"
 
 import DeleteAlert from "./DeleteAlert"
 
@@ -12,11 +12,10 @@ import style from '../styles/secSidebar.module.css'
 
 
 interface TopicProps {
-    main: AI
     sec: Topic
     topicList: Topic[] | undefined
     deleteAlert: string
-    topic: Topic | undefined
+    mains: Mains
 
     deleteTopicfunc: (userId: string, topicId: string)=>void
     DTloading: boolean
@@ -26,11 +25,11 @@ interface TopicProps {
 
     setTopicList: Dispatch<Topic[]>
     setDeleteAlert: Dispatch<string>
-    setTopic: Dispatch<Topic>
+    setMains: Dispatch<Mains>
 
 }
 
-const Topic = ({main, sec, topicList, topic, setTopic, setTopicList, deleteTopicfunc, addTopicToFavs, setDeleteAlert, deleteAlert, clickHandler, DTloading, ATTFloading } : TopicProps)=> {
+const Topic = ({ sec, topicList, mains, setMains, setTopicList, deleteTopicfunc, addTopicToFavs, setDeleteAlert, deleteAlert, clickHandler, DTloading, ATTFloading } : TopicProps)=> {
 
     const [edit, setEdit] = useState<boolean>(false)
     const [newName, setNewName] = useState<string>(sec.name)
@@ -40,7 +39,10 @@ const Topic = ({main, sec, topicList, topic, setTopic, setTopicList, deleteTopic
 
     // EVENT HANDLERS
     const deleteTopicHandler = async()=> {
-        await deleteTopicfunc(main?.userId, sec.id)
+        if (!mains.main) {
+            return
+        }
+        await deleteTopicfunc(mains.main?.userId, sec.id)
         setDeleteAlert("none")
     }
 
@@ -49,7 +51,7 @@ const Topic = ({main, sec, topicList, topic, setTopic, setTopicList, deleteTopic
     },[edit])
 
     const editTopicHandler = async() => {
-        if (!topicList || !main || !newName) {
+        if (!topicList || !mains.main || !newName) {
             return
         }
         const newTopic = await editTopic({variables:{topicId:sec.id, newName:newName}})
@@ -60,8 +62,8 @@ const Topic = ({main, sec, topicList, topic, setTopic, setTopicList, deleteTopic
         newList[aiIndex] = newTopic.data.editTopic.name
         setTopicList(newList)
         setEdit(!edit)
-        if (sec.id === topic?.id) {
-            setTopic(newMainTopic)
+        if (sec.id === mains.topic?.id) {
+            setMains({...mains, topic: newMainTopic})
         }
     }
 

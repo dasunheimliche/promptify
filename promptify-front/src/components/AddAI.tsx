@@ -1,6 +1,6 @@
 import { useState, Dispatch } from 'react'
 
-import { User, AI } from '../types'
+import { User, AI, Mains } from '../types'
 
 import { useMutation } from '@apollo/client';
 import { ADD_AI } from '@/queries'
@@ -8,11 +8,12 @@ import { ADD_AI } from '@/queries'
 import style from '../styles/popups.module.css'
 
 interface AddAIProps {
+    mains       : Mains
     me          : User | undefined
     aiList      : AI[] | undefined
     setShowMenu : Dispatch<string>
     setAiList   : Dispatch<AI[]>
-    setMain     : Dispatch<AI>
+    setMains     : Dispatch<Mains>
     setMe       : Dispatch<User>
 }
 
@@ -27,7 +28,7 @@ interface addAiVariables {
     }
 }
 
-const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIProps)  => {
+const AddAI = ({mains, me, aiList, setAiList, setShowMenu, setMains, setMe } : AddAIProps)  => {
 
     // STATES
     const [name, setName] = useState<string>("")
@@ -65,7 +66,7 @@ const AddAI = ({ me, aiList, setAiList, setShowMenu, setMain, setMe } : AddAIPro
         
                 setMe(updatedMe);
                 setAiList(updatedAiList);
-                setMain(newAI.createAi);
+                setMains({ ...mains, main: newAI.createAi })
                 setShowMenu("none");
             }
         } catch (error) {

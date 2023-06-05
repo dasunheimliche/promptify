@@ -1,24 +1,18 @@
 import { useState, Dispatch } from 'react'
 
-import { Topic, Card, AI } from '../types'
+import { Topic, Card, AI, Mains } from '../types'
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
 
 import style from '../styles/popups.module.css'
 
-interface Mains {
-    main: AI | undefined
-    topic: Topic | undefined
-    currCard: Card | undefined
-  }
-
 interface AddPromptProps {
     setShowMenu: Dispatch<string>
-    topic: Topic | undefined
+    mains: Mains
     cardList: Card[] | undefined
     setCardList: Dispatch<Card[]>
-    setTopic: Dispatch<Topic>
+    setMains: Dispatch<Mains>
 }
 
 interface addCardData {
@@ -38,7 +32,7 @@ interface addCardVariables {
     }
 }
 
-const AddStack = ({cardList, setCardList, topic, setShowMenu, setTopic} : AddPromptProps)=> {
+const AddStack = ({cardList, setCardList, mains, setShowMenu, setMains} : AddPromptProps)=> {
 
     const [stackTitle, setStackTitle] = useState<string>("")
     const [count, setCount] = useState<number>(0)
@@ -69,13 +63,13 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu, setTopic} : AddPro
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
     
-        if (!topic || !stack || !cardList) {
+        if (!mains.topic || !stack || !cardList) {
             return;
         }
     
         const variables = {
-            topicId: topic.id,
-            aiId: topic.aiId,
+            topicId: mains.topic.id,
+            aiId: mains.topic.aiId,
             card: {
                 title: stackTitle,
                 prompts: stack,
@@ -93,9 +87,9 @@ const AddStack = ({cardList, setCardList, topic, setShowMenu, setTopic} : AddPro
     
             setCardList(copied);
     
-            let t = { ...topic };
+            let t = { ...mains.topic };
             t.cards = t.cards ? [...t.cards, newCard.data.createCard.id] : [newCard.data.createCard.id];
-            setTopic(t);
+            setMains({...mains, topic: t});
     
             setShowMenu("none");
         } catch (error) {

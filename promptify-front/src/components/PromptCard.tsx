@@ -3,7 +3,7 @@ import { Dispatch, useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
 
-import { Card, Topic } from '../types'
+import { Card, Mains } from '../types'
 
 import DeleteAlert from './DeleteAlert'
 import EditPrompt from './EditPrompt'
@@ -12,15 +12,13 @@ import style from '../styles/prompt.module.css'
 interface PromptProps {
     card: Card
     cardList: Card[]
-    topic: Topic | undefined
-    currentCard: Card | undefined
-    setCurrentCard: Dispatch<Card | undefined>
+    mains: Mains
     setCardList: Dispatch<Card[]>
     setShowPS: Dispatch<boolean>
-    setTopic: Dispatch<Topic>
+    setMains: Dispatch<Mains>
 }
 
-const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCardList, setShowPS, setTopic} : PromptProps)=> {
+const PromptCard = ({card, mains, cardList, setCardList, setShowPS, setMains} : PromptProps)=> {
     // STATE
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
     const [edit,        setEdit]        = useState<boolean>(false)
@@ -32,19 +30,19 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
 
     // EVENT HANDLER
     const openCardHandler = async()=> {
-        await setCurrentCard(card)
+        setMains({...mains, currCard: card})
         setShowPS(true)
 
-        if (card.id === currentCard?.id) {
+        if (card.id === mains.currCard?.id) {
             setShowPS(false)
-            setCurrentCard(undefined)
+            setMains({...mains, currCard: undefined})
         }
     }
 
     const deleteCardfunc = async (cardId:string, topicId:string)=> {
         const deleted = await deleteCard({variables: {cardId, topicId}})
 
-        if (!topic) {
+        if (!mains.topic) {
             return
         }
 
@@ -53,19 +51,19 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
             setCardList(newCardList)
         }
 
-        let t = {...topic}
+        let t = {...mains.topic}
         let c = t.cards?.filter(id => id !== topicId)
         t.cards = c
 
-        setTopic(t)
+        setMains({...mains, topic: t})
 
     }
 
     const deleteCardHandler = ()=> {
-        if (!card || !topic) {
+        if (!card || !mains.topic) {
             return
         }
-        deleteCardfunc(card.id, topic.id)
+        deleteCardfunc(card.id, mains.topic.id)
         setDeleteAlert("none")
     }
 
@@ -83,9 +81,9 @@ const PromptCard = ({card, topic, cardList, currentCard, setCurrentCard, setCard
 
 
     return (
-        <div className={card.prompts.length > 1? (card.id === currentCard?.id? `${style.prompt} ${style.stack} ${style.selected}`:`${style.prompt} ${style.stack}`) : (card.id === currentCard?.id? `${style.prompt} ${style.selected}` :style.prompt) } >
+        <div className={card.prompts.length > 1? (card.id === mains.currCard?.id? `${style.prompt} ${style.stack} ${style.selected}`:`${style.prompt} ${style.stack}`) : (card.id === mains.currCard?.id? `${style.prompt} ${style.selected}` :style.prompt) } >
             {(deleteAlert === "prompt") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteCardHandler} loading={DCloading}/>}
-            {edit && <EditPrompt card={card} currentCard={currentCard} cardList={cardList} edit={edit} setCardList={setCardList} setEdit={setEdit} setCurrentCard={setCurrentCard}/>}
+            {edit && <EditPrompt card={card} mains={mains} cardList={cardList} edit={edit} setCardList={setCardList} setEdit={setEdit} setMains={setMains}/>}
             <div className='p' onClick={openCardHandler}>
                 <div className={style.title}>{card.title}</div>
                 <div className={style.content}>{card.prompts[0].content}</div>

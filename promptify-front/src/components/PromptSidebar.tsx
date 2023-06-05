@@ -1,36 +1,36 @@
 import { useEffect, useState, Dispatch } from 'react'
 
-import { Card } from '../types'
+import { Card, Mains } from '../types'
 
 import style from '../styles/promptSidebar.module.css'
 
 interface PromptSidebarProps {
-    currCard: Card | undefined
+    mains: Mains
     showPS: boolean
     setShowPS: Dispatch<boolean>
-    setCurrentCard: Dispatch<Card | undefined>
+    setMains: Dispatch<Mains>
 }
 
 
-const PromptSidebar = ({currCard, setShowPS, showPS, setCurrentCard} : PromptSidebarProps)=> {
+const PromptSidebar = ({mains, setShowPS, showPS, setMains} : PromptSidebarProps)=> {
 
 
-    const [card, setCard] = useState<Card | undefined>(currCard)
+    const [card, setCard] = useState<Card | undefined>(mains.currCard)
     const [index, setIndex] = useState<number>(0)
 
 
     useEffect(()=> {
         setIndex(0)
-        setCard(currCard)
-    }, [currCard])
+        setCard(mains.currCard)
+    }, [mains.currCard])
 
     const clear = ()=> {
-        setCard(currCard)
+        setCard(mains.currCard)
     }
 
     const restart = ()=> {
         setIndex(0)
-        setCard(currCard)
+        setCard(mains.currCard)
     }
 
     const copy = ()=> {
@@ -48,7 +48,7 @@ const PromptSidebar = ({currCard, setShowPS, showPS, setCurrentCard} : PromptSid
 
     const close = ()=> {
         setShowPS(false)
-        setCurrentCard(undefined)
+        setMains({...mains, currCard: undefined})
     }
 
     const forward = ()=> {
@@ -70,7 +70,7 @@ const PromptSidebar = ({currCard, setShowPS, showPS, setCurrentCard} : PromptSid
 
 
     return (
-        <div style={!showPS? {} : {}} className={(currCard !== undefined && showPS == true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
+        <div style={!showPS? {} : {}} className={(mains.currCard !== undefined && showPS == true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
             <div className={style.header}>
                 <span className={`${style[`back-button`]} p`} onClick={close}></span>
                 <div className={style.buttons}>
@@ -80,7 +80,7 @@ const PromptSidebar = ({currCard, setShowPS, showPS, setCurrentCard} : PromptSid
                 </div>
             </div>
             <div className={style.content}>
-                <div className={style[`content-title`]}>{currCard?.title}</div>
+                <div className={style[`content-title`]}>{mains.currCard?.title}</div>
                 <div className={style[`content-subtitle-container`]}>
                     {(card && card.prompts.length > 1) && <div>{`${index + 1} - ${card.prompts[index].title}`}</div>}
                 </div>

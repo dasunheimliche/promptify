@@ -10,7 +10,7 @@ import { ME } from '@/queries'
 
 /* TYPES */
 
-import { User, Topic, Card, AI } from '../types'
+import { User, Topic, Card, AI, Mains } from '../types'
 
 /* COMPONENTES */
 import MainSidebar from "@/components/MainSidebar";
@@ -31,12 +31,6 @@ interface meData {
   me: User
 }
 
-interface Mains {
-  main: AI | undefined
-  topic: Topic | undefined
-  currCard: Card | undefined
-}
-
 export default function Me() {
 
 
@@ -46,16 +40,10 @@ export default function Me() {
   }
   // const client = useApolloClient()
 
-  // STATES THAT CONTROLS ACTIVATED ITEMS
-  // const [mains, setMains] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined});
-
-  const [main,     setMain       ] = useState<AI    | undefined>(undefined)
-  const [topic,    setTopic      ] = useState<Topic | undefined>(undefined)
-  const [currCard, setCurrentCard] = useState<Card  | undefined>(undefined)
-
-  const [profile,  setProfile    ] = useState<boolean>(true)
+  const [mains, setMains] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined, profile: true});
 
   // STATES WHICH CONTROLS VISIVILITY
+  // const [visibility, setVisibility] = useState({showMenu:"none", showSS:true, showPS:false})
 
   const [showMenu, setShowMenu] = useState<string>("none")
   const [showSS,   setShowSS  ] = useState<boolean>(true)
@@ -127,9 +115,9 @@ export default function Me() {
     <div className={style.main}>
       {showMenu !== "none" && 
         <div className={style[`opt-mode`]}>
-          {showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}      setShowMenu={setShowMenu}  setMain={setMain}  setMe={setMe}/>}
-          {showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}  setTopic={setTopic} />}
-          {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  topic={topic}  setCardList={setCardList}  setShowMenu={setShowMenu}  setTopic={setTopic} />}
+          {showMenu === "add ai"      &&  <AddAI mains={mains}      aiList={aiList}      me={me}        setAiList={setAiList}      setShowMenu={setShowMenu}  setMains={setMains}  setMe={setMe}/>}
+          {showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  mains={mains}  setCardList={setCardList}  setShowMenu={setShowMenu}  setMains={setMains} />}
+          {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  mains={mains}  setCardList={setCardList}  setShowMenu={setShowMenu}  setMains={setMains} />}
         </div>
       }
 
@@ -137,14 +125,11 @@ export default function Me() {
 
       <MainSidebar 
         me           = {me          } 
-        main         = {main        }
-        profile      = {profile     }
+        mains         = {mains       }
         aiList       = {aiList      }   
         topicList    = {topicList   } 
         showSS       = {showSS      } 
-        setMain      = {setMain     }
-        setTopic     = {setTopic    } 
-        setProfile   = {setProfile  }  
+        setMains      = {setMains     } 
         setAiList    = {setAiList   } 
         setTopicList = {setTopicList}
         setShowSS    = {setShowSS   } 
@@ -152,15 +137,14 @@ export default function Me() {
       />
       <SecSidebar 
         me           = {me          } 
-        main         = {main        } 
-        topic        = {topic       } 
-        profile      = {profile     } 
+ 
+        mains        = {mains       } 
         aiList       = {aiList      } 
         topicList    = {topicList   }
         showSS       = {showSS      } 
         setMe        = {setMe       }
-        setMain      = {setMain     }
-        setTopic     = {setTopic    }
+
+        setMains     = {setMains    }
         setAiList    = {setAiList   } 
         setTopicList = {setTopicList} 
         setCardList  = {setCardList } 
@@ -168,22 +152,18 @@ export default function Me() {
         signOff      = {signOff     }
       />
       <div className={style[`main-content`]} >
-        <MainContentMenu topic={topic} />
+        <MainContentMenu mains={mains} />
         <MainContentGrid 
-          main           = {main          } 
-          topic          = {topic && topic} 
-          currentCard    = {currCard      } 
-          profile        = {profile       } 
+          mains          = {mains} 
           cardList       = {cardList      } 
           columns        = {columns       } 
-          setTopic       = {setTopic      }
-          setCurrentCard = {setCurrentCard} 
+          setMains       = {setMains      }
           setCardList    = {setCardList   } 
           setShowPS      = {setShowPS     } 
           setShowMenu    = {setShowMenu   }
         />
       </div>
-      <PromptSidebar currCard={currCard} setShowPS={setShowPS} showPS={showPS} setCurrentCard={setCurrentCard}/>
+      <PromptSidebar mains={mains} setShowPS={setShowPS} showPS={showPS} setMains={setMains}/>
     </div>
   )
 }

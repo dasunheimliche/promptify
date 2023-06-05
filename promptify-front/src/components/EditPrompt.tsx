@@ -4,22 +4,23 @@ import { Card, Prompt } from '@/types'
 
 import { useMutation } from '@apollo/client'
 import { EDIT_CARD } from '@/queries'
+import { Mains } from '@/types'
 
 import style from '../styles/popups.module.css'
 
 interface EditPRomptProps {
     card: Card
-    currentCard: Card | undefined
+    mains: Mains
     cardList: Card[]
     edit: boolean
-    setCurrentCard: Dispatch<Card>
+    setMains: Dispatch<Mains>
     setCardList: Dispatch<Card[]>
     setEdit: Dispatch<boolean>
 }
 
 type mode = "stack" | "prompt"
 
-const EditPrompt = ({card, currentCard, cardList, setEdit, setCardList, setCurrentCard} : EditPRomptProps)=> {
+const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : EditPRomptProps)=> {
     const [mode, setMode] = useState<mode>(card.prompts.length > 1? "stack" : "prompt")
 
     // ESTADOS
@@ -97,8 +98,8 @@ const EditPrompt = ({card, currentCard, cardList, setEdit, setCardList, setCurre
   
         setCardList(newCardList)
 
-        if (card.id === currentCard?.id) {
-            setCurrentCard(newCard.data.editCard)
+        if (card.id === mains.currCard?.id) {
+            setMains({...mains, currCard: newCard.data.editCard})
         }
         setEdit(false)
     }

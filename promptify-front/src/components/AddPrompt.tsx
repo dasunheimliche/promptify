@@ -1,21 +1,19 @@
 
 import { useState, Dispatch } from 'react'
 
-import { Topic, Card } from '../types'
+import { Topic, Card, Mains } from '../types'
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
 
 import style from '../styles/popups.module.css'
 
-
-
 interface AddPromptProps {
     setShowMenu : Dispatch<string>
-    topic       : Topic  | undefined
+    mains       : Mains
     cardList    : Card[] | undefined
     setCardList : Dispatch<Card[]>
-    setTopic    : Dispatch<Topic>
+    setMains    : Dispatch<Mains>
 }
 
 interface addCardData {
@@ -36,7 +34,7 @@ interface addCardVariables {
     }
 }
 
-const AddPrompt = ({cardList, topic, setCardList, setShowMenu, setTopic} : AddPromptProps)=> {
+const AddPrompt = ({cardList, mains, setCardList, setShowMenu, setMains} : AddPromptProps)=> {
 
     const [ title,   setTitle    ] = useState<string>("")
     const [ content, setContent ] = useState<string>("")
@@ -51,11 +49,11 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu, setTopic} : AddPr
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
       
-        if (!topic) {
+        if (!mains.topic) {
             return;
         }
       
-        const { id, aiId } = topic;
+        const { id, aiId } = mains.topic;
       
         const variables = {
             topicId: id,
@@ -81,9 +79,9 @@ const AddPrompt = ({cardList, topic, setCardList, setShowMenu, setTopic} : AddPr
         
                 setCardList(updatedCardList);
         
-                const updatedTopic = { ...topic };
+                const updatedTopic = { ...mains.topic };
                 updatedTopic.cards = updatedTopic.cards?.concat(newCard.createCard.id);
-                setTopic(updatedTopic);
+                setMains({...mains, topic: updatedTopic});
                 setShowMenu("none");
             }
         } catch (error) {
