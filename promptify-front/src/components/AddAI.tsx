@@ -1,8 +1,10 @@
 import { useState, Dispatch } from 'react'
-import { User, AI } from '../types'
-import { useMutation } from '@apollo/client';
 
+import { User, AI } from '../types'
+
+import { useMutation } from '@apollo/client';
 import { ADD_AI } from '@/queries'
+
 import style from '../styles/popups.module.css'
 
 interface AddAIProps {

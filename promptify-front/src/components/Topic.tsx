@@ -1,16 +1,15 @@
-import { Topic, AI } from "@/types"
+
 import { Dispatch, useState, useRef, useEffect } from "react"
-import DeleteAlert from "./DeleteAlert"
-import style from '../styles/secSidebar.module.css'
+
 import { useMutation } from '@apollo/client'
 import { EDIT_TOPIC } from "@/queries"
 
-interface addTopicVariables {
-    aiId: string
-    topic: {
-        name: string
-    }
-}
+import { Topic, AI } from "@/types"
+
+import DeleteAlert from "./DeleteAlert"
+
+import style from '../styles/secSidebar.module.css'
+
 
 interface TopicProps {
     main: AI

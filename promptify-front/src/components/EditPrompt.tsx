@@ -1,8 +1,10 @@
-
-import { EDIT_CARD } from '@/queries'
-import { Card, Prompt } from '@/types'
-import { useMutation } from '@apollo/client'
 import { Dispatch, useState } from 'react'
+
+import { Card, Prompt } from '@/types'
+
+import { useMutation } from '@apollo/client'
+import { EDIT_CARD } from '@/queries'
+
 import style from '../styles/popups.module.css'
 
 interface EditPRomptProps {

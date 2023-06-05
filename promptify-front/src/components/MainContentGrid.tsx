@@ -1,13 +1,14 @@
 import { Dispatch, useEffect, useState } from 'react'
+
 import { Card, AI, Topic } from '../types'
-import { GET_CARDS } from '@/queries'
+
 import { useQuery } from '@apollo/client';
+import { GET_CARDS } from '@/queries'
 
 import PromptCard from './PromptCard'
 import AddCardButton from './AddCardButton'
 
 import style from '../styles/mainContent.module.css'
-import { profile } from 'console';
 
 interface MainContentGridProps {
     main: AI | undefined
@@ -27,9 +28,6 @@ interface getCardsData {
     getCards: Card[]
 }
 
-// interface getCardsVariables {
-//     list: string[] | undefined
-// }
 interface getCardsVariables {
     topicId: string | undefined
 }
@@ -37,10 +35,6 @@ interface getCardsVariables {
 const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMenu, setCurrentCard, setShowPS, setCardList, setTopic }: MainContentGridProps)=> {
     
     let [changed, setChanged] = useState<boolean>(false)
-    
-    // const { loading: cardLoading, error: cardError, data: cardData } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
-    //     variables: {list:topic?.cards}
-    // });
 
     const { loading: cardLoading, error: cardError, data: cardData, refetch } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
         variables: {topicId:topic?.id}
@@ -98,7 +92,6 @@ const MainContentGrid = ({cardList, currentCard, main, topic, columns, setShowMe
             <div  id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid} ${style['no-favs']}` : `${style.grid} ${style['no-favs']} ${style.changed2}`}> 
                 {loadPrompts()}
             </div>
-            {/* {(cardList === undefined && !profile) && <div className={style.loading}></div>} */}
             {topic !== undefined && <AddCardButton  setShowMenu={setShowMenu}/>}
         </div>
     )

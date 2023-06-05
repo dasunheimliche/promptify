@@ -1,10 +1,14 @@
 import { useState, Dispatch, useEffect, useRef } from 'react'
 import { useRouter } from "next/router"
+
 import { AI, Topic, User, Card } from '../types'
-import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
+
 import { useQuery, useMutation } from '@apollo/client'
+import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
+
 import DeleteAlert from './DeleteAlert'
 import TopicComponent from './Topic'
+
 import style from '../styles/secSidebar.module.css'
 
 interface SecSideBarProps {
@@ -332,11 +336,6 @@ const SecSidebar = ({me, main, topic, aiList, showSS, profile, signOff,  setTopi
     const setEditHandler = ()=> {
         setEdit(!edit)
     }
-
-    // const signOff = ()=> {
-    //     sessionStorage.clear()
-    //     setToken(undefined)
-    // }
 
     const doNothing = (e : any)=> {
         e.preventDefacult()

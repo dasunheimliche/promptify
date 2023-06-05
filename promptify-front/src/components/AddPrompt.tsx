@@ -1,8 +1,14 @@
-import { ADD_CARD } from '@/queries'
+
 import { useState, Dispatch } from 'react'
+
 import { Topic, Card } from '../types'
+
 import { useMutation } from '@apollo/client';
+import { ADD_CARD } from '@/queries'
+
 import style from '../styles/popups.module.css'
+
+
 
 interface AddPromptProps {
     setShowMenu : Dispatch<string>

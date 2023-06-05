@@ -1,5 +1,7 @@
 import { useEffect, Dispatch } from 'react'
+
 import { AI, User, Topic } from '../types'
+
 import { GET_AIS } from '@/queries'
 import { useQuery } from '@apollo/client';
 

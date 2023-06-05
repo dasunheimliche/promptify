@@ -31,6 +31,12 @@ interface meData {
   me: User
 }
 
+interface Mains {
+  main: AI | undefined
+  topic: Topic | undefined
+  currCard: Card | undefined
+}
+
 export default function Me() {
 
 
@@ -38,9 +44,11 @@ export default function Me() {
   if (typeof window !== "undefined") {
     tkn = sessionStorage.getItem('user-token')
   }
-  const client = useApolloClient()
+  // const client = useApolloClient()
 
   // STATES THAT CONTROLS ACTIVATED ITEMS
+  // const [mains, setMains] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined});
+
   const [main,     setMain       ] = useState<AI    | undefined>(undefined)
   const [topic,    setTopic      ] = useState<Topic | undefined>(undefined)
   const [currCard, setCurrentCard] = useState<Card  | undefined>(undefined)

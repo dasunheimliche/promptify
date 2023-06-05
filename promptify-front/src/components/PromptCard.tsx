@@ -1,7 +1,10 @@
 import { Dispatch, useState } from 'react'
-import { Card, Topic } from '../types'
-import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
+
 import { useMutation } from '@apollo/client'
+import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
+
+import { Card, Topic } from '../types'
+
 import DeleteAlert from './DeleteAlert'
 import EditPrompt from './EditPrompt'
 import style from '../styles/prompt.module.css'

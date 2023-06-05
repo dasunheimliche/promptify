@@ -1,5 +1,7 @@
 import { useEffect, useState, Dispatch } from 'react'
-import { Prompt, Card } from '../types'
+
+import { Card } from '../types'
+
 import style from '../styles/promptSidebar.module.css'
 
 interface PromptSidebarProps {
