@@ -1,6 +1,6 @@
 import { useState, Dispatch } from 'react'
 
-import { User, AI, Mains } from '../types'
+import { User, AI, Mains, Visibility } from '../types'
 
 import { useMutation } from '@apollo/client';
 import { ADD_AI } from '@/queries'
@@ -8,13 +8,12 @@ import { ADD_AI } from '@/queries'
 import style from '../styles/popups.module.css'
 
 interface AddAIProps {
-    mains       : Mains
-    me          : User | undefined
-    aiList      : AI[] | undefined
-    setShowMenu : Dispatch<string>
-    setAiList   : Dispatch<AI[]>
-    setMains     : Dispatch<Mains>
-    setMe       : Dispatch<User>
+    me            : User | undefined
+    aiList        : AI[] | undefined
+    setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
+    setAiList     : Dispatch<AI[]>
+    setMains      : React.Dispatch<React.SetStateAction<Mains>>
+    setMe         : Dispatch<User>
 }
 
 interface addAiData {
@@ -28,7 +27,7 @@ interface addAiVariables {
     }
 }
 
-const AddAI = ({mains, me, aiList, setAiList, setShowMenu, setMains, setMe } : AddAIProps)  => {
+const AddAI = ({me, aiList, setAiList, setVisibility, setMains, setMe } : AddAIProps)  => {
 
     // STATES
     const [name, setName] = useState<string>("")
@@ -40,7 +39,7 @@ const AddAI = ({mains, me, aiList, setAiList, setShowMenu, setMains, setMe } : A
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
         e.preventDefault()
-        setShowMenu("none")
+        setVisibility(prev=>({...prev, showMenu: "none"}))
     }
 
     const addAI = async (e: React.FormEvent<HTMLDivElement>) => {
@@ -66,8 +65,8 @@ const AddAI = ({mains, me, aiList, setAiList, setShowMenu, setMains, setMe } : A
         
                 setMe(updatedMe);
                 setAiList(updatedAiList);
-                setMains({ ...mains, main: newAI.createAi })
-                setShowMenu("none");
+                setMains(prev=>({...prev, main: newAI.createAi}))
+                setVisibility(prev=>({...prev, showMenu: "none"}))
             }
         } catch (error) {
             console.error(error);

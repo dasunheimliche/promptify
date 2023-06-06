@@ -1,7 +1,7 @@
 
 import { useState, Dispatch } from 'react'
 
-import { Topic, Card, Mains } from '../types'
+import { Visibility, Card, Mains } from '../types'
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
@@ -9,11 +9,11 @@ import { ADD_CARD } from '@/queries'
 import style from '../styles/popups.module.css'
 
 interface AddPromptProps {
-    setShowMenu : Dispatch<string>
-    mains       : Mains
-    cardList    : Card[] | undefined
-    setCardList : Dispatch<Card[]>
-    setMains    : Dispatch<Mains>
+    setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
+    mains         : Mains
+    cardList      : Card[] | undefined
+    setCardList   : Dispatch<Card[]>
+    setMains      : Dispatch<Mains>
 }
 
 interface addCardData {
@@ -34,7 +34,7 @@ interface addCardVariables {
     }
 }
 
-const AddPrompt = ({cardList, mains, setCardList, setShowMenu, setMains} : AddPromptProps)=> {
+const AddPrompt = ({cardList, mains, setCardList, setVisibility, setMains} : AddPromptProps)=> {
 
     const [ title,   setTitle    ] = useState<string>("")
     const [ content, setContent ] = useState<string>("")
@@ -43,7 +43,7 @@ const AddPrompt = ({cardList, mains, setCardList, setShowMenu, setMains} : AddPr
 
     const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
-        setShowMenu("none")
+        setVisibility(prev=>({...prev, showMenu: "none"}))
     }
 
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
@@ -81,8 +81,8 @@ const AddPrompt = ({cardList, mains, setCardList, setShowMenu, setMains} : AddPr
         
                 const updatedTopic = { ...mains.topic };
                 updatedTopic.cards = updatedTopic.cards?.concat(newCard.createCard.id);
-                setMains({...mains, topic: updatedTopic});
-                setShowMenu("none");
+                setMains({...mains, topic: updatedTopic})
+                setVisibility(prev=>({...prev, showMenu: "none"}))
             }
         } catch (error) {
             console.error(error);

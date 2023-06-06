@@ -1,6 +1,6 @@
 import { useState, Dispatch } from 'react'
 
-import { Topic, Card, AI, Mains } from '../types'
+import { Card, Mains, Visibility } from '../types'
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
@@ -8,7 +8,7 @@ import { ADD_CARD } from '@/queries'
 import style from '../styles/popups.module.css'
 
 interface AddPromptProps {
-    setShowMenu: Dispatch<string>
+    setVisibility: React.Dispatch<React.SetStateAction<Visibility>>
     mains: Mains
     cardList: Card[] | undefined
     setCardList: Dispatch<Card[]>
@@ -32,7 +32,7 @@ interface addCardVariables {
     }
 }
 
-const AddStack = ({cardList, setCardList, mains, setShowMenu, setMains} : AddPromptProps)=> {
+const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddPromptProps)=> {
 
     const [stackTitle, setStackTitle] = useState<string>("")
     const [count, setCount] = useState<number>(0)
@@ -46,7 +46,7 @@ const AddStack = ({cardList, setCardList, mains, setShowMenu, setMains} : AddPro
     // EVENT HANDLERS
     const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
-        setShowMenu("none")
+        setVisibility(prev=>({...prev, showMenu: "none"}))
     }
 
     const addToStack = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -91,7 +91,7 @@ const AddStack = ({cardList, setCardList, mains, setShowMenu, setMains} : AddPro
             t.cards = t.cards ? [...t.cards, newCard.data.createCard.id] : [newCard.data.createCard.id];
             setMains({...mains, topic: t});
     
-            setShowMenu("none");
+            setVisibility(prev=>({...prev, showMenu: "none"}))
         } catch (error) {
             console.error("Error:", error);
         }

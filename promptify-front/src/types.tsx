@@ -58,3 +58,9 @@ export interface Mains {
     currCard: Card | undefined
     profile: boolean
 }
+
+export interface Visibility {
+    showMenu:"none" | "add ai" | "add prompt" | "add stack"
+    showSS:boolean
+    showPS:boolean
+}

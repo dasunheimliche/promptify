@@ -1,18 +1,18 @@
 import { useEffect, useState, Dispatch } from 'react'
 
-import { Card, Mains } from '../types'
+import { Card, Mains, Visibility } from '../types'
 
 import style from '../styles/promptSidebar.module.css'
 
 interface PromptSidebarProps {
     mains: Mains
-    showPS: boolean
-    setShowPS: Dispatch<boolean>
+    visibility: Visibility
+    setVisibility: Dispatch<Visibility>
     setMains: Dispatch<Mains>
 }
 
 
-const PromptSidebar = ({mains, setShowPS, showPS, setMains} : PromptSidebarProps)=> {
+const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSidebarProps)=> {
 
 
     const [card, setCard] = useState<Card | undefined>(mains.currCard)
@@ -47,7 +47,7 @@ const PromptSidebar = ({mains, setShowPS, showPS, setMains} : PromptSidebarProps
     }
 
     const close = ()=> {
-        setShowPS(false)
+        setVisibility({...visibility, showPS: false})
         setMains({...mains, currCard: undefined})
     }
 
@@ -70,7 +70,7 @@ const PromptSidebar = ({mains, setShowPS, showPS, setMains} : PromptSidebarProps
 
 
     return (
-        <div style={!showPS? {} : {}} className={(mains.currCard !== undefined && showPS == true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
+        <div style={!visibility.showPS? {} : {}} className={(mains.currCard !== undefined && visibility.showPS == true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
             <div className={style.header}>
                 <span className={`${style[`back-button`]} p`} onClick={close}></span>
                 <div className={style.buttons}>

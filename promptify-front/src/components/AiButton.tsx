@@ -1,28 +1,28 @@
 import { AI } from '../types'
 import style from '../styles/mainSidebar.module.css'
 
-const AiButton = ({ai, mains, setMains, setShowSS, showSS, setTopicList } : any)=> {
+const AiButton = ({ai, mains, setMains, setVisibility, visibility, setTopicList } : any)=> {
 
     const clickHandler = (ai: AI)=> {
 
         setMains({...mains, main: ai, profile: false})
 
-        if (showSS && mains.profile) {
+        if (visibility.showSS && mains.profile) {
             return
         }
 
-        if (showSS && (ai.name !== mains.main?.name)) {
+        if (visibility.showSS && (ai.name !== mains.main?.name)) {
             setTopicList(undefined)
             return
         }
 
-        if (showSS && (ai.name === mains.main?.name)) {
-            setShowSS(false)
+        if (visibility.showSS && (ai.name === mains.main?.name)) {
+            setVisibility({...visibility, showSS: false})
             return
         }
 
-        if (!showSS) {
-            setShowSS(true)
+        if (!visibility.showSS) {
+            setVisibility({...visibility, showSS: true})
         }
     }
 

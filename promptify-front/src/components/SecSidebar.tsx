@@ -1,7 +1,7 @@
 import { useState, Dispatch, useEffect, useRef } from 'react'
 import { useRouter } from "next/router"
 
-import { AI, Topic, User, Card, Mains } from '../types'
+import { AI, Topic, User, Card, Mains, Visibility } from '../types'
 
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
@@ -15,13 +15,13 @@ interface SecSideBarProps {
     me: User | undefined
 
     mains: Mains
-    showSS: boolean
+    visibility: Visibility
     aiList: AI[] | undefined
     signOff: ()=> void
     setAiList: Dispatch<AI[]>
     setMains: Dispatch<Mains>
 
-    setShowSS: Dispatch<boolean>
+    setVisibility: Dispatch<Visibility>
     setMe: Dispatch<User>
     
     topicList: Topic[] | undefined
@@ -50,7 +50,7 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, mains, aiList, showSS, signOff,  setMains, setAiList, setMe, setShowSS, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
+const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiList, setMe, setVisibility, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic]    = useState<string>("")
     const [show,        setShow]        = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
@@ -75,20 +75,17 @@ const SecSidebar = ({me, mains, aiList, showSS, signOff,  setMains, setAiList, s
     // });
 
     const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-        variables: { mainId: mains.main?.id }
+        variables: { mainId: mains.main?.id },
+        skip: !mains.main?.id
     });
 
 
     // USE EFFECT    
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const reff = async()=> {
-        refetch()
-    }
-
     useEffect(()=> {
-        reff()
-    }, [showSS, topicList])
+        refetch()
+    }, [visibility.showSS, topicList])
 
     
 
@@ -189,7 +186,7 @@ const SecSidebar = ({me, mains, aiList, showSS, signOff,  setMains, setAiList, s
             refetch()
             
             if (isMobile) {
-                setShowSS(false)
+                setVisibility({...visibility, showSS: false})
             }
             
         }
@@ -227,10 +224,9 @@ const SecSidebar = ({me, mains, aiList, showSS, signOff,  setMains, setAiList, s
             }
 
             refetch()
-            
-
+    
             if (isMobile) {
-                setShowSS(false)
+                setVisibility({...visibility, showSS: false})
             }
         }
         const newTopicList = topicList?.filter(t=> t?.fav !== false )
@@ -339,7 +335,7 @@ const SecSidebar = ({me, mains, aiList, showSS, signOff,  setMains, setAiList, s
 
 
     return (
-        <div style={!showSS? {} : {}} className={showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
+        <div style={!visibility.showSS? {} : {}} className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} loading={DAloading}/>}
             {mains.profile && 
                 <div className={style['profile-card']}>

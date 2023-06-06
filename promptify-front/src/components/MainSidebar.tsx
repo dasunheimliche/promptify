@@ -1,6 +1,6 @@
 import { useEffect, Dispatch } from 'react'
 
-import { AI, User, Topic, Mains } from '../types'
+import { AI, User, Topic, Mains, Visibility } from '../types'
 
 import { GET_AIS } from '@/queries'
 import { useQuery } from '@apollo/client';
@@ -11,14 +11,13 @@ import style from '../styles/mainSidebar.module.css'
  
 interface MainSideBarProps {
     mains: Mains
-    showSS: boolean
     me: User | undefined
     aiList: AI[] | undefined
     topicList: Topic[] | undefined
+    visibility: Visibility
+    setVisibility: Dispatch<Visibility>
     setMains: Dispatch<Mains>
     setAiList: Dispatch<AI[]>
-    setShowMenu: Dispatch<string>
-    setShowSS: Dispatch<boolean>
     setTopicList: Dispatch<Topic[] | undefined>
 }
 
@@ -32,10 +31,11 @@ interface aiListVariables {
 
 
 
-const MainSidebar = ({ aiList, mains, showSS, me, topicList, setMains, setShowMenu, setShowSS, setAiList, setTopicList}: MainSideBarProps)=> {
+const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVisibility, setAiList, setTopicList}: MainSideBarProps)=> {
 
-    const { loading: aiLoading, error: aiError, data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
-        variables: {meId: me?.id}
+    const { data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
+        variables: {meId: me?.id},
+        skip: !me?.id
     });
     
     useEffect(()=> {
@@ -44,24 +44,20 @@ const MainSidebar = ({ aiList, mains, showSS, me, topicList, setMains, setShowMe
         }
     }, [aiData]) // eslint-disable-line
 
-    const refff = async()=> {
-        aiRefetch()
-    }
-
     useEffect(()=> {
-
-        refff()
+        aiRefetch()
     }, [me]) // eslint-disable-line
 
 
     
     // EVENT HANDLERS
+
     const loadAIs = ()=> {
         if (!aiList) {
             return
         }
         const newAiList = aiList.filter(ai=> ai.fav !== true)
-        return newAiList?.map((ai: AI) => <AiButton mains={mains} topicList={topicList} setMains={setMains} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} setTopicList={setTopicList} />)
+        return newAiList?.map((ai: AI) => <AiButton mains={mains} topicList={topicList} setMains={setMains} setVisibility={setVisibility} visibility={visibility} key={ai.id} ai={ai} setTopicList={setTopicList} />)
     }
 
     const loadFavAis = ()=> {
@@ -69,12 +65,12 @@ const MainSidebar = ({ aiList, mains, showSS, me, topicList, setMains, setShowMe
             return
         }
         const newAiList = aiList?.filter(ai => ai.fav === true)
-        return newAiList?.map((ai: AI) => <AiButton mains={mains} topicList={topicList} setMains={setMains} setShowSS={setShowSS} showSS={showSS} key={ai.id} ai={ai} setTopicList={setTopicList} />)
+        return newAiList?.map((ai: AI) => <AiButton mains={mains} topicList={topicList} setMains={setMains} setVisibility={setVisibility} visibility={visibility} key={ai.id} ai={ai} setTopicList={setTopicList} />)
     }
 
     const openPanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
-        setShowMenu("add ai")
+        setVisibility({...visibility, showMenu: "add ai"})
     }
 
     const theresfavs = ()=> {
@@ -83,17 +79,17 @@ const MainSidebar = ({ aiList, mains, showSS, me, topicList, setMains, setShowMe
 
     const toProfile = ()=> {
 
-        if (mains.profile && showSS) {
+        if (mains.profile && visibility.showSS) {
             setMains({...mains, profile: false})
-            setShowSS(false)
+            setVisibility({...visibility, showSS: false})
         }
 
-        if (showSS) {
+        if (visibility.showSS) {
             setMains({...mains, profile: true})
         }
 
-        if (!showSS) {
-            setShowSS(true)
+        if (!visibility.showSS) {
+            setVisibility({...visibility, showSS:true})
             setMains({...mains, profile: true})
         }
     }
@@ -101,7 +97,7 @@ const MainSidebar = ({ aiList, mains, showSS, me, topicList, setMains, setShowMe
     return(
         <div className={style[`main-sidebar`]}>
             <div className={`${style.logo} p`}>Pfy</div>
-            <div className={(mains.profile && showSS)? `${style[`add-ai`]} ${style['selected-me']} p` :`${style[`add-ai`]} p`} onClick={toProfile}>ME</div>
+            <div className={(mains.profile && visibility.showSS)? `${style[`add-ai`]} ${style['selected-me']} p` :`${style[`add-ai`]} p`} onClick={toProfile}>ME</div>
             {(aiList && aiList.length > 0) && <div className={style[`ais-wrapper`]}>
                 {theresfavs() && 
                     <div className={style['favs-container']}>

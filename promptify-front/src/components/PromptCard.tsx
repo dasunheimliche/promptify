@@ -3,7 +3,7 @@ import { Dispatch, useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
 
-import { Card, Mains } from '../types'
+import { Card, Mains, Visibility } from '../types'
 
 import DeleteAlert from './DeleteAlert'
 import EditPrompt from './EditPrompt'
@@ -13,12 +13,13 @@ interface PromptProps {
     card: Card
     cardList: Card[]
     mains: Mains
+    visibility: Visibility
+    setVisibility: Dispatch<Visibility>
     setCardList: Dispatch<Card[]>
-    setShowPS: Dispatch<boolean>
     setMains: Dispatch<Mains>
 }
 
-const PromptCard = ({card, mains, cardList, setCardList, setShowPS, setMains} : PromptProps)=> {
+const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, setVisibility} : PromptProps)=> {
     // STATE
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
     const [edit,        setEdit]        = useState<boolean>(false)
@@ -31,10 +32,10 @@ const PromptCard = ({card, mains, cardList, setCardList, setShowPS, setMains} : 
     // EVENT HANDLER
     const openCardHandler = async()=> {
         setMains({...mains, currCard: card})
-        setShowPS(true)
+        setVisibility({...visibility, showPS: true})
 
         if (card.id === mains.currCard?.id) {
-            setShowPS(false)
+            setVisibility({...visibility, showPS: false})
             setMains({...mains, currCard: undefined})
         }
     }

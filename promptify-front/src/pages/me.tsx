@@ -1,30 +1,35 @@
-/* REACT IMPORTS */
+//** REACT IMPORTS
 import React, { useEffect, useState } from "react";
 
-/* NEXTJS IMPORTS */
+//** CUSTOM HOOKS
+import useColumns from '../hooks/useColumns'
+import useIsUserLoggedIn from "@/hooks/useIsLogguedIn";
+
+//** NEXTJS IMPORTS
 import { useRouter } from "next/router"
 
-/* GRAPHQL/APOLLO IMPORTS */
+//** GRAPHQL/APOLLO IMPORTS
 import { useQuery, useApolloClient } from "@apollo/client"
 import { ME } from '@/queries'
 
-/* TYPES */
+//** TYPES
 
-import { User, Topic, Card, AI, Mains } from '../types'
+import { User, Topic, Card, AI, Mains, Visibility } from '../types'
 
-/* COMPONENTES */
-import MainSidebar from "@/components/MainSidebar";
-import SecSidebar from "@/components/SecSidebar";
-import PromptSidebar from "@/components/PromptSidebar";
+//** FUNCTIONS
+import { getUserToken } from "@/utils/functions";
 
+//** COMPONENTES
+import MainSidebar     from "@/components/MainSidebar";
+import SecSidebar      from "@/components/SecSidebar";
+import PromptSidebar   from "@/components/PromptSidebar";
 import MainContentMenu from "@/components/MainContentMenu";
 import MainContentGrid from "@/components/MainContentGrid";
+import AddAI           from "@/components/AddAI";
+import AddPrompt       from "@/components/AddPrompt";
+import AddStack        from "@/components/AddStack";
 
-import AddAI from "@/components/AddAI";
-import AddPrompt from "@/components/AddPrompt";
-import AddStack from "@/components/AddStack";
-
-/* STYLES */
+//** STYLES
 import style from '../styles/me.module.css'
 
 interface meData {
@@ -33,50 +38,27 @@ interface meData {
 
 export default function Me() {
 
-
-  let tkn
-  if (typeof window !== "undefined") {
-    tkn = sessionStorage.getItem('user-token')
-  }
-  // const client = useApolloClient()
-
-  const [mains, setMains] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined, profile: true});
-
-  // STATES WHICH CONTROLS VISIVILITY
-  // const [visibility, setVisibility] = useState({showMenu:"none", showSS:true, showPS:false})
-
-  const [showMenu, setShowMenu] = useState<string>("none")
-  const [showSS,   setShowSS  ] = useState<boolean>(true)
-  const [showPS,   setShowPS  ] = useState<boolean>(false)
+  const [mains,      setMains      ] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined, profile: true});
+  const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
   
-  const [columns,  setColumns ] = useState<number>(3)
-  
-  // STATE WHICH SETS CURRENT USER
-  const [me,       setMe]       = useState<User   | undefined>(undefined);
-  const [token,    setToken]    = useState<string | undefined>(tkn? tkn : undefined)
+  //** STATE WHICH SETS CURRENT USER
+  const [me,         setMe        ] = useState<User    | undefined>(undefined);
 
-  // STATES WICH CONTROLS ITEM LISTS
-  const [aiList,   setAiList    ] = useState<AI[]    | undefined>(undefined)
-  const [cardList, setCardList  ] = useState<Card[]  | undefined>(undefined)
-  const [topicList, setTopicList] = useState<Topic[] | undefined>(undefined)
+  //** STATES WICH CONTROLS ITEM LISTS
+  const [aiList,     setAiList    ] = useState<AI[]    | undefined>(undefined)
+  const [cardList,   setCardList  ] = useState<Card[]  | undefined>(undefined)
+  const [topicList,  setTopicList ] = useState<Topic[] | undefined>(undefined)
 
-  // HOOKS
-  const router = useRouter()
+  //** HOOKS & CUSTOM HOOKS
+  const router    = useRouter()
+  const columns   = useColumns(visibility)
+  const client    = useApolloClient()
+  const isLoggued = useIsUserLoggedIn()
 
-  // QUERIES
-  const {data, refetch } = useQuery<meData>(ME)  
+  //** QUERIES
+  const { data, refetch } = useQuery<meData>(ME)  
 
-  // USE EFFECTS
-
-  useEffect(()=> {
-    const token: string | null = sessionStorage.getItem('user-token')
-    if (token === null) {
-      return
-    }    
-    setToken(token)
-    
-  }, []) // eslint-disable-line
-
+  //** USE EFFECTS
 
   useEffect(()=> {
     if (data) {
@@ -90,80 +72,67 @@ export default function Me() {
 
   useEffect(()=> {
     reef()
-    if (!token) {
+    if (!isLoggued) {
         router.push("/login")
     } 
-  }, [token]) // eslint-disable-line
-
-  useEffect(()=> {
-    if (showPS && showSS) {
-      setColumns(2)
-    } else if (!showPS && !showSS)  {
-      setColumns(4)
-    } else {
-      setColumns(3)
-    }
-  }, [showPS, showSS])
+  }, [isLoggued]) // eslint-disable-line
 
   const signOff = ()=> {
     sessionStorage.clear()
-    setToken(undefined)
-    // client.resetStore()
+    router.push("/login")
+    client.resetStore()
   }
   
   return (
     <div className={style.main}>
-      {showMenu !== "none" && 
+      {visibility.showMenu !== "none" && 
         <div className={style[`opt-mode`]}>
-          {showMenu === "add ai"      &&  <AddAI mains={mains}      aiList={aiList}      me={me}        setAiList={setAiList}      setShowMenu={setShowMenu}  setMains={setMains}  setMe={setMe}/>}
-          {showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  mains={mains}  setCardList={setCardList}  setShowMenu={setShowMenu}  setMains={setMains} />}
-          {showMenu === "add stack"   &&  <AddStack   cardList={cardList}  mains={mains}  setCardList={setCardList}  setShowMenu={setShowMenu}  setMains={setMains} />}
+          {visibility.showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}     setVisibility={setVisibility}  setMains={setMains}  setMe={setMe}/>}
+          {visibility.showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
+          {visibility.showMenu === "add stack"   &&  <AddStack   cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
         </div>
       }
 
       {aiList === undefined && <div className={style.loading}></div>}
 
       <MainSidebar 
-        me           = {me          } 
-        mains         = {mains       }
-        aiList       = {aiList      }   
-        topicList    = {topicList   } 
-        showSS       = {showSS      } 
+        me            = {me           } 
+        mains         = {mains        }
+        aiList        = {aiList       }   
+        topicList     = {topicList    } 
         setMains      = {setMains     } 
-        setAiList    = {setAiList   } 
-        setTopicList = {setTopicList}
-        setShowSS    = {setShowSS   } 
-        setShowMenu  = {setShowMenu } 
+        setAiList     = {setAiList    } 
+        setTopicList  = {setTopicList } 
+        visibility    = {visibility   }
+        setVisibility = {setVisibility}
       />
       <SecSidebar 
-        me           = {me          } 
- 
-        mains        = {mains       } 
-        aiList       = {aiList      } 
-        topicList    = {topicList   }
-        showSS       = {showSS      } 
-        setMe        = {setMe       }
-
-        setMains     = {setMains    }
-        setAiList    = {setAiList   } 
-        setTopicList = {setTopicList} 
-        setCardList  = {setCardList } 
-        setShowSS    = {setShowSS   } 
-        signOff      = {signOff     }
+        me            = {me           } 
+        mains         = {mains        } 
+        aiList        = {aiList       } 
+        topicList     = {topicList    }
+        visibility    = {visibility   } 
+        setMe         = {setMe        }
+        setMains      = {setMains     }
+        setAiList     = {setAiList    } 
+        setTopicList  = {setTopicList } 
+        setCardList   = {setCardList  } 
+        setVisibility = {setVisibility} 
+        signOff       = {signOff      }
       />
       <div className={style[`main-content`]} >
         <MainContentMenu mains={mains} />
         <MainContentGrid 
-          mains          = {mains} 
-          cardList       = {cardList      } 
-          columns        = {columns       } 
-          setMains       = {setMains      }
-          setCardList    = {setCardList   } 
-          setShowPS      = {setShowPS     } 
-          setShowMenu    = {setShowMenu   }
+          mains          = {mains        } 
+          cardList       = {cardList     } 
+          columns        = {columns      } 
+          visibility     = {visibility   }
+          setMains       = {setMains     }
+          setCardList    = {setCardList  } 
+          setVisibility  = {setVisibility}
         />
       </div>
-      <PromptSidebar mains={mains} setShowPS={setShowPS} showPS={showPS} setMains={setMains}/>
+      <PromptSidebar mains={mains} setVisibility={setVisibility} visibility={visibility} setMains={setMains}/>
     </div>
   )
 }
