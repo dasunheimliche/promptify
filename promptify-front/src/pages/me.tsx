@@ -16,9 +16,6 @@ import { ME } from '@/queries'
 
 import { User, Topic, Card, AI, Mains, Visibility } from '../types'
 
-//** FUNCTIONS
-import { getUserToken } from "@/utils/functions";
-
 //** COMPONENTES
 import MainSidebar     from "@/components/MainSidebar";
 import SecSidebar      from "@/components/SecSidebar";
