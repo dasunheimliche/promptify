@@ -38,7 +38,7 @@ const Login = ()=> {
     const router = useRouter()
 
     // USE MUTATION
-    const [ login, {data} ] = useMutation<loginData, loginVariables>(LOGIN, {
+    const [ login, {data, loading} ] = useMutation<loginData, loginVariables>(LOGIN, {
         onError: (error) => {
             if (error.graphQLErrors && error.graphQLErrors.length > 0) {
                 setOk(false)
@@ -78,6 +78,7 @@ const Login = ()=> {
 
     return (
         <div className={style.main}>
+            {(loading || token) && <div className={style.loading}></div>}
             <div className={style['left-side']}>
 
                 <div className={style.card}>
