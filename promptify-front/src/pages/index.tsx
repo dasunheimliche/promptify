@@ -1,20 +1,20 @@
 import  { useState} from "react"
-import Link from "next/link"
 import { useRouter } from "next/router"
+import { getUserToken } from "@/utils/functions"
+import Link from "next/link"
 
 const Home = ()=> {
-
-  let tkn
-  if (typeof window !== "undefined") {
-    tkn = sessionStorage.getItem('user-token')
-  }
-
-  const [token] = useState<string | undefined>(tkn? tkn : undefined)
+  const [token] = useState<string | null>(getUserToken()? getUserToken() : null)
 
   const router = useRouter()
 
-  if (token) {
-    router.push("/me")
+  //**  TEMPORAL CODE UNTIL LANDPAGE WRITEN
+  if (typeof window !== 'undefined') {
+    if (token !== null) {
+      router.push('/me')
+    } else {
+      router.push('/login')
+    }
   }
 
   return (
