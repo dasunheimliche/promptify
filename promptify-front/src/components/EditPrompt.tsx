@@ -1,6 +1,7 @@
 import { Dispatch, useState } from 'react'
 
 import { Card, Prompt } from '@/types'
+import { doNothing } from '@/utils/functions'
 
 import { useMutation } from '@apollo/client'
 import { EDIT_CARD } from '@/queries'
@@ -21,12 +22,12 @@ interface EditPRomptProps {
 type mode = "stack" | "prompt"
 
 const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : EditPRomptProps)=> {
-    const [mode, setMode] = useState<mode>(card.prompts.length > 1? "stack" : "prompt")
 
     // ESTADOS
-    const [newTitle, setNewTitle] = useState<string>(card.title)
-    const [newPrompts, setNewPrompts] = useState<Prompt[]>(card.prompts)
-    const [index, setIndex] = useState<number>(0)
+    const [mode,       setMode       ] = useState<mode>(card.prompts.length > 1? "stack" : "prompt")
+    const [newTitle,   setNewTitle   ] = useState<string>(card.title)
+    const [newPrompts, setNewPrompts ] = useState<Prompt[]>(card.prompts)
+    const [index,      setIndex      ] = useState<number>(0)
 
     // MUTATIONS
     const [ editCard, {loading} ] = useMutation(EDIT_CARD) 
@@ -74,35 +75,38 @@ const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : Ed
         setNewPrompts(prompts)
     }
 
-    const editCardHandler = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
-        e.preventDefault()
-
-        let promptsWithoutTypename = newPrompts.map((obj) => {
-            const { __typename, ...rest } = obj; // crea una copia del objeto sin la propiedad 'description'
-            return rest; // devuelve el objeto sin la propiedad 'description'
-        });
-
+    const editCardHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+      
+        let promptsWithoutTypename = newPrompts.map(({ __typename, ...rest }) => rest);
+      
         if (mode === "prompt") {
-            promptsWithoutTypename = [promptsWithoutTypename[0]]
+            promptsWithoutTypename = [promptsWithoutTypename[0]];
         }
-
-        const newCard = await editCard({variables: {cardId: card.id, newTitle, newPrompts:promptsWithoutTypename}})
-
-        if (!newCard) {
-            return
+      
+        try {
+            const { data } = await editCard({
+                variables: { cardId: card.id, newTitle, newPrompts: promptsWithoutTypename },
+            });
+        
+            if (!data || !data.editCard) {
+                return;
+            }
+        
+            const cardIndex = cardList.findIndex((c) => c.id === card.id);
+            const newCardList = [...cardList];
+            newCardList[cardIndex] = data.editCard;
+        
+            setCardList(newCardList);
+        
+            if (card.id === mains.currCard?.id) {
+                setMains({ ...mains, currCard: data.editCard });
+            }
+            setEdit(false);
+        } catch (error) {
+            console.error(error)
         }
-
-        const cardIndex =  cardList.findIndex(c => c.id === card.id)
-        const newCardList = [...cardList]
-        newCardList[cardIndex] = newCard.data.editCard
-  
-        setCardList(newCardList)
-
-        if (card.id === mains.currCard?.id) {
-            setMains({...mains, currCard: newCard.data.editCard})
-        }
-        setEdit(false)
-    }
+      };
 
     const deletePrompt = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
@@ -119,11 +123,6 @@ const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : Ed
         setNewPrompts(prompts)  
         setIndex(index+1)
     }
-
-    const doNothing = (e:any)=> {
-        e.preventDefault()
-    }
-
 
     return(
         <div className={style[`delete-background`]}>

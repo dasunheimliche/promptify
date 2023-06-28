@@ -1,6 +1,7 @@
 import { Dispatch, useEffect, useState } from 'react'
 
 import { Card, Mains, Visibility } from '../types'
+import { theresFavs } from '@/utils/functions';
 
 import { useQuery } from '@apollo/client';
 import { GET_CARDS } from '@/queries'
@@ -29,21 +30,23 @@ interface getCardsVariables {
 }
 
 const MainContentGrid = ({cardList, mains, columns, visibility, setVisibility, setCardList, setMains }: MainContentGridProps)=> {
-    
+    //** STATES
     let [changed, setChanged] = useState<boolean>(false)
 
-    const { loading: cardLoading, error: cardError, data: cardData, refetch } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+    //** GRAPHQL QUERY
+    const { data: cardData, refetch } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
         variables: {topicId:mains.topic?.id},
         skip: !mains.topic?.id
     });
 
+    //** USE EFFECT
     useEffect(()=> {
         refetch()
-    }, [mains.main, cardList])
+    }, [mains.main, cardList]) // eslint-disable-line
     
     useEffect(()=> {
         setChanged(!changed)
-    }, [columns])
+    }, [columns]) // eslint-disable-line
     
     useEffect(()=> {
         if (cardData) {
@@ -51,36 +54,37 @@ const MainContentGrid = ({cardList, mains, columns, visibility, setVisibility, s
         }
     }, [cardData]) //eslint-disable-line
 
-    
+    //** EVENT HANDLERS
 
-    const loadPrompts = () => {
+    const loadPrompts = (isFav = false) => {
         if (!mains.main || !cardList) {
-            return
+            return;
         }
-        const newCardList = cardList.filter(c => c.fav !== true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} visibility={visibility} setCardList={setCardList} mains={mains} setVisibility={setVisibility} setMains={setMains}/>).reverse()
-    }
-
-    const loadFavPrompts = () => {
-        if (!mains.main || !cardList) {
-            return
-        }
-        const newCardList = cardList.filter(c => c.fav === true)
-        return newCardList.map((c: Card,i: number)=> <PromptCard key={i} card={c} cardList={cardList} visibility={visibility} setCardList={setCardList} mains={mains} setVisibility={setVisibility} setMains={setMains}/>).reverse()
-    }
-
-    const theresfavs = ()=> {
-        return cardList?.some(card => card.fav)
-    }
+        
+        const newCardList = cardList.filter(c => (isFav ? c.fav === true : c.fav !== true));
+        
+        return newCardList.map((c, i) => (
+            <PromptCard
+                key={i}
+                card={c}
+                cardList={cardList}
+                visibility={visibility}
+                setCardList={setCardList}
+                mains={mains}
+                setVisibility={setVisibility}
+                setMains={setMains}
+            />
+        )).reverse();
+    };
 
     return (
         <div className={style[`cards-wrapper`]}>
             
-            {theresfavs() && <div className={style[`grid-favs`]}>Favourites</div>}
+            {theresFavs(cardList) && <div className={style[`grid-favs`]}>Favourites</div>}
             <div id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid}` : `${style.grid} ${style.changed2}`}> 
-                {theresfavs() && loadFavPrompts()}
+                {theresFavs(cardList) && loadPrompts(true)}
             </div>
-            {theresfavs() && <div className={style[`divisor-grid`]}></div>}
+            {theresFavs(cardList) && <div className={style[`divisor-grid`]}></div>}
             <div  id={style.grid} style={{columnCount: `${columns}`}} className={!changed? `${style.grid} ${style['no-favs']}` : `${style.grid} ${style['no-favs']} ${style.changed2}`}> 
                 {loadPrompts()}
             </div>

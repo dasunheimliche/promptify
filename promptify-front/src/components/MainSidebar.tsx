@@ -1,6 +1,7 @@
 import { useEffect, Dispatch } from 'react'
 
 import { AI, User, Topic, Mains, Visibility } from '../types'
+import { theresFavs } from '@/utils/functions';
 
 import { GET_AIS } from '@/queries'
 import { useQuery } from '@apollo/client';
@@ -33,10 +34,13 @@ interface aiListVariables {
 
 const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVisibility, setAiList, setTopicList}: MainSideBarProps)=> {
 
+    //** GRAPHQL QUERYS
     const { data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
         variables: {meId: me?.id},
         skip: !me?.id
     });
+
+    //** USE EFFECTS
     
     useEffect(()=> {
         if (aiData?.getAis) {
@@ -52,29 +56,30 @@ const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVi
     
     // EVENT HANDLERS
 
-    const loadAIs = ()=> {
+    const loadAIs = (isFav = false) => {
         if (!aiList) {
-            return
+          return;
         }
-        const newAiList = aiList.filter(ai=> ai.fav !== true)
-        return newAiList?.map((ai: AI) => <AiButton mains={mains} topicList={topicList} setMains={setMains} setVisibility={setVisibility} visibility={visibility} key={ai.id} ai={ai} setTopicList={setTopicList} />)
-    }
-
-    const loadFavAis = ()=> {
-        if (!aiList) {
-            return
-        }
-        const newAiList = aiList?.filter(ai => ai.fav === true)
-        return newAiList?.map((ai: AI) => <AiButton mains={mains} topicList={topicList} setMains={setMains} setVisibility={setVisibility} visibility={visibility} key={ai.id} ai={ai} setTopicList={setTopicList} />)
-    }
+        
+        const newAiList = aiList.filter(ai => (isFav ? ai.fav === true : ai.fav !== true));
+        
+        return newAiList?.map((ai) => (
+            <AiButton
+                key={ai.id}
+                ai={ai}
+                mains={mains}
+                topicList={topicList}
+                setMains={setMains}
+                setVisibility={setVisibility}
+                visibility={visibility}
+                setTopicList={setTopicList}
+            />
+        ));
+      };
 
     const openPanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
         e.preventDefault()
         setVisibility({...visibility, showMenu: "add ai"})
-    }
-
-    const theresfavs = ()=> {
-        return aiList?.some(ai => ai.fav)
     }
 
     const toProfile = ()=> {
@@ -99,10 +104,10 @@ const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVi
             <div className={`${style.logo} p`}>Pfy</div>
             <div className={(mains.profile && visibility.showSS)? `${style[`add-ai`]} ${style['selected-me']} p` :`${style[`add-ai`]} p`} onClick={toProfile}>ME</div>
             {(aiList && aiList.length > 0) && <div className={style[`ais-wrapper`]}>
-                {theresfavs() && 
+                {theresFavs(aiList) && 
                     <div className={style['favs-container']}>
                         <div className={style['fav-ais']}></div>
-                        <div className={style[`ai-logos`]}>{loadFavAis()}</div>
+                        <div className={style[`ai-logos`]}>{loadAIs(true)}</div>
                     </div>
                 }
                 <div className="divisor"></div>

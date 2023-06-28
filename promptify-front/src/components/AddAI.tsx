@@ -1,6 +1,7 @@
 import { useState, Dispatch } from 'react'
 
 import { User, AI, Mains, Visibility } from '../types'
+import { doNothing, closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
 import { ADD_AI } from '@/queries'
@@ -15,7 +16,6 @@ interface AddAIProps {
     setMains      : React.Dispatch<React.SetStateAction<Mains>>
     setMe         : Dispatch<User>
 }
-
 interface addAiData {
     createAi : AI
 }
@@ -29,18 +29,14 @@ interface addAiVariables {
 
 const AddAI = ({me, aiList, setAiList, setVisibility, setMains, setMe } : AddAIProps)  => {
 
-    // STATES
+    //** STATES
     const [name, setName] = useState<string>("")
     const [abb,  setAbb ] = useState<string>("")
 
-    // MUTATIONS
+    //** MUTATIONS
     const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
 
-    // EVENT HANDLERS
-    const closePanel = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
-        e.preventDefault()
-        setVisibility(prev=>({...prev, showMenu: "none"}))
-    }
+    //** EVENT HANDLERS
 
     const addAI = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -73,10 +69,6 @@ const AddAI = ({me, aiList, setAiList, setVisibility, setMains, setMe } : AddAIP
         }
     };
 
-    const doNothing = (e: React.FormEvent<HTMLDivElement>)=> {
-        e.preventDefault()
-    }
-
     return (
         <div className={style.popup} onSubmit={loading? doNothing : addAI}>
             <form action="" className={style.form}>
@@ -84,11 +76,11 @@ const AddAI = ({me, aiList, setAiList, setVisibility, setMains, setMe } : AddAIP
                 <input type="text" placeholder="name" onChange={e=> setName(e.target.value)} minLength={1} required/>
 
                 <label className={style.title}>{"AI's abb:"}</label>
-                <input type="text" placeholder="abb" onChange={e=> setAbb(e.target.value)} maxLength={5} required/>
+                <input type="text" placeholder="abb"  onChange={e=> setAbb(e.target.value)} maxLength={5} required/>
 
                 <div className={style.buttons}>
                     <button type="submit">Enviar</button>
-                    <button onClick={closePanel}>Cerrar</button>
+                    <button onClick={e=>closePopUp(e, setVisibility)}>Cerrar</button>
                 </div>
             </form>
         </div>

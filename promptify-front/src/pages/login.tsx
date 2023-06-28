@@ -66,15 +66,23 @@ const Login = ()=> {
     }, [data]) // eslint-disable-line
 
     // EVENT HANDLERS
-    const submit = async(event:React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        await login({ variables: { username, password } })
-    }
+    const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+        try {
+            event.preventDefault();
+            await login({ variables: { username, password } });
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+        }
+    };
 
-    const demoSubmit = async(event:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
-        event.preventDefault()
-        await login({ variables: { username: "Horrorshow", password: "12345" } })
-    }
+    const demoSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        try {
+            event.preventDefault();
+            await login({ variables: { username: "Horrorshow", password: "12345" } });
+        } catch (error) {
+            console.error('An error occurred while submitting the demo:', error);
+        }
+    };
 
     return (
         <div className={style.main}>

@@ -1,5 +1,6 @@
 
 import { Dispatch } from "react"
+import { doNothing } from "@/utils/functions"
 import style from '../styles/popups.module.css'
 
 
@@ -10,10 +11,6 @@ interface DeleteArgs {
 }
 
 const DeleteAlert = ({setDeleteAlert, deleteHandler, loading} : DeleteArgs)=> {
-
-    const doNothing = (e: any)=> {
-        e.preventDefault()
-    }
 
     return(
         <div className={style[`delete-background`]}>

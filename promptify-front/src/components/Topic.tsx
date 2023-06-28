@@ -31,7 +31,7 @@ interface TopicProps {
 
 const Topic = ({ sec, topicList, mains, setMains, setTopicList, deleteTopicfunc, addTopicToFavs, setDeleteAlert, deleteAlert, clickHandler, DTloading, ATTFloading } : TopicProps)=> {
 
-    const [edit, setEdit] = useState<boolean>(false)
+    const [edit,    setEdit   ] = useState<boolean>(false)
     const [newName, setNewName] = useState<string>(sec.name)
 
     const inputRef = useRef<HTMLInputElement>(null)
@@ -50,34 +50,42 @@ const Topic = ({ sec, topicList, mains, setMains, setTopicList, deleteTopicfunc,
         inputRef.current?.focus()
     },[edit])
 
-    const editTopicHandler = async() => {
-        if (!topicList || !mains.main || !newName) {
-            return
+    const editTopicHandler = async () => {
+        try {
+            if (!topicList || !mains.main || !newName) {
+                return;
+            }
+            const newTopic = await editTopic({ variables: { topicId: sec.id, newName: newName } });
+            const aiIndex = topicList?.findIndex((t) => t.id === sec.id);
+            const newMainTopic = { ...sec, name: newTopic.data.editTopic.name };
+        
+            const newList = [...topicList];
+            newList[aiIndex] = newTopic.data.editTopic.name;
+            setTopicList(newList);
+            setEdit(!edit);
+            if (sec.id === mains.topic?.id) {
+                setMains({ ...mains, topic: newMainTopic });
+            }
+        } catch (error) {
+            console.error('An error occurred while editing the topic:', error);
         }
-        const newTopic = await editTopic({variables:{topicId:sec.id, newName:newName}})
-        const aiIndex = topicList?.findIndex(t=> t.id === sec.id)
-        const newMainTopic = {...sec, name: newTopic.data.editTopic.name}
+    };
 
-        const newList = [...topicList]
-        newList[aiIndex] = newTopic.data.editTopic.name
-        setTopicList(newList)
-        setEdit(!edit)
-        if (sec.id === mains.topic?.id) {
-            setMains({...mains, topic: newMainTopic})
+    const addToFav = async () => {
+        try {
+            if (!topicList) {
+                return;
+            }
+            const newTopic = await addTopicToFavs({ variables: { topicId: sec.id } });
+            const topicIndex = topicList.findIndex((t: Topic) => t.id === sec?.id);
+        
+            const newTopicList = [...topicList];
+            newTopicList[topicIndex] = newTopic.data.addTopicToFavs;
+            setTopicList(newTopicList);
+        } catch (error) {
+            console.error('An error occurred while adding to favorites:', error);
         }
-    }
-
-    const addToFav = async()=> {
-        if (!topicList) {
-            return
-        }
-        const newTopic = await addTopicToFavs({variables:{topicId: sec.id}})
-        const topicIndex = topicList.findIndex((t: Topic) => t.id === sec?.id)
-
-        const newTopicList = [...topicList];
-        newTopicList[topicIndex] = newTopic.data.addTopicToFavs
-        setTopicList(newTopicList)
-    }
+    };
 
     const doNothing = (e:any)=> {
         e.preventDefault()
@@ -93,8 +101,8 @@ const Topic = ({ sec, topicList, mains, setMains, setTopicList, deleteTopicfunc,
                 {!edit && <div className={`${style[`del-topic`]} p`}  onClick={()=>setDeleteAlert("topic")}></div>}
                 {!edit && <div className={`${style[`edit-topic`]} p`} onClick={()=>setEdit(!edit)}></div>}  
                 {!edit && <div className={sec.fav? `${style[`fav-topic`]} ${style[`fav-topic-on`]} p`: `${style[`fav-topic`]} p`} onClick={ATTFloading? doNothing : addToFav}></div>}
-                {edit && <div className={`${style.yes} p`} onClick={ETloading? doNothing : editTopicHandler}>✓</div>}
-                {edit && <div className={`${style.not} p`} onClick={()=>setEdit(false)}>✕</div>}
+                {edit  && <div className={`${style.yes} p`} onClick={ETloading? doNothing : editTopicHandler}>✓</div>}
+                {edit  && <div className={`${style.not} p`} onClick={()=>setEdit(false)}>✕</div>}
             </div>}
         </div>
     )

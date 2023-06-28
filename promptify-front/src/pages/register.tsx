@@ -2,11 +2,6 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from "next/router"
-
-// CSS
-
-
-
 import { INVALID_USERNAMES, CREATE_USER } from '@/queries'
 import { useMutation, useQuery } from '@apollo/client'
 
@@ -30,10 +25,10 @@ type isOk = undefined | false | true
 const Register = ()=> {
 
     // STATES
-    let [inputs, setInputs] = useState<Inputs>({ name: "", lastname: "", username: "", email: "", password: '', password2: '' })
-    let [validUsers, setValidUsers] = useState<string[] | undefined>([])
+    let [inputs,       setInputs     ] = useState<Inputs>({ name: "", lastname: "", username: "", email: "", password: '', password2: '' })
+    let [validUsers,   setValidUsers ] = useState<string[] | undefined>([])
 
-    let [isPassOk, setIsPassOk] = useState<isOk>(undefined)
+    let [isPassOk,     setIsPassOk   ] = useState<isOk>(undefined)
     let [isUsernameOk, setIsUserameOk] = useState<isOk>(undefined) 
 
     const { data, loading } = useQuery<InvaludUsernameList>(INVALID_USERNAMES)
@@ -67,10 +62,22 @@ const Register = ()=> {
     }, [inputs.username, validUsers])
 
     // EVENT HANDLERS
-    let signin = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        await createUser({variables: {name: inputs.name, lastname: inputs.lastname, username: inputs.username, email:inputs.email, password:inputs.password}})
-        router.push('/login')
+    let signin = async (e: React.FormEvent<HTMLFormElement>) => {
+        try {
+            e.preventDefault();
+            await createUser({
+                variables: {
+                name: inputs.name,
+                lastname: inputs.lastname,
+                username: inputs.username,
+                email: inputs.email,
+                password: inputs.password,
+                },
+            });
+            router.push('/login');
+        } catch (error) {
+            console.error('An error occurred while signing up:', error);
+        }
     };
 
     return (

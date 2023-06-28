@@ -1,5 +1,4 @@
 import { useState, Dispatch, useEffect, useRef } from 'react'
-import { useRouter } from "next/router"
 
 import { AI, Topic, User, Card, Mains, Visibility } from '../types'
 
@@ -51,14 +50,12 @@ interface addTopicVariables {
 }
 
 const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiList, setMe, setVisibility, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
-    const [addTopic,    setAddTopic]    = useState<string>("")
-    const [show,        setShow]        = useState<boolean>(false)
+    const [addTopic,    setAddTopic   ] = useState<string>("")
+    const [show,        setShow       ] = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
 
-    const [edit,        setEdit]        = useState<boolean>(false) 
-    const [newTitle,    setNewTitle]    = useState<string | undefined>(mains.main?.name)
-
-    const router = useRouter()
+    const [edit,        setEdit       ] = useState<boolean>(false) 
+    const [newTitle,    setNewTitle   ] = useState<string | undefined>(mains.main?.name)
 
     let isMobile: boolean
 
@@ -69,10 +66,6 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
     
 
     // USE QUERY
-
-    // const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-    //     variables: { list: main?.topics }
-    // });
 
     const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
         variables: { mainId: mains.main?.id },
@@ -85,7 +78,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
 
     useEffect(()=> {
         refetch()
-    }, [visibility.showSS, topicList])
+    }, [visibility.showSS, topicList]) // eslint-disable-line
 
     
 
@@ -93,7 +86,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
         if (data) {
             setTopicList(data.getTopics)
         }
-    }, [data?.getTopics])
+    }, [data?.getTopics]) // eslint-disable-line
 
     useEffect(()=> {
         inputRef.current?.focus()
@@ -106,219 +99,202 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
 
     // MUTATIONS
 
-    const [ createTopic, {loading: CTloading} ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC)
-    const [ deleteTopic, {loading: DTloading} ] = useMutation(DELETE_TOPIC)
-    const [ deleteAi, {loading: DAloading} ] = useMutation(DELETE_AI)
-    const [ addAiToFavs, {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
+    const [ createTopic,    {loading: CTloading}   ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC)
+    const [ deleteTopic,    {loading: DTloading}   ] = useMutation(DELETE_TOPIC)
+    const [ deleteAi,       {loading: DAloading}   ] = useMutation(DELETE_AI)
+    const [ addAiToFavs,    {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
     const [ addTopicToFavs, {loading: ATTFloading} ] = useMutation(ADD_TOPIC_FAV)
-    const [ editAi, {loading: EAloading} ] = useMutation(EDIT_AI)
+    const [ editAi,         {loading: EAloading}   ] = useMutation(EDIT_AI)
 
     // EVENT HANDLERS
-    const deleteAifunc = async (userId: string | undefined, aiId: string | undefined)=> {
 
-        if (!userId || !aiId) {
-            return
+    const deleteAifunc = async (userId: string, aiId: string) => {
+        try {
+            if (!userId || !aiId) {
+                return;
+            }
+        
+            if (!me) {
+                return;
+            }
+        
+            await deleteAi({ variables: { userId, aiId } });
+        
+            if (!aiList) {
+                return;
+            }
+        
+            const newAiList = aiList.filter((arrayAi) => arrayAi.id !== aiId);
+            setAiList(newAiList);
+        
+            if (newAiList.length === 0) {
+                    return;
+            } else {
+                    setMains({...mains, main: newAiList[0]})
+                    setDeleteAlert("none");
+            }
+        
+            const updatedMe = { ...me };
+            const updatedAllPrompts = updatedMe.allPrompts?.filter((id) => id !== aiId);
+            updatedMe.allPrompts = updatedAllPrompts;
+            setMe(updatedMe);
+        } catch (error) {
+            console.error("Error deleting AI:", error);
         }
-        if (!me) {
-            return
-        }
-
-        await deleteAi({variables: {userId, aiId}})
-        if (!aiList) return
-        const newAiList = aiList.filter(arrayAi => arrayAi.id != aiId)
-        setAiList(newAiList)
-        if (newAiList.length === 0) {
-            return
-        } else {
-            setMains({...mains, main: newAiList[0]})
-            setDeleteAlert("none")
-        }
-
-        let u = {...me}
-        let a = u.allPrompts?.filter(id=> id != aiId)
-        u.allPrompts = a
-        setMe(u)
-    }
+      };
 
     const deleteAiHandler = async ()=> {
+        if (!mains.main) {
+            return
+        }
         await deleteAifunc(mains.main?.userId, mains.main?.id)
         setDeleteAlert("none")
     }
 
-    const deleteTopicfunc = async (aiId:string, topicId:string)=> {
-
-        await deleteTopic({variables: {aiId, topicId}})
-
-        if (!topicList) {
-            return
-        }
-
-        if (!mains.main) {
-            return
-        }
-
-        let m = {...mains.main}
-        let t = m.topics?.filter(id => id !== topicId)
-        m.topics = t
-
-        setMains({...mains, main: m})
-
-        const newTopic = topicList.filter(arrayTopic => arrayTopic.id !== topicId)
-        setTopicList(newTopic)
-
-        if (mains.topic?.id === topicId) {
-            setMains({...mains, topic: newTopic[0]})
-        }
-    }
-
-    const loadSections = ()=>{
-        if (!mains.main) {
-            return
-        }
-
-        const clickHandler = (sec: Topic)=> {
-
-            if (mains.topic?.id !== sec.id) {
-                setCardList(undefined)
-            }
-
-            setMains({...mains, topic: sec})
-            refetch()
-            
-            if (isMobile) {
-                setVisibility({...visibility, showSS: false})
-            }
-            
-        }
-        const newTopicList = topicList?.filter(t=> t?.fav === false )
-
-        return newTopicList?.map((sec:Topic, i:number) => 
-            <TopicComponent 
-                key={i}
-                sec={sec}
-                topicList={topicList}
-                mains={mains}
-                deleteAlert={deleteAlert}
-                deleteTopicfunc={deleteTopicfunc}
-                DTloading={DTloading}
-                addTopicToFavs={addTopicToFavs}
-                ATTFloading={ATTFloading}
-                clickHandler={clickHandler}
-                setTopicList={setTopicList}
-                setMains={setMains}
-                setDeleteAlert={setDeleteAlert}
-            />
-        )
-    }
-
-    const loadFavSections = ()=>{
-        if (!mains.main) {
-            return
-        }
-
-        const clickHandler = (sec: Topic)=> {
-            setMains({...mains, topic: sec})
-
-            if (mains.topic?.id !== sec.id) {
-                setCardList(undefined)
-            }
-
-            refetch()
-    
-            if (isMobile) {
-                setVisibility({...visibility, showSS: false})
-            }
-        }
-        const newTopicList = topicList?.filter(t=> t?.fav !== false )
-
-        return newTopicList?.map((sec:Topic, i:number) => 
-            <TopicComponent 
-                key={i}
-                sec={sec}
-                topicList={topicList}
-                mains={mains}
-                deleteAlert={deleteAlert}
-                deleteTopicfunc={deleteTopicfunc}
-                DTloading={DTloading}
-                addTopicToFavs={addTopicToFavs}
-                ATTFloading={ATTFloading}
-                clickHandler={clickHandler}
-                setTopicList={setTopicList}
-                setMains={setMains}
-                setDeleteAlert={setDeleteAlert}
-            />
-        )
-    }
-
-    const addTopicHandler = async (e: React.FormEvent<HTMLFormElement>)=> {
-        e.preventDefault()
-
-        if (!mains.main  || !data) {
-            return
-        }
-
-        const variables = {aiId: mains.main?.id, topic: {name: addTopic}}
-
-        const newTopic = await createTopic({variables: variables})
-
-        if (!topicList || !newTopic.data) {
-            return
-        }
-
-        let copied = [...topicList, newTopic.data.createTopic]
-        setTopicList(copied)
-        setMains({...mains, topic: newTopic.data.createTopic})
-        setAddTopic("")
-
-        let m = {...mains.main}
-        m.topics = m.topics?.concat(newTopic.data.createTopic.id)
-
-        setMains({...mains, main: m})
-
-        if (copied) {
-
-            if (!mains.main) {
-                return
-            } 
-            setShow(false)
-
-        }
-
-    }   
-
-    const addToFavs = async()=> {
-        if (!aiList || !mains.main) {
-            return
-        }
-        const newAi = await addAiToFavs({variables:{aiId: mains.main.id}})
-        const aiIndex = aiList?.findIndex(ai=> ai.id === mains.main?.id)
-        const newMain = {...mains.main, fav: !mains.main.fav}
+    const deleteTopicfunc = async (aiId: string, topicId:string) => {
+        try {
+            await deleteTopic({ variables: { aiId, topicId } });
         
-        const newAiList = [...aiList]
-        newAiList[aiIndex] = newAi.data.addAiToFavs
-        setMains({...mains, main: newMain})
-        setAiList(newAiList)
-    }
-
-    const editAiHandler = async() => {
-        if (!aiList || !mains.main || !newTitle) {
-            return
+            if (!topicList || !mains.main) {
+                return;
+            }
+        
+            const updatedMain = { ...mains.main };
+            const updatedTopics = updatedMain.topics?.filter((id) => id !== topicId);
+            updatedMain.topics = updatedTopics;
+        
+            setMains({ ...mains, main: updatedMain });
+        
+            const updatedTopicList = topicList.filter((arrayTopic) => arrayTopic.id !== topicId);
+            setTopicList(updatedTopicList);
+        
+            if (mains.topic?.id === topicId) {
+                setMains({ ...mains, topic: updatedTopicList[0] });
+            }
+        } catch (error) {
+            console.error('An error occurred while deleting the topic:', error);
         }
+    };
 
-        if (mains.main.name === newTitle) {
-            setEdit(!edit)
-            return
+    const loadSections = (isFav = false) => {
+        if (!mains.main) {
+          return;
         }
+      
+        const clickHandler = (sec: Topic) => {
+          if (mains.topic?.id !== sec.id) {
+            setCardList(undefined);
+          }
+      
+          setMains({ ...mains, topic: sec });
+          refetch();
+      
+          if (isMobile) {
+            setVisibility({ ...visibility, showSS: false });
+          }
+        };
+      
+        const newTopicList = topicList?.filter((t) => (isFav ? t?.fav !== false : t?.fav === false));
+      
+        return newTopicList?.map((sec, i) => (
+            <TopicComponent
+                key={i}
+                sec={sec}
+                topicList={topicList}
+                mains={mains}
+                deleteAlert={deleteAlert}
+                deleteTopicfunc={deleteTopicfunc}
+                DTloading={DTloading}
+                addTopicToFavs={addTopicToFavs}
+                ATTFloading={ATTFloading}
+                clickHandler={clickHandler}
+                setTopicList={setTopicList}
+                setMains={setMains}
+                setDeleteAlert={setDeleteAlert}
+            />
+        ));
+      };
 
-        const newAi = await editAi({variables:{aiId: mains.main.id, newName:newTitle}})
-        const aiIndex = aiList?.findIndex(ai=> ai.id === mains.main?.id)
-        const newMain = {...mains.main, name: newAi.data.editAi.name}
-        const newAiList = [...aiList]
-        newAiList[aiIndex] = newAi.data.editAi
-        setMains({...mains, main: newMain})
-        setAiList(newAiList)
-        setEdit(!edit)
-    }
+    const addTopicHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+        try {
+            e.preventDefault();
+        
+            if (!mains.main || !data) {
+                return;
+            }
+        
+            const variables = { aiId: mains.main?.id, topic: { name: addTopic } };
+        
+            const newTopic = await createTopic({ variables: variables });
+        
+            if (!topicList || !newTopic.data) {
+                return;
+            }
+        
+            let copied = [...topicList, newTopic.data.createTopic];
+            setTopicList(copied);
+            setMains({ ...mains, topic: newTopic.data.createTopic });
+            setAddTopic("");
+        
+            let m = { ...mains.main };
+            m.topics = m.topics?.concat(newTopic.data.createTopic.id);
+        
+            setMains({ ...mains, main: m });
+        
+            if (copied) {
+                if (!mains.main) {
+                return;
+                }
+                setShow(false);
+            }
+        } catch (error) {
+            console.error('An error occurred while adding the topic:', error);
+        }
+      };
+
+
+    const addToFavs = async () => {
+        try {
+            if (!aiList || !mains.main) {
+                return;
+            }
+        
+            const newAi = await addAiToFavs({ variables: { aiId: mains.main.id } });
+            const aiIndex = aiList?.findIndex((ai) => ai.id === mains.main?.id);
+            const newMain = { ...mains.main, fav: !mains.main.fav };
+        
+            const newAiList = [...aiList];
+            newAiList[aiIndex] = newAi.data.addAiToFavs;
+            setMains({ ...mains, main: newMain });
+            setAiList(newAiList);
+        } catch (error) {
+            console.error('An error occurred while adding to favorites:', error);
+        }
+    };
+
+    const editAiHandler = async () => {
+        try {
+            if (!aiList || !mains.main || !newTitle) {
+                return;
+            }
+        
+            if (mains.main.name === newTitle) {
+                setEdit(!edit);
+                return;
+            }
+        
+            const newAi = await editAi({ variables: { aiId: mains.main.id, newName: newTitle } });
+            const aiIndex = aiList?.findIndex((ai) => ai.id === mains.main?.id);
+            const newMain = { ...mains.main, name: newAi.data.editAi.name };
+            const newAiList = [...aiList];
+            newAiList[aiIndex] = newAi.data.editAi;
+            setMains({ ...mains, main: newMain });
+            setAiList(newAiList);
+            setEdit(!edit);
+        } catch (error) {
+            console.error('An error occurred while editing AI:', error);
+        }
+      };
 
     const theresFavs = ()=> {
         return topicList?.some(c => c.fav === true)
@@ -338,36 +314,42 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
         <div style={!visibility.showSS? {} : {}} className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
             {(deleteAlert === "ai") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteAiHandler} loading={DAloading}/>}
             {mains.profile && 
+
                 <div className={style['profile-card']}>
-                    {/* <div className={style['profile-pic']}></div> */}
                     <div className={style['profile-name']}>{me?.name}</div>
                     <button className={style['sign-off']} onClick={signOff} type='button' title='Sign off'>Sign Off</button>
                 </div>
             }
             {!mains.profile && <div className={style[`ai-container`]}>
+
                 {!edit && <div className={style[`ai-title`]}>{mains.main && mains.main.name}</div>}
                 {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)} minLength={1}></input>}
-                {mains.main && <div className={style[`ai-opt`]}>
-                    {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
-                    {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
-                    {!edit && <div className={mains.main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
-                    {edit && <div className={`${style.yes} p`} onClick={EAloading? doNothing : editAiHandler}>✓</div>}
-                    {edit && <div className={`${style.not} p`} onClick={()=>setEdit(!edit)}>✕</div>}
-                </div>}
+                {mains.main && 
+                    <div className={style[`ai-opt`]}>
+                        {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDeleteAlert("ai")}></div> }
+                        {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
+                        {!edit && <div className={mains.main?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
+                        {edit  && <div className={`${style.yes} p`} onClick={EAloading? doNothing : editAiHandler}>✓</div>}
+                        {edit  && <div className={`${style.not} p`} onClick={()=>setEdit(!edit)}>✕</div>}
+                    </div>
+                }
+
             </div>}
             {!mains.profile && <div className={style.addContainer}>
                 <div className={style[`add-header`]}>
                     <span className={style[`add-title`]}>Topics</span>
                     <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
                 </div>
+
                 {<form className={show ? style[`add-form`] : `${style['add-form']} ${style['hidden-form']}`} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
-                    <input placeholder='topic' value={addTopic} onChange={e=>setAddTopic(e.target.value)} minLength={1} required></input>
+                    <input placeholder='new topic' value={addTopic} onChange={e=>setAddTopic(e.target.value)} minLength={1} required></input>
                     <button type='submit'>ADD</button>
                 </form>}
             </div>}
+
             {!mains.profile && <div className={style[`topics-wrapper`]}>
                 {theresFavs() && <div className={style['favs-title']}>Favourites</div>}
-                {theresFavs() && <div className={style.topics}>{loadFavSections()}</div>}
+                {theresFavs() && <div className={style.topics}>{loadSections(true)}</div>}
                 {theresFavs() && <div className="divisor"></div>}
                 {topicList === undefined && <div className={style.loading}></div>}
                 {<div className={style.topics}>{loadSections()}</div>} 

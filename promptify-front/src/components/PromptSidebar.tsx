@@ -15,7 +15,7 @@ interface PromptSidebarProps {
 const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSidebarProps)=> {
 
 
-    const [card, setCard] = useState<Card | undefined>(mains.currCard)
+    const [card,  setCard ] = useState<Card | undefined>(mains.currCard)
     const [index, setIndex] = useState<number>(0)
 
 
@@ -62,7 +62,6 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
     }
 
     const back = ()=> {
-        // const maxind = card.prompts.length - 1
         if (index - 1 >= 0) {
             setIndex(index - 1)
         }

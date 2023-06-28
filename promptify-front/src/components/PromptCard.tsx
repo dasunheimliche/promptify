@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client'
 import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
 
 import { Card, Mains, Visibility } from '../types'
+import { doNothing } from '@/utils/functions'
 
 import DeleteAlert from './DeleteAlert'
 import EditPrompt from './EditPrompt'
@@ -21,16 +22,15 @@ interface PromptProps {
 
 const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, setVisibility} : PromptProps)=> {
     // STATE
-    const [deleteAlert, setDeleteAlert] = useState<string>("none")
-    const [edit,        setEdit]        = useState<boolean>(false)
-    const [editCard,    setEditCard]    = useState<Card | undefined>(card)
+    const [deleteAlert, setDeleteAlert ] = useState<string>("none")
+    const [edit,        setEdit        ] = useState<boolean>(false)
 
     // MUTATIONS
-    const [deleteCard, { error, data, loading: DCloading }] = useMutation(DELETE_CARD)
+    const [deleteCard,    { loading: DCloading }] = useMutation(DELETE_CARD)
     const [addCardToFavs, {loading: ACTFloading}] = useMutation(ADD_CARD_FAV)
 
     // EVENT HANDLER
-    const openCardHandler = async()=> {
+    const openCardHandler = ()=> {
         setMains({...mains, currCard: card})
         setVisibility({...visibility, showPS: true})
 
@@ -40,25 +40,28 @@ const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, s
         }
     }
 
-    const deleteCardfunc = async (cardId:string, topicId:string)=> {
-        const deleted = await deleteCard({variables: {cardId, topicId}})
-
-        if (!mains.topic) {
-            return
+    const deleteCardfunc = async (cardId: string, topicId: string) => {
+        try {
+            const deleted = await deleteCard({ variables: { cardId, topicId } });
+        
+            if (!mains.topic) {
+                    return;
+            }
+        
+            if (deleted) {
+                    const newCardList = cardList.filter((arrayCard) => arrayCard.id !== cardId);
+                    setCardList(newCardList);
+            }
+        
+            const updatedTopic = { ...mains.topic };
+            const updatedCards = updatedTopic.cards?.filter((id) => id !== cardId);
+            updatedTopic.cards = updatedCards;
+        
+            setMains({...mains, topic: updatedTopic});
+        } catch (error) {
+            console.error("Error deleting card:", error);
         }
-
-        if(deleted) {
-            const newCardList = cardList.filter(arrayCard => arrayCard.id !== card.id)
-            setCardList(newCardList)
-        }
-
-        let t = {...mains.topic}
-        let c = t.cards?.filter(id => id !== topicId)
-        t.cards = c
-
-        setMains({...mains, topic: t})
-
-    }
+      };
 
     const deleteCardHandler = ()=> {
         if (!card || !mains.topic) {
@@ -68,18 +71,18 @@ const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, s
         setDeleteAlert("none")
     }
 
-    const addToFavs = async()=> {
-        const newCard = await addCardToFavs({variables: {cardId: card.id}})
-        const cardIndex = cardList.findIndex(c => c.id === card.id)
-        const newCardList = [...cardList]
-        newCardList[cardIndex] = newCard.data.addCardToFavs
-        setCardList(newCardList)
-    }
-
-    const doNothing = (e:any) => {
-        e.preventDefault()
-    }
-
+    const addToFavs = async () => {
+        try {
+            const { id } = card;
+            const newCard = await addCardToFavs({ variables: { cardId: id } });
+            const cardIndex = cardList.findIndex(c => c.id === id);
+            const newCardList = cardList.slice();
+            newCardList[cardIndex] = newCard.data.addCardToFavs;
+            setCardList(newCardList);
+        } catch (error) {
+            console.error('Error al agregar la tarjeta a favoritos:', error);
+        }
+      };
 
     return (
         <div className={card.prompts.length > 1? (card.id === mains.currCard?.id? `${style.prompt} ${style.stack} ${style.selected}`:`${style.prompt} ${style.stack}`) : (card.id === mains.currCard?.id? `${style.prompt} ${style.selected}` :style.prompt) } >

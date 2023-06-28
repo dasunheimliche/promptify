@@ -19,7 +19,7 @@ const Home = ()=> {
 
   return (
       <div>
-          <Link href={`/login`}>GO TO LOGIN</Link>
+          {/* <Link href={`/login`}>GO TO LOGIN</Link> */}
       </div>
   )
 }

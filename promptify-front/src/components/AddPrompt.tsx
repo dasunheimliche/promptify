@@ -2,6 +2,7 @@
 import { useState, Dispatch } from 'react'
 
 import { Visibility, Card, Mains } from '../types'
+import { doNothing, closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
@@ -37,14 +38,9 @@ interface addCardVariables {
 const AddPrompt = ({cardList, mains, setCardList, setVisibility, setMains} : AddPromptProps)=> {
 
     const [ title,   setTitle    ] = useState<string>("")
-    const [ content, setContent ] = useState<string>("")
+    const [ content, setContent  ] = useState<string>("")
 
     const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
-
-    const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
-        e.preventDefault()
-        setVisibility(prev=>({...prev, showMenu: "none"}))
-    }
 
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -89,16 +85,12 @@ const AddPrompt = ({cardList, mains, setCardList, setVisibility, setMains} : Add
         }
     };
 
-    const doNothing = (e: React.FormEvent<HTMLDivElement>) => {
-        e.preventDefault()
-    }
-
     return (
         <div className={style.popup} onSubmit={loading? doNothing : addPrompt}>
             
             <div className={style.header}>
                 <div className={style[`header-title`]}>Add a Prompt</div>
-                <div className={`${style[`header-close`]} p`} onClick={closePanel}>x</div>
+                <button className={style[`header-close`]} onClick={e=>closePopUp(e, setVisibility)}>x</button>
             </div>
 
             <form action="" className={style.form}>

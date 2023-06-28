@@ -1,6 +1,7 @@
 import { useState, Dispatch } from 'react'
 
 import { Card, Mains, Visibility } from '../types'
+import { doNothing, closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD } from '@/queries'
@@ -34,20 +35,16 @@ interface addCardVariables {
 
 const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddPromptProps)=> {
 
-    const [stackTitle, setStackTitle] = useState<string>("")
-    const [count, setCount] = useState<number>(0)
+    const [stackTitle,    setStackTitle   ] = useState<string>("")
+    const [count,         setCount        ] = useState<number>(0)
 
-    const [stack, setStack] = useState<promptVariables[] | undefined>([])
-    const [promptTitle, setPromptTitle] = useState<string>("")
+    const [stack,         setStack        ] = useState<promptVariables[] | undefined>([])
+    const [promptTitle,   setPromptTitle  ] = useState<string>("")
     const [promptContent, setPromptContent] = useState<string>("")
 
     const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
 
     // EVENT HANDLERS
-    const closePanel = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
-        e.preventDefault()
-        setVisibility(prev=>({...prev, showMenu: "none"}))
-    }
 
     const addToStack = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -97,15 +94,12 @@ const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddP
         }
     };
 
-    const doNothing = (e:any)=> {
-        e.preventDefault()
-    }
 
     return (
         <div className={style.popup} onSubmit={loading? doNothing : addPrompt}>
             <div className={style.header}>
                 <div className={style[`header-title`]}>Add a Stack</div>
-                <div className={`${style[`header-close`]} p`} onClick={closePanel}>x</div>
+                <button className={style[`header-close`]} onClick={e=>closePopUp(e,setVisibility)}>x</button>
             </div>
             <form action="" className={style.form}>
                 <label className={style.title}>{"Stack Title"}</label>
