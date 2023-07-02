@@ -18,7 +18,7 @@ interface MainSideBarProps {
     visibility: Visibility
     setVisibility: Dispatch<Visibility>
     setMains: Dispatch<Mains>
-    setAiList: Dispatch<AI[]>
+    // setAiList: Dispatch<AI[]>
     setTopicList: Dispatch<Topic[] | undefined>
 }
 
@@ -32,28 +32,8 @@ interface aiListVariables {
 
 
 
-const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVisibility, setAiList, setTopicList}: MainSideBarProps)=> {
+const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVisibility, setTopicList}: MainSideBarProps)=> {
 
-    //** GRAPHQL QUERYS
-    const { data: aiData, refetch: aiRefetch } = useQuery<aiListData, aiListVariables>(GET_AIS, {
-        variables: {meId: me?.id},
-        skip: !me?.id
-    });
-
-    //** USE EFFECTS
-    
-    useEffect(()=> {
-        if (aiData?.getAis) {
-            setAiList(aiData?.getAis)
-        }
-    }, [aiData]) // eslint-disable-line
-
-    useEffect(()=> {
-        aiRefetch()
-    }, [me]) // eslint-disable-line
-
-
-    
     // EVENT HANDLERS
 
     const loadAIs = (isFav = false) => {

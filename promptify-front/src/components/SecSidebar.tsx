@@ -3,7 +3,7 @@ import { useState, Dispatch, useEffect, useRef } from 'react'
 import { AI, Topic, User, Card, Mains, Visibility } from '../types'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { ME, GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
+import { ME, GET_AIS, GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
 
 import DeleteAlert from './DeleteAlert'
 import TopicComponent from './Topic'
@@ -17,7 +17,7 @@ interface SecSideBarProps {
     visibility: Visibility
     aiList: AI[] | undefined
     signOff: ()=> void
-    setAiList: Dispatch<AI[]>
+    // setAiList: Dispatch<AI[]>
     setMains: Dispatch<Mains>
 
     setVisibility: Dispatch<Visibility>
@@ -30,9 +30,7 @@ interface SecSideBarProps {
 interface topicListData {
     getTopics: Topic[]
 }
-// interface topicListVariables {
-//     list: string[] | undefined
-// }
+
 interface topicListVariables {
     mainId: string | undefined
 }
@@ -49,7 +47,7 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiList, setVisibility, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
+const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setVisibility, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic   ] = useState<string>("")
     const [show,        setShow       ] = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
@@ -64,14 +62,12 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
     }
     
     
-
     // USE QUERY
 
     const { data, refetch } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
         variables: { mainId: mains.main?.id },
         skip: !mains.main?.id
     });
-
 
     // USE EFFECT    
     const inputRef = useRef<HTMLInputElement>(null)
@@ -105,17 +101,45 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
     const [ deleteAi,       {loading: DAloading}   ] = useMutation(DELETE_AI, {
         update: (cache, response) => {
             cache.updateQuery({ query: ME }, ({ me } ) => {
-                console.log("RESPONSE", response)
-                console.log("ME", me)
+                const newList = me.allPrompts.filter((id:string) => id !== response.data.deleteAi)
+                const newME = {...me}
+                newME.allPrompts = newList
                 return {
-                    asdf: "asdf"
+                    me: newME
+              }
+            });
+            cache.updateQuery({ query: GET_AIS, variables: {meId: me?.id} }, ({getAis}) => {
+                return {
+                    getAis: getAis.filter((ai: AI)=> ai.id != response.data.deleteAi)
               }
             });
         }
     })
-    const [ addAiToFavs,    {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
+    const [ addAiToFavs,    {loading: AATFloading} ] = useMutation(ADD_AI_FAV, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: GET_AIS, variables: {meId: me?.id} }, ({getAis}) => {
+                const aiIndex = getAis?.findIndex((ai: AI) => ai.id === mains.main?.id);
+                const newAiList = {...getAis}
+                newAiList[aiIndex] = response.data.addAiToFavs;
+                return {
+                    getAis: newAiList
+                }
+            });
+        }
+    });
+    const [ editAi,         {loading: EAloading}   ] = useMutation(EDIT_AI, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: GET_AIS, variables: {meId: me?.id} }, ({getAis}) => {
+                const aiIndex = getAis?.findIndex((ai: AI) => ai.id === mains.main?.id);
+                const newAiList = {...getAis}
+                newAiList[aiIndex] = response.data.editAi;
+                return {
+                    getAis: newAiList
+                }
+            });
+        }
+    })
     const [ addTopicToFavs, {loading: ATTFloading} ] = useMutation(ADD_TOPIC_FAV)
-    const [ editAi,         {loading: EAloading}   ] = useMutation(EDIT_AI)
 
     // EVENT HANDLERS
 
@@ -136,7 +160,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
             }
         
             const newAiList = aiList.filter((arrayAi) => arrayAi.id !== aiId);
-            setAiList(newAiList);
+            // setAiList(newAiList);
         
             if (newAiList.length === 0) {
                     return;
@@ -145,9 +169,9 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
                     setDeleteAlert("none");
             }
         
-            const updatedMe = { ...me };
-            const updatedAllPrompts = updatedMe.allPrompts?.filter((id) => id !== aiId);
-            updatedMe.allPrompts = updatedAllPrompts;
+            // const updatedMe = { ...me };
+            // const updatedAllPrompts = updatedMe.allPrompts?.filter((id) => id !== aiId);
+            // updatedMe.allPrompts = updatedAllPrompts;
             // setMe(updatedMe);
         } catch (error) {
             console.error("Error deleting AI:", error);
@@ -224,7 +248,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
                 setDeleteAlert={setDeleteAlert}
             />
         ));
-      };
+    };
 
     const addTopicHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         try {
@@ -261,7 +285,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
         } catch (error) {
             console.error('An error occurred while adding the topic:', error);
         }
-      };
+    };
 
 
     const addToFavs = async () => {
@@ -270,14 +294,14 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
                 return;
             }
         
-            const newAi = await addAiToFavs({ variables: { aiId: mains.main.id } });
-            const aiIndex = aiList?.findIndex((ai) => ai.id === mains.main?.id);
+            await addAiToFavs({ variables: { aiId: mains.main.id } });
+            // const aiIndex = aiList?.findIndex((ai) => ai.id === mains.main?.id);
             const newMain = { ...mains.main, fav: !mains.main.fav };
         
-            const newAiList = [...aiList];
-            newAiList[aiIndex] = newAi.data.addAiToFavs;
+            // const newAiList = [...aiList];
+            // newAiList[aiIndex] = newAi.data.addAiToFavs;
             setMains({ ...mains, main: newMain });
-            setAiList(newAiList);
+            // setAiList(newAiList);
         } catch (error) {
             console.error('An error occurred while adding to favorites:', error);
         }
@@ -295,12 +319,12 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
             }
         
             const newAi = await editAi({ variables: { aiId: mains.main.id, newName: newTitle } });
-            const aiIndex = aiList?.findIndex((ai) => ai.id === mains.main?.id);
+            // const aiIndex = aiList?.findIndex((ai) => ai.id === mains.main?.id);
             const newMain = { ...mains.main, name: newAi.data.editAi.name };
-            const newAiList = [...aiList];
-            newAiList[aiIndex] = newAi.data.editAi;
+            // const newAiList = [...aiList];
+            // newAiList[aiIndex] = newAi.data.editAi;
             setMains({ ...mains, main: newMain });
-            setAiList(newAiList);
+            // setAiList(newAiList);
             setEdit(!edit);
         } catch (error) {
             console.error('An error occurred while editing AI:', error);

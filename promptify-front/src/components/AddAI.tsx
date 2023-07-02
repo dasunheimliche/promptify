@@ -12,7 +12,7 @@ interface AddAIProps {
     me            : User | undefined
     aiList        : AI[] | undefined
     setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
-    setAiList     : Dispatch<AI[]>
+    // setAiList     : Dispatch<AI[]>
     setMains      : React.Dispatch<React.SetStateAction<Mains>>
     // setMe         : Dispatch<User>
 }
@@ -27,7 +27,7 @@ interface addAiVariables {
     }
 }
 
-const AddAI = ({me, aiList, setAiList, setVisibility, setMains } : AddAIProps)  => {
+const AddAI = ({me, aiList, setVisibility, setMains } : AddAIProps)  => {
 
     //** STATES
     const [name, setName] = useState<string>("")
@@ -36,9 +36,14 @@ const AddAI = ({me, aiList, setAiList, setVisibility, setMains } : AddAIProps)  
     //** MUTATIONS
     const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI, {
         update: (cache, response) => {
-            cache.updateQuery({ query: ME }, ({ me } ) => {
+            cache.updateQuery({ query: ME}, ({me}) => {
                 return {
-                    me: me.allPrompts.concat(response.data?.createAi.id),
+                    me: me.allPrompts.concat(response.data?.createAi.id)
+              }
+            });
+            cache.updateQuery({ query: GET_AIS, variables: {meId: me?.id} }, ({getAis}) => {
+                return {
+                    getAis: getAis.concat(response.data?.createAi)
               }
             });
         }
@@ -62,13 +67,13 @@ const AddAI = ({me, aiList, setAiList, setVisibility, setMains } : AddAIProps)  
             const { data: newAI } = await createAi({ variables });
         
             if (newAI) {
-                const updatedAiList: AI[] = aiList ? [...aiList, newAI.createAi] : [newAI.createAi];
+                // const updatedAiList: AI[] = aiList ? [...aiList, newAI.createAi] : [newAI.createAi];
         
-                const updatedMe: User = { ...me };
-                updatedMe.allPrompts = updatedMe.allPrompts?.concat(newAI.createAi.id);
+                // const updatedMe: User = { ...me };
+                // updatedMe.allPrompts = updatedMe.allPrompts?.concat(newAI.createAi.id);
         
                 // setMe(updatedMe);
-                setAiList(updatedAiList);
+                // setAiList(updatedAiList);
                 setMains(prev=>({...prev, main: newAI.createAi}))
                 setVisibility(prev=>({...prev, showMenu: "none"}))
             }

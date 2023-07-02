@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 
 //** GRAPHQL/APOLLO IMPORTS
 import { useQuery, useApolloClient } from "@apollo/client"
-import { ME } from '@/queries'
+import { ME, GET_AIS, GET_TOPICS } from '@/queries'
 
 //** TYPES
 
@@ -33,16 +33,45 @@ interface meData {
   me: User
 }
 
+interface aiListData {
+  getAis: AI[]
+}
+
+interface aiListVariables {
+  meId: string | undefined
+}
+
+interface topicListData {
+  getTopics: Topic[]
+}
+
+interface topicListVariables {
+  mainId: string | undefined
+}
+
 export default function Me() {
 
   const [mains,      setMains      ] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined, profile: true});
   const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
   
   //** STATE WHICH SETS CURRENT USER
-  // const [me,         setMe        ] = useState<User    | undefined>(undefined);
+  const { data: meData, refetch: meRefetch } = useQuery<meData>(ME)  
+  const me = meData?.me
 
   //** STATES WICH CONTROLS ITEM LISTS
-  const [aiList,     setAiList    ] = useState<AI[]    | undefined>(undefined)
+
+  const { data: aiData} = useQuery<aiListData, aiListVariables>(GET_AIS, {
+    variables: {meId: me?.id},
+    skip: !me?.id,
+  });
+  const aiList = aiData?.getAis
+
+  // const { data: topicData } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
+  //   variables: { mainId: mains.main?.id },
+  //   skip: !mains.main?.id
+  // });
+  // const topicList = topicData?.getTopics
+
   const [cardList,   setCardList  ] = useState<Card[]  | undefined>(undefined)
   const [topicList,  setTopicList ] = useState<Topic[] | undefined>(undefined)
 
@@ -53,19 +82,12 @@ export default function Me() {
   const isLoggued = useIsUserLoggedIn()
 
   //** QUERIES
-  const { data, refetch } = useQuery<meData>(ME)  
-  const me = data?.me
+ 
 
   //** USE EFFECTS
 
-  // useEffect(()=> {
-  //   if (data) {
-  //     setMe(data.me)
-  //   }
-  // }, [data])
-
   const reef = async()=> {
-    await refetch()
+    await meRefetch()
   }
 
   useEffect(()=> {
@@ -85,7 +107,7 @@ export default function Me() {
     <div className={style.main}>
       {visibility.showMenu !== "none" && 
         <div className={style[`opt-mode`]}>
-          {visibility.showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}     setVisibility={setVisibility}  setMains={setMains}   />}
+          {visibility.showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setVisibility={setVisibility}  setMains={setMains}   />}
           {visibility.showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
           {visibility.showMenu === "add stack"   &&  <AddStack   cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
         </div>
@@ -99,7 +121,6 @@ export default function Me() {
         aiList        = {aiList       }   
         topicList     = {topicList    } 
         setMains      = {setMains     } 
-        setAiList     = {setAiList    } 
         setTopicList  = {setTopicList } 
         visibility    = {visibility   }
         setVisibility = {setVisibility}
@@ -110,9 +131,7 @@ export default function Me() {
         aiList        = {aiList       } 
         topicList     = {topicList    }
         visibility    = {visibility   } 
-        // setMe         = {setMe        }
         setMains      = {setMains     }
-        setAiList     = {setAiList    } 
         setTopicList  = {setTopicList } 
         setCardList   = {setCardList  } 
         setVisibility = {setVisibility} 
