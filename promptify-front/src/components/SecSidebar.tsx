@@ -102,7 +102,17 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
     const [ createTopic,    {loading: CTloading}   ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC, {})
     const [ deleteTopic,    {loading: DTloading}   ] = useMutation(DELETE_TOPIC)
 
-    const [ deleteAi,       {loading: DAloading}   ] = useMutation(DELETE_AI)
+    const [ deleteAi,       {loading: DAloading}   ] = useMutation(DELETE_AI, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: ME }, ({ me } ) => {
+                console.log("RESPONSE", response)
+                console.log("ME", me)
+                return {
+                    asdf: "asdf"
+              }
+            });
+        }
+    })
     const [ addAiToFavs,    {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
     const [ addTopicToFavs, {loading: ATTFloading} ] = useMutation(ADD_TOPIC_FAV)
     const [ editAi,         {loading: EAloading}   ] = useMutation(EDIT_AI)

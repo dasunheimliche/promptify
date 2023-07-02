@@ -119,17 +119,17 @@ const typeDefs = `
 		deleteCard (
 			cardId: String!
 			topicId: String!
-		) : Boolean!
+		) : String!
 
 		deleteTopic (
 			aiId: String!
 			topicId: String!
-		) : Boolean!
+		) : String!
 
 		deleteAi (
 			userId: String!
 			aiId: String!
-		) : Boolean!
+		) : String!
 
 		addCardToFavs (
 			cardId: String!
