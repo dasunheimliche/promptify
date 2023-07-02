@@ -4,7 +4,7 @@ import { User, AI, Mains, Visibility } from '../types'
 import { doNothing, closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
-import { ADD_AI } from '@/queries'
+import { ADD_AI, GET_AIS, ME } from '@/queries'
 
 import style from '../styles/popups.module.css'
 
@@ -14,7 +14,7 @@ interface AddAIProps {
     setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
     setAiList     : Dispatch<AI[]>
     setMains      : React.Dispatch<React.SetStateAction<Mains>>
-    setMe         : Dispatch<User>
+    // setMe         : Dispatch<User>
 }
 interface addAiData {
     createAi : AI
@@ -27,14 +27,22 @@ interface addAiVariables {
     }
 }
 
-const AddAI = ({me, aiList, setAiList, setVisibility, setMains, setMe } : AddAIProps)  => {
+const AddAI = ({me, aiList, setAiList, setVisibility, setMains } : AddAIProps)  => {
 
     //** STATES
     const [name, setName] = useState<string>("")
     const [abb,  setAbb ] = useState<string>("")
 
     //** MUTATIONS
-    const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI)
+    const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: ME }, ({ me } ) => {
+                return {
+                    me: me.allPrompts.concat(response.data?.createAi.id),
+              }
+            });
+        }
+    })
 
     //** EVENT HANDLERS
 
@@ -59,7 +67,7 @@ const AddAI = ({me, aiList, setAiList, setVisibility, setMains, setMe } : AddAIP
                 const updatedMe: User = { ...me };
                 updatedMe.allPrompts = updatedMe.allPrompts?.concat(newAI.createAi.id);
         
-                setMe(updatedMe);
+                // setMe(updatedMe);
                 setAiList(updatedAiList);
                 setMains(prev=>({...prev, main: newAI.createAi}))
                 setVisibility(prev=>({...prev, showMenu: "none"}))

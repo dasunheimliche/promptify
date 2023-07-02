@@ -3,7 +3,7 @@ import { useState, Dispatch, useEffect, useRef } from 'react'
 import { AI, Topic, User, Card, Mains, Visibility } from '../types'
 
 import { useQuery, useMutation } from '@apollo/client'
-import { GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
+import { ME, GET_TOPICS, ADD_TOPIC, DELETE_TOPIC, DELETE_AI, ADD_AI_FAV, ADD_TOPIC_FAV, EDIT_AI } from '@/queries'
 
 import DeleteAlert from './DeleteAlert'
 import TopicComponent from './Topic'
@@ -21,7 +21,7 @@ interface SecSideBarProps {
     setMains: Dispatch<Mains>
 
     setVisibility: Dispatch<Visibility>
-    setMe: Dispatch<User>
+    // setMe: Dispatch<User>
     
     topicList: Topic[] | undefined
     setTopicList: Dispatch<Topic[] | undefined>
@@ -49,7 +49,7 @@ interface addTopicVariables {
     }
 }
 
-const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiList, setMe, setVisibility, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
+const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiList, setVisibility, topicList, setTopicList, setCardList}: SecSideBarProps)=> {
     const [addTopic,    setAddTopic   ] = useState<string>("")
     const [show,        setShow       ] = useState<boolean>(false)
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
@@ -99,8 +99,9 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
 
     // MUTATIONS
 
-    const [ createTopic,    {loading: CTloading}   ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC)
+    const [ createTopic,    {loading: CTloading}   ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC, {})
     const [ deleteTopic,    {loading: DTloading}   ] = useMutation(DELETE_TOPIC)
+
     const [ deleteAi,       {loading: DAloading}   ] = useMutation(DELETE_AI)
     const [ addAiToFavs,    {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
     const [ addTopicToFavs, {loading: ATTFloading} ] = useMutation(ADD_TOPIC_FAV)
@@ -137,7 +138,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setAiLis
             const updatedMe = { ...me };
             const updatedAllPrompts = updatedMe.allPrompts?.filter((id) => id !== aiId);
             updatedMe.allPrompts = updatedAllPrompts;
-            setMe(updatedMe);
+            // setMe(updatedMe);
         } catch (error) {
             console.error("Error deleting AI:", error);
         }

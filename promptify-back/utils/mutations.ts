@@ -192,7 +192,7 @@ const Mutation = {
 			}
 		}
 	},
-	deleteCard: async(_root:undefined, args: deleteCardArgs, context: Context) : Promise<boolean> => {
+	deleteCard: async(_root:undefined, args: deleteCardArgs, context: Context) : Promise<string> => {
 		try {
 			const curr = await context?.currentUser;
 			if (!curr) throw new Error("Failed to fetch context");
@@ -208,7 +208,7 @@ const Mutation = {
 				{ $pull: { cards: cardIdObject } }
 			);
         
-			return true;
+			return cardId;
 		} catch (error) {
 			if (error instanceof Error) {
 				throw new GraphQLError(error.message, {
@@ -221,17 +221,12 @@ const Mutation = {
 			}
 		}
 	},
-	deleteTopic: async(_root:undefined, args: deleteTopicArgs, context: Context) : Promise<boolean> => {
+	deleteTopic: async(_root:undefined, args: deleteTopicArgs, context: Context) : Promise<string> => {
 		try {
 			const curr = await context?.currentUser;
 			if (!curr) throw new Error("Failed to fetch context");
 
 			const { aiId, topicId } = args;
-			const topic = await TopicCollection.findById(topicId);
-        
-			if (!topic) {
-				return false;
-			}
         
 			const aiIdObject = new mongoose.Types.ObjectId(aiId);
 			const topicIdObject = new mongoose.Types.ObjectId(topicId);
@@ -243,7 +238,7 @@ const Mutation = {
 				{ $pull: { topics: topicIdObject } }
 			);
         
-			return true;
+			return topicId;
 		} catch (error) {
 			if (error instanceof Error) {
 				throw new GraphQLError(error.message, {
@@ -256,7 +251,7 @@ const Mutation = {
 			}
 		}
 	},
-	deleteAi: async(_root: undefined, args: StringObj, context: Context): Promise<boolean> => {
+	deleteAi: async(_root: undefined, args: StringObj, context: Context): Promise<string> => {
 		try {
 			const curr = await context?.currentUser;
 			if (!curr) throw new Error("Failed to fetch context");
@@ -274,7 +269,7 @@ const Mutation = {
 				{ $pull: { allPrompts: aiIdObject } }
 			);
         
-			return true;
+			return aiId;
 		} catch (error) {
 			if (error instanceof Error) {
 				throw new GraphQLError(error.message, {

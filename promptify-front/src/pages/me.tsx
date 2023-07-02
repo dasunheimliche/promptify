@@ -39,7 +39,7 @@ export default function Me() {
   const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
   
   //** STATE WHICH SETS CURRENT USER
-  const [me,         setMe        ] = useState<User    | undefined>(undefined);
+  // const [me,         setMe        ] = useState<User    | undefined>(undefined);
 
   //** STATES WICH CONTROLS ITEM LISTS
   const [aiList,     setAiList    ] = useState<AI[]    | undefined>(undefined)
@@ -54,14 +54,15 @@ export default function Me() {
 
   //** QUERIES
   const { data, refetch } = useQuery<meData>(ME)  
+  const me = data?.me
 
   //** USE EFFECTS
 
-  useEffect(()=> {
-    if (data) {
-      setMe(data.me)
-    }
-  }, [data])
+  // useEffect(()=> {
+  //   if (data) {
+  //     setMe(data.me)
+  //   }
+  // }, [data])
 
   const reef = async()=> {
     await refetch()
@@ -84,7 +85,7 @@ export default function Me() {
     <div className={style.main}>
       {visibility.showMenu !== "none" && 
         <div className={style[`opt-mode`]}>
-          {visibility.showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}     setVisibility={setVisibility}  setMains={setMains}  setMe={setMe}/>}
+          {visibility.showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setAiList={setAiList}     setVisibility={setVisibility}  setMains={setMains}   />}
           {visibility.showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
           {visibility.showMenu === "add stack"   &&  <AddStack   cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
         </div>
@@ -109,7 +110,7 @@ export default function Me() {
         aiList        = {aiList       } 
         topicList     = {topicList    }
         visibility    = {visibility   } 
-        setMe         = {setMe        }
+        // setMe         = {setMe        }
         setMains      = {setMains     }
         setAiList     = {setAiList    } 
         setTopicList  = {setTopicList } 

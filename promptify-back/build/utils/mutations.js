@@ -185,7 +185,7 @@ const Mutation = {
             const topicIdObject = new mongoose_1.default.Types.ObjectId(topicId);
             yield Card_1.default.findByIdAndDelete(cardId);
             yield Topic_1.default.updateOne({ _id: topicIdObject }, { $pull: { cards: cardIdObject } });
-            return true;
+            return cardId;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -206,16 +206,12 @@ const Mutation = {
             if (!curr)
                 throw new Error("Failed to fetch context");
             const { aiId, topicId } = args;
-            const topic = yield Topic_1.default.findById(topicId);
-            if (!topic) {
-                return false;
-            }
             const aiIdObject = new mongoose_1.default.Types.ObjectId(aiId);
             const topicIdObject = new mongoose_1.default.Types.ObjectId(topicId);
             yield Card_1.default.deleteMany({ topicId: topicIdObject });
             yield Topic_1.default.findByIdAndDelete(topicId);
             yield Ai_1.default.updateOne({ _id: aiIdObject }, { $pull: { topics: topicIdObject } });
-            return true;
+            return topicId;
         }
         catch (error) {
             if (error instanceof Error) {
@@ -242,7 +238,7 @@ const Mutation = {
             yield Topic_1.default.deleteMany({ aiId: aiIdObject });
             yield Ai_1.default.findByIdAndDelete(aiId);
             yield User_1.default.updateOne({ _id: userIdObject }, { $pull: { allPrompts: aiIdObject } });
-            return true;
+            return aiId;
         }
         catch (error) {
             if (error instanceof Error) {
