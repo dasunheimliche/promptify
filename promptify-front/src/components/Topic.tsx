@@ -2,9 +2,10 @@
 import { Dispatch, useState, useRef, useEffect } from "react"
 
 import { useMutation } from '@apollo/client'
-import { EDIT_TOPIC } from "@/queries"
+import { EDIT_TOPIC, GET_TOPICS, ADD_TOPIC_FAV, DELETE_TOPIC } from "@/queries"
+import { doNothing } from "@/utils/functions"
 
-import { Topic, AI, Mains } from "@/types"
+import { AI, Topic, Mains } from "@/types"
 
 import DeleteAlert from "./DeleteAlert"
 
@@ -16,56 +17,73 @@ interface TopicProps {
     topicList: Topic[] | undefined
     deleteAlert: string
     mains: Mains
-
-    deleteTopicfunc: (userId: string, topicId: string)=>void
-    DTloading: boolean
-    ATTFloading: boolean
-    addTopicToFavs: any
+    currentAI: AI | undefined
+    toDelete: Topic | undefined
+    setToDelete: Dispatch<Topic | undefined> 
     clickHandler: (sec: Topic)=>void
-
-    setTopicList: Dispatch<Topic[]>
     setDeleteAlert: Dispatch<string>
     setMains: Dispatch<Mains>
-
 }
 
-const Topic = ({ sec, topicList, mains, setMains, setTopicList, deleteTopicfunc, addTopicToFavs, setDeleteAlert, deleteAlert, clickHandler, DTloading, ATTFloading } : TopicProps)=> {
+
+const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMains, setDeleteAlert, deleteAlert, clickHandler } : TopicProps)=> {
 
     const [edit,    setEdit   ] = useState<boolean>(false)
     const [newName, setNewName] = useState<string>(sec.name)
 
     const inputRef = useRef<HTMLInputElement>(null)
+
+    const [ deleteTopic,    {loading: DTloading}   ] = useMutation(DELETE_TOPIC, {
+        update: (cache, response) => {
+            cache.updateQuery({query: GET_TOPICS, variables: { mainId: currentAI?.id }}, ({ getTopics })=> {
+                return {
+                    getTopics: getTopics.filter((topic: Topic) =>  response.data?.deleteTopic !== topic.id)
+                }
+            })
+        }
+    })
+
+    const [ addTopicToFavs, {loading: ATTFloading} ] = useMutation(ADD_TOPIC_FAV)
+
     const [ editTopic, { loading: ETloading} ] = useMutation(EDIT_TOPIC)
 
     // EVENT HANDLERS
     const deleteTopicHandler = async()=> {
-        if (!mains.main) {
-            return
-        }
-        await deleteTopicfunc(mains.main?.userId, sec.id)
+        if (!toDelete) return
+        
+        await deleteTopicfunc(toDelete?.aiId, toDelete?.id)
         setDeleteAlert("none")
+        setToDelete(undefined)
     }
 
-    useEffect(()=> {
-        inputRef.current?.focus()
-    },[edit])
+    const deleteTopicfunc = async (aiId: string, topicId:string) => {
+        
+        if (!topicList) return;
+
+        try {
+            await deleteTopic({ variables: { aiId, topicId } });
+        
+            const updatedTopicList = topicList.filter((arrayTopic: Topic) => arrayTopic.id !== topicId);
+        
+            if (mains.topic?.id === topicId) {
+                setMains({ ...mains, topic: updatedTopicList[0] });
+            }
+        } catch (error) {
+            console.error('An error occurred while deleting the topic:', error);
+        }
+    };
+
+    
 
     const editTopicHandler = async () => {
+
+        if (!newName) return
+
         try {
-            if (!topicList || !mains.main || !newName) {
-                return;
-            }
-            const newTopic = await editTopic({ variables: { topicId: sec.id, newName: newName } });
-            const aiIndex = topicList?.findIndex((t) => t.id === sec.id);
-            const newMainTopic = { ...sec, name: newTopic.data.editTopic.name };
-        
-            const newList = [...topicList];
-            newList[aiIndex] = newTopic.data.editTopic.name;
-            setTopicList(newList);
+
+            await editTopic({ variables: { topicId: sec.id, newName: newName } });
             setEdit(!edit);
-            if (sec.id === mains.topic?.id) {
-                setMains({ ...mains, topic: newMainTopic });
-            }
+
         } catch (error) {
             console.error('An error occurred while editing the topic:', error);
         }
@@ -76,29 +94,24 @@ const Topic = ({ sec, topicList, mains, setMains, setTopicList, deleteTopicfunc,
             if (!topicList) {
                 return;
             }
-            const newTopic = await addTopicToFavs({ variables: { topicId: sec.id } });
-            const topicIndex = topicList.findIndex((t: Topic) => t.id === sec?.id);
-        
-            const newTopicList = [...topicList];
-            newTopicList[topicIndex] = newTopic.data.addTopicToFavs;
-            setTopicList(newTopicList);
+            await addTopicToFavs({ variables: { topicId: sec.id } });
         } catch (error) {
             console.error('An error occurred while adding to favorites:', error);
         }
     };
 
-    const doNothing = (e:any)=> {
-        e.preventDefault()
-    }
+    useEffect(()=> {
+        inputRef.current?.focus()
+    },[edit])
 
     return (
-        <div className={style[`topic-container`]}>
-            {(deleteAlert === "topic") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteTopicHandler} loading={DTloading}/>}
+        <div className={style[`topic-container`]} >
+            {(deleteAlert === "topic") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteTopicHandler} loading={DTloading} />}
             {!edit && <div className={ `${style[`topic-name`]} p`} onClick={()=>clickHandler(sec)}>{sec.name}</div>}
             {edit && <input ref={inputRef} value={newName} type={"text"} placeholder="Edit name" className={ `${style[`topic-name`]} p unset`} onChange={(e)=>setNewName(e.target.value)}/>}
 
             {<div className={style[`topic-opt`]}>
-                {!edit && <div className={`${style[`del-topic`]} p`}  onClick={()=>setDeleteAlert("topic")}></div>}
+                {!edit && <div className={`${style[`del-topic`]} p`}  onClick={()=>{setToDelete(sec);setDeleteAlert("topic")}} ></div>}
                 {!edit && <div className={`${style[`edit-topic`]} p`} onClick={()=>setEdit(!edit)}></div>}  
                 {!edit && <div className={sec.fav? `${style[`fav-topic`]} ${style[`fav-topic-on`]} p`: `${style[`fav-topic`]} p`} onClick={ATTFloading? doNothing : addToFav}></div>}
                 {edit  && <div className={`${style.yes} p`} onClick={ETloading? doNothing : editTopicHandler}>✓</div>}

@@ -1,7 +1,7 @@
 import { Dispatch, useState } from 'react'
 
 import { useMutation } from '@apollo/client'
-import { DELETE_CARD, ADD_CARD_FAV } from '@/queries'
+import { DELETE_CARD, ADD_CARD_FAV, GET_CARDS } from '@/queries'
 
 import { Card, Mains, Visibility } from '../types'
 import { doNothing } from '@/utils/functions'
@@ -16,18 +16,37 @@ interface PromptProps {
     mains: Mains
     visibility: Visibility
     setVisibility: Dispatch<Visibility>
-    setCardList: Dispatch<Card[]>
     setMains: Dispatch<Mains>
 }
 
-const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, setVisibility} : PromptProps)=> {
+const PromptCard = ({card, mains, cardList, visibility, setMains, setVisibility} : PromptProps)=> {
     // STATE
     const [deleteAlert, setDeleteAlert ] = useState<string>("none")
     const [edit,        setEdit        ] = useState<boolean>(false)
 
     // MUTATIONS
-    const [deleteCard,    { loading: DCloading }] = useMutation(DELETE_CARD)
-    const [addCardToFavs, {loading: ACTFloading}] = useMutation(ADD_CARD_FAV)
+    const [deleteCard,    { loading: DCloading }] = useMutation(DELETE_CARD, {
+        update: (cache, response) => {
+            cache.updateQuery({query: GET_CARDS, variables: {topicId: mains.topic?.id}}, ({ getCards })=> {
+                return {
+                    getCards: getCards.filter((card: Card) =>  response.data?.deleteCard !== card.id)
+                }
+            })
+        }
+    })
+    const [addCardToFavs, {loading: ACTFloading}] = useMutation(ADD_CARD_FAV, {
+        update: (cache, response)=> {
+            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({ getCards }) => {
+                const cardIndex = getCards?.findIndex((card: Card) => card.id === mains.currCard?.id);
+                const newCardList = {...getCards}
+                newCardList[cardIndex] = response.data.addTopicToFavs;
+                return {
+                    getAis: newCardList
+                }
+            });
+        }
+        
+    })
 
     // EVENT HANDLER
     const openCardHandler = ()=> {
@@ -42,15 +61,10 @@ const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, s
 
     const deleteCardfunc = async (cardId: string, topicId: string) => {
         try {
-            const deleted = await deleteCard({ variables: { cardId, topicId } });
+            await deleteCard({ variables: { cardId, topicId } });
         
             if (!mains.topic) {
                     return;
-            }
-        
-            if (deleted) {
-                    const newCardList = cardList.filter((arrayCard) => arrayCard.id !== cardId);
-                    setCardList(newCardList);
             }
         
             const updatedTopic = { ...mains.topic };
@@ -74,11 +88,8 @@ const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, s
     const addToFavs = async () => {
         try {
             const { id } = card;
-            const newCard = await addCardToFavs({ variables: { cardId: id } });
-            const cardIndex = cardList.findIndex(c => c.id === id);
-            const newCardList = cardList.slice();
-            newCardList[cardIndex] = newCard.data.addCardToFavs;
-            setCardList(newCardList);
+            await addCardToFavs({ variables: { cardId: id } });
+
         } catch (error) {
             console.error('Error al agregar la tarjeta a favoritos:', error);
         }
@@ -87,7 +98,14 @@ const PromptCard = ({card, mains, cardList, visibility, setCardList, setMains, s
     return (
         <div className={card.prompts.length > 1? (card.id === mains.currCard?.id? `${style.prompt} ${style.stack} ${style.selected}`:`${style.prompt} ${style.stack}`) : (card.id === mains.currCard?.id? `${style.prompt} ${style.selected}` :style.prompt) } >
             {(deleteAlert === "prompt") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteCardHandler} loading={DCloading}/>}
-            {edit && <EditPrompt card={card} mains={mains} cardList={cardList} edit={edit} setCardList={setCardList} setEdit={setEdit} setMains={setMains}/>}
+            {edit && 
+                <EditPrompt 
+                    card={card} 
+                    mains={mains} 
+                    edit={edit} 
+                    setEdit={setEdit} 
+                    setMains={setMains}/>
+            }
             <div className='p' onClick={openCardHandler}>
                 <div className={style.title}>{card.title}</div>
                 <div className={style.content}>{card.prompts[0].content}</div>

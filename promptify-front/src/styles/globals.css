@@ -14,23 +14,16 @@
 
 :root {
   --main-sidebar: rgb(27,27,27);
-  /* --main-sidebar: rgb(142, 57, 44); */
 
   --ai-logo: rgb(210, 210, 210);
 
-
   --second-sidebar: rgb(16,16,20);
-  /* --second-sidebar: rgb(189, 72, 54); */
 
   --main-content: rgb(242,238,233);
 
-
   --add-ai: rgb(247,212,76);
 
-
   --prompt-sidebar: rgb(231,220,244)
-
-
 }
 
 

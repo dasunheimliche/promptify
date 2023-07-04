@@ -1,10 +1,7 @@
-import { useEffect, Dispatch } from 'react'
+import { Dispatch } from 'react'
 
 import { AI, User, Topic, Mains, Visibility } from '../types'
 import { theresFavs } from '@/utils/functions';
-
-import { GET_AIS } from '@/queries'
-import { useQuery } from '@apollo/client';
 
 import AiButton from './AiButton';
 
@@ -12,27 +9,15 @@ import style from '../styles/mainSidebar.module.css'
  
 interface MainSideBarProps {
     mains: Mains
-    me: User | undefined
     aiList: AI[] | undefined
     topicList: Topic[] | undefined
     visibility: Visibility
     setVisibility: Dispatch<Visibility>
     setMains: Dispatch<Mains>
-    // setAiList: Dispatch<AI[]>
-    setTopicList: Dispatch<Topic[] | undefined>
-}
-
-interface aiListData {
-    getAis: AI[]
-}
-
-interface aiListVariables {
-    meId: string | undefined
 }
 
 
-
-const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVisibility, setTopicList}: MainSideBarProps)=> {
+const MainSidebar = ({ aiList, mains, topicList, visibility, setMains, setVisibility}: MainSideBarProps)=> {
 
     // EVENT HANDLERS
 
@@ -52,7 +37,6 @@ const MainSidebar = ({ aiList, mains, me, topicList, visibility, setMains, setVi
                 setMains={setMains}
                 setVisibility={setVisibility}
                 visibility={visibility}
-                setTopicList={setTopicList}
             />
         ));
       };

@@ -4,15 +4,13 @@ import { Card, Mains, Visibility } from '../types'
 import { doNothing, closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
-import { ADD_CARD } from '@/queries'
+import { ADD_CARD, GET_CARDS } from '@/queries'
 
 import style from '../styles/popups.module.css'
 
 interface AddPromptProps {
     setVisibility: React.Dispatch<React.SetStateAction<Visibility>>
     mains: Mains
-    cardList: Card[] | undefined
-    setCardList: Dispatch<Card[]>
     setMains: Dispatch<Mains>
 }
 
@@ -33,7 +31,7 @@ interface addCardVariables {
     }
 }
 
-const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddPromptProps)=> {
+const AddStack = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
 
     const [stackTitle,    setStackTitle   ] = useState<string>("")
     const [count,         setCount        ] = useState<number>(0)
@@ -42,7 +40,15 @@ const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddP
     const [promptTitle,   setPromptTitle  ] = useState<string>("")
     const [promptContent, setPromptContent] = useState<string>("")
 
-    const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
+    const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => {
+                return {
+                    getCards: getCards.concat(response.data?.createCard)
+              }
+            });
+        }
+    })
 
     // EVENT HANDLERS
 
@@ -60,7 +66,7 @@ const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddP
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
     
-        if (!mains.topic || !stack || !cardList) {
+        if (!mains.topic || !stack) {
             return;
         }
     
@@ -79,10 +85,6 @@ const AddStack = ({cardList, setCardList, mains, setVisibility, setMains} : AddP
             if (!newCard.data) {
                 return;
             }
-    
-            let copied = cardList ? [...cardList, newCard.data.createCard] : [newCard.data.createCard];
-    
-            setCardList(copied);
     
             let t = { ...mains.topic };
             t.cards = t.cards ? [...t.cards, newCard.data.createCard.id] : [newCard.data.createCard.id];

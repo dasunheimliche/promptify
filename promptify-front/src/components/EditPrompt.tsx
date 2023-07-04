@@ -4,7 +4,7 @@ import { Card, Prompt } from '@/types'
 import { doNothing } from '@/utils/functions'
 
 import { useMutation } from '@apollo/client'
-import { EDIT_CARD } from '@/queries'
+import { EDIT_CARD, GET_CARDS } from '@/queries'
 import { Mains } from '@/types'
 
 import style from '../styles/popups.module.css'
@@ -12,16 +12,14 @@ import style from '../styles/popups.module.css'
 interface EditPRomptProps {
     card: Card
     mains: Mains
-    cardList: Card[]
     edit: boolean
     setMains: Dispatch<Mains>
-    setCardList: Dispatch<Card[]>
     setEdit: Dispatch<boolean>
 }
 
 type mode = "stack" | "prompt"
 
-const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : EditPRomptProps)=> {
+const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
 
     // ESTADOS
     const [mode,       setMode       ] = useState<mode>(card.prompts.length > 1? "stack" : "prompt")
@@ -30,7 +28,18 @@ const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : Ed
     const [index,      setIndex      ] = useState<number>(0)
 
     // MUTATIONS
-    const [ editCard, {loading} ] = useMutation(EDIT_CARD) 
+    const [ editCard, {loading} ] = useMutation(EDIT_CARD, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => {
+                const cardIndex = getCards?.findIndex((card: Card) => card.id === mains.currCard?.id);
+                const newCardList = {...getCards}
+                newCardList[cardIndex] = response.data.editCard;
+                return {
+                    getCards: newCardList
+                }
+            });
+        }
+    }) 
 
     // EVENT HANDLERS
     const confirmEdit = ()=> {
@@ -92,12 +101,6 @@ const EditPrompt = ({card, mains, cardList, setEdit, setCardList, setMains} : Ed
             if (!data || !data.editCard) {
                 return;
             }
-        
-            const cardIndex = cardList.findIndex((c) => c.id === card.id);
-            const newCardList = [...cardList];
-            newCardList[cardIndex] = data.editCard;
-        
-            setCardList(newCardList);
         
             if (card.id === mains.currCard?.id) {
                 setMains({ ...mains, currCard: data.editCard });

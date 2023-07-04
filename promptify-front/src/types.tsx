@@ -1,3 +1,5 @@
+// ENTITIES
+
 export interface User {
     id: string
     name: string
@@ -52,6 +54,8 @@ export interface Token {
 	value: string
 }
 
+// CURRENT ITEMS
+
 export interface Mains {
     main: AI | undefined
     topic: Topic | undefined
@@ -59,8 +63,40 @@ export interface Mains {
     profile: boolean
 }
 
+// VISIBILITY
+
 export interface Visibility {
     showMenu:"none" | "add ai" | "add prompt" | "add stack"
     showSS:boolean
     showPS:boolean
+}
+
+// GRAPHQL DATA
+
+export interface meData {
+    me: User
+}
+  
+export interface aiListData {
+    getAis: AI[]
+}
+  
+export interface aiListVariables {
+    meId: string | undefined
+}
+  
+export interface topicListData {
+    getTopics: Topic[]
+}
+  
+export interface topicListVariables {
+    mainId: string | undefined
+}
+  
+export interface getCardsData {
+    getCards: Card[]
+}
+  
+export interface getCardsVariables {
+    topicId: string | undefined
 }

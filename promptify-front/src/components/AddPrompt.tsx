@@ -5,15 +5,13 @@ import { Visibility, Card, Mains } from '../types'
 import { doNothing, closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
-import { ADD_CARD } from '@/queries'
+import { ADD_CARD, GET_CARDS } from '@/queries'
 
 import style from '../styles/popups.module.css'
 
 interface AddPromptProps {
     setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
     mains         : Mains
-    cardList      : Card[] | undefined
-    setCardList   : Dispatch<Card[]>
     setMains      : Dispatch<Mains>
 }
 
@@ -35,12 +33,21 @@ interface addCardVariables {
     }
 }
 
-const AddPrompt = ({cardList, mains, setCardList, setVisibility, setMains} : AddPromptProps)=> {
+const AddPrompt = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
 
     const [ title,   setTitle    ] = useState<string>("")
     const [ content, setContent  ] = useState<string>("")
 
-    const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD)
+
+    const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD, {
+        update: (cache, response) => {
+            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => {
+                return {
+                    getCards: getCards.concat(response.data?.createCard)
+              }
+            });
+        }
+    })
 
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -69,12 +76,6 @@ const AddPrompt = ({cardList, mains, setCardList, setVisibility, setMains} : Add
             const { data: newCard } = await createCard({ variables });
         
             if (newCard) {
-                const updatedCardList = cardList ? [...cardList, newCard.createCard] : [newCard.createCard];
-        
-                if (!updatedCardList) return;
-        
-                setCardList(updatedCardList);
-        
                 const updatedTopic = { ...mains.topic };
                 updatedTopic.cards = updatedTopic.cards?.concat(newCard.createCard.id);
                 setMains({...mains, topic: updatedTopic})

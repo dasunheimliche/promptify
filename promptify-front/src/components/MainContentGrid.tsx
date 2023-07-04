@@ -3,9 +3,6 @@ import { Dispatch, useEffect, useState } from 'react'
 import { Card, Mains, Visibility } from '../types'
 import { theresFavs } from '@/utils/functions';
 
-import { useQuery } from '@apollo/client';
-import { GET_CARDS } from '@/queries'
-
 import PromptCard from './PromptCard'
 import AddCardButton from './AddCardButton'
 
@@ -17,42 +14,17 @@ interface MainContentGridProps {
     columns: number
     visibility: Visibility
     setVisibility: Dispatch<Visibility>
-    setCardList: Dispatch<Card[]>
     setMains: Dispatch<Mains>
 }
 
-interface getCardsData {
-    getCards: Card[]
-}
 
-interface getCardsVariables {
-    topicId: string | undefined
-}
-
-const MainContentGrid = ({cardList, mains, columns, visibility, setVisibility, setCardList, setMains }: MainContentGridProps)=> {
+const MainContentGrid = ({cardList, mains, columns, visibility, setVisibility, setMains }: MainContentGridProps)=> {
     //** STATES
     let [changed, setChanged] = useState<boolean>(false)
 
-    //** GRAPHQL QUERY
-    const { data: cardData, refetch } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
-        variables: {topicId:mains.topic?.id},
-        skip: !mains.topic?.id
-    });
-
-    //** USE EFFECT
-    useEffect(()=> {
-        refetch()
-    }, [mains.main, cardList]) // eslint-disable-line
-    
     useEffect(()=> {
         setChanged(!changed)
     }, [columns]) // eslint-disable-line
-    
-    useEffect(()=> {
-        if (cardData) {
-            setCardList(cardData.getCards)
-        }
-    }, [cardData]) //eslint-disable-line
 
     //** EVENT HANDLERS
 
@@ -69,7 +41,6 @@ const MainContentGrid = ({cardList, mains, columns, visibility, setVisibility, s
                 card={c}
                 cardList={cardList}
                 visibility={visibility}
-                setCardList={setCardList}
                 mains={mains}
                 setVisibility={setVisibility}
                 setMains={setMains}

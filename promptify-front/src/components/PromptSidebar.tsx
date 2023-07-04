@@ -19,10 +19,10 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
     const [index, setIndex] = useState<number>(0)
 
 
-    useEffect(()=> {
-        setIndex(0)
-        setCard(mains.currCard)
-    }, [mains.currCard])
+    // useEffect(()=> {
+    //     setIndex(0)
+    //     setCard(mains.currCard)
+    // }, [mains.currCard])
 
     const clear = ()=> {
         setCard(mains.currCard)
@@ -69,7 +69,7 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
 
 
     return (
-        <div style={!visibility.showPS? {} : {}} className={(mains.currCard !== undefined && visibility.showPS == true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
+        <div style={!visibility.showPS? {} : {}} className={(mains.currCard !== undefined && visibility.showPS === true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
             <div className={style.header}>
                 <span className={`${style[`back-button`]} p`} onClick={close}></span>
                 <div className={style.buttons}>

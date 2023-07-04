@@ -11,7 +11,6 @@ interface DeleteArgs {
 }
 
 const DeleteAlert = ({setDeleteAlert, deleteHandler, loading} : DeleteArgs)=> {
-
     return(
         <div className={style[`delete-background`]}>
             <div className={style[`delete-alert-container`]}>

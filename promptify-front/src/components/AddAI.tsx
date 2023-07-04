@@ -1,4 +1,4 @@
-import { useState, Dispatch } from 'react'
+import { useState } from 'react'
 
 import { User, AI, Mains, Visibility } from '../types'
 import { doNothing, closePopUp } from '@/utils/functions';
@@ -10,11 +10,8 @@ import style from '../styles/popups.module.css'
 
 interface AddAIProps {
     me            : User | undefined
-    aiList        : AI[] | undefined
     setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
-    // setAiList     : Dispatch<AI[]>
     setMains      : React.Dispatch<React.SetStateAction<Mains>>
-    // setMe         : Dispatch<User>
 }
 interface addAiData {
     createAi : AI
@@ -27,7 +24,7 @@ interface addAiVariables {
     }
 }
 
-const AddAI = ({me, aiList, setVisibility, setMains } : AddAIProps)  => {
+const AddAI = ({me, setVisibility, setMains } : AddAIProps)  => {
 
     //** STATES
     const [name, setName] = useState<string>("")
@@ -37,8 +34,10 @@ const AddAI = ({me, aiList, setVisibility, setMains } : AddAIProps)  => {
     const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI, {
         update: (cache, response) => {
             cache.updateQuery({ query: ME}, ({me}) => {
+                const newME: User = {...me}
+                newME.allPrompts = me.allPrompts.concat(response.data?.createAi.id)
                 return {
-                    me: me.allPrompts.concat(response.data?.createAi.id)
+                    me: newME
               }
             });
             cache.updateQuery({ query: GET_AIS, variables: {meId: me?.id} }, ({getAis}) => {
@@ -64,16 +63,9 @@ const AddAI = ({me, aiList, setVisibility, setMains } : AddAIProps)  => {
         };
     
         try {
-            const { data: newAI } = await createAi({ variables });
+            const { data: newAI } = await createAi({ variables});
         
             if (newAI) {
-                // const updatedAiList: AI[] = aiList ? [...aiList, newAI.createAi] : [newAI.createAi];
-        
-                // const updatedMe: User = { ...me };
-                // updatedMe.allPrompts = updatedMe.allPrompts?.concat(newAI.createAi.id);
-        
-                // setMe(updatedMe);
-                // setAiList(updatedAiList);
                 setMains(prev=>({...prev, main: newAI.createAi}))
                 setVisibility(prev=>({...prev, showMenu: "none"}))
             }

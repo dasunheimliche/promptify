@@ -10,11 +10,12 @@ import { useRouter } from "next/router"
 
 //** GRAPHQL/APOLLO IMPORTS
 import { useQuery, useApolloClient } from "@apollo/client"
-import { ME, GET_AIS, GET_TOPICS } from '@/queries'
+import { ME, GET_AIS, GET_TOPICS, GET_CARDS } from '@/queries'
 
 //** TYPES
 
 import { User, Topic, Card, AI, Mains, Visibility } from '../types'
+import { meData, aiListData, aiListVariables, topicListData, topicListVariables, getCardsData, getCardsVariables } from "../types";
 
 //** COMPONENTES
 import MainSidebar     from "@/components/MainSidebar";
@@ -29,127 +30,101 @@ import AddStack        from "@/components/AddStack";
 //** STYLES
 import style from '../styles/me.module.css'
 
-interface meData {
-  me: User
-}
-
-interface aiListData {
-  getAis: AI[]
-}
-
-interface aiListVariables {
-  meId: string | undefined
-}
-
-interface topicListData {
-  getTopics: Topic[]
-}
-
-interface topicListVariables {
-  mainId: string | undefined
-}
-
 export default function Me() {
 
   const [mains,      setMains      ] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined, profile: true});
   const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
   
   //** STATE WHICH SETS CURRENT USER
-  const { data: meData, refetch: meRefetch } = useQuery<meData>(ME)  
-  const me = meData?.me
+  const { data: {me} = {} } = useQuery<meData>(ME)  
 
   //** STATES WICH CONTROLS ITEM LISTS
-
-  const { data: aiData} = useQuery<aiListData, aiListVariables>(GET_AIS, {
+  const { data: { getAis: aiList } = {} } = useQuery<aiListData, aiListVariables>(GET_AIS, {
     variables: {meId: me?.id},
     skip: !me?.id,
   });
-  const aiList = aiData?.getAis
 
-  // const { data: topicData } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-  //   variables: { mainId: mains.main?.id },
-  //   skip: !mains.main?.id
-  // });
-  // const topicList = topicData?.getTopics
+  const { data: {getTopics: topicList} = {} } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
+    variables: { mainId: mains.main?.id },
+    skip: !mains.main?.id
+  });
 
-  const [cardList,   setCardList  ] = useState<Card[]  | undefined>(undefined)
-  const [topicList,  setTopicList ] = useState<Topic[] | undefined>(undefined)
+  const { data: {getCards: cardList} = {} } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+    variables: {topicId: mains.topic?.id},
+    skip: !mains.topic?.id
+  });
 
   //** HOOKS & CUSTOM HOOKS
-  const router    = useRouter()
+  const router    = useRouter() 
   const columns   = useColumns(visibility)
   const client    = useApolloClient()
   const isLoggued = useIsUserLoggedIn()
 
-  //** QUERIES
- 
-
   //** USE EFFECTS
 
-  const reef = async()=> {
-    await meRefetch()
-  }
-
   useEffect(()=> {
-    reef()
     if (!isLoggued) {
         router.push("/login")
     } 
   }, [isLoggued]) // eslint-disable-line
 
-  const signOff = ()=> {
+  const signOff = async()=> {
     sessionStorage.clear()
     router.push("/login")
-    client.resetStore()
+    await client.resetStore()
+    await client.cache.reset()
   }
   
   return (
     <div className={style.main}>
       {visibility.showMenu !== "none" && 
         <div className={style[`opt-mode`]}>
-          {visibility.showMenu === "add ai"      &&  <AddAI      aiList={aiList}      me={me}        setVisibility={setVisibility}  setMains={setMains}   />}
-          {visibility.showMenu === "add prompt"  &&  <AddPrompt  cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
-          {visibility.showMenu === "add stack"   &&  <AddStack   cardList={cardList}  mains={mains}  setCardList={setCardList} setVisibility={setVisibility}  setMains={setMains} />}
+          {visibility.showMenu === "add ai"      &&  <AddAI     me={me}       setVisibility={setVisibility} setMains={setMains} />}
+          {visibility.showMenu === "add prompt"  &&  <AddPrompt mains={mains} setVisibility={setVisibility} setMains={setMains} />}
+          {visibility.showMenu === "add stack"   &&  <AddStack  mains={mains} setVisibility={setVisibility} setMains={setMains} />}
         </div>
       }
 
       {aiList === undefined && <div className={style.loading}></div>}
 
       <MainSidebar 
-        me            = {me           } 
         mains         = {mains        }
         aiList        = {aiList       }   
         topicList     = {topicList    } 
-        setMains      = {setMains     } 
-        setTopicList  = {setTopicList } 
         visibility    = {visibility   }
+        setMains      = {setMains     } 
         setVisibility = {setVisibility}
       />
       <SecSidebar 
+        key           = {mains.main?.id}
         me            = {me           } 
         mains         = {mains        } 
         aiList        = {aiList       } 
         topicList     = {topicList    }
         visibility    = {visibility   } 
         setMains      = {setMains     }
-        setTopicList  = {setTopicList } 
-        setCardList   = {setCardList  } 
         setVisibility = {setVisibility} 
         signOff       = {signOff      }
       />
       <div className={style[`main-content`]} >
         <MainContentMenu mains={mains} />
         <MainContentGrid 
-          mains          = {mains        } 
-          cardList       = {cardList     } 
-          columns        = {columns      } 
-          visibility     = {visibility   }
-          setMains       = {setMains     }
-          setCardList    = {setCardList  } 
-          setVisibility  = {setVisibility}
+          key            = {mains.topic?.id}
+          mains          = {mains          } 
+          cardList       = {cardList       } 
+          columns        = {columns        } 
+          visibility     = {visibility     }
+          setMains       = {setMains       }
+          setVisibility  = {setVisibility  }
         />
       </div>
-      <PromptSidebar mains={mains} setVisibility={setVisibility} visibility={visibility} setMains={setMains}/>
+      <PromptSidebar 
+        key           = {mains.currCard?.id} 
+        mains         = {mains} 
+        visibility    = {visibility} 
+        setVisibility = {setVisibility} 
+        setMains      = {setMains}
+      />
     </div>
   )
 }
