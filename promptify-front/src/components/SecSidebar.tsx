@@ -1,8 +1,9 @@
 import { useState, Dispatch } from 'react'
 
-import { AI, Topic, User, Mains, Visibility } from '../types'
+import { AI, User, Mains, Visibility } from '../types'
 
-import { useMutation } from '@apollo/client'
+import { useMutation, useApolloClient } from '@apollo/client'
+import { useRouter } from "next/router"
 import { ME, GET_AIS,DELETE_AI } from '@/queries'
 
 import DeleteAlert from './DeleteAlert'
@@ -16,18 +17,18 @@ interface SecSideBarProps {
     mains: Mains
     visibility: Visibility
     aiList: AI[] | undefined
-    signOff: ()=> void
     setMains: Dispatch<Mains>
     setVisibility: Dispatch<Visibility>
-    topicList: Topic[] | undefined
 } 
 
-const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setVisibility, topicList}: SecSideBarProps)=> {
+const SecSidebar = ({me, mains, aiList, visibility,  setMains, setVisibility}: SecSideBarProps)=> {
     
     const currentAI = aiList?.find((ai:AI)=> ai.id === mains.main?.id)
     
     const [deleteAlert, setDeleteAlert] = useState<string>("none")
 
+    const router = useRouter() 
+    const client = useApolloClient()
 
     // MUTATIONS
 
@@ -81,6 +82,13 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setVisib
         setDeleteAlert("none")
     }
 
+    const handleSignOff = async()=> {
+        sessionStorage.clear()
+        await client.resetStore()
+        await client.cache.reset()
+        router.push("/login")
+      }
+
 
     return (
         <div style={!visibility.showSS? {} : {}} className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
@@ -89,7 +97,7 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setVisib
 
                 <div className={style['profile-card']}>
                     <div className={style['profile-name']}>{me?.name}</div>
-                    <button className={style['sign-off']} onClick={signOff} type='button' title='Sign off'>Sign Off</button>
+                    <button className={style['sign-off']} onClick={handleSignOff} type='button' title='Sign off'>Sign Off</button>
                 </div>
             }
 
@@ -99,7 +107,6 @@ const SecSidebar = ({me, mains, aiList, visibility, signOff,  setMains, setVisib
                 mains={mains} 
                 setMains={setMains} 
                 currentAI={currentAI} 
-                topicList={topicList} 
                 setVisibility={setVisibility} 
                 visibility={visibility} 
                 deleteAlert={deleteAlert} 

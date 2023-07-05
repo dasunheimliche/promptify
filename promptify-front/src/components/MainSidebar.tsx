@@ -1,6 +1,6 @@
 import { Dispatch } from 'react'
 
-import { AI, User, Topic, Mains, Visibility } from '../types'
+import { AI, Mains, Visibility } from '../types'
 import { theresFavs } from '@/utils/functions';
 
 import AiButton from './AiButton';
@@ -10,21 +10,18 @@ import style from '../styles/mainSidebar.module.css'
 interface MainSideBarProps {
     mains: Mains
     aiList: AI[] | undefined
-    topicList: Topic[] | undefined
     visibility: Visibility
     setVisibility: Dispatch<Visibility>
     setMains: Dispatch<Mains>
 }
 
-
-const MainSidebar = ({ aiList, mains, topicList, visibility, setMains, setVisibility}: MainSideBarProps)=> {
+const MainSidebar = ({ aiList, mains, visibility, setMains, setVisibility}: MainSideBarProps)=> {
 
     // EVENT HANDLERS
 
     const loadAIs = (isFav = false) => {
-        if (!aiList) {
-          return;
-        }
+        
+        if (!aiList) return
         
         const newAiList = aiList.filter(ai => (isFav ? ai.fav === true : ai.fav !== true));
         
@@ -33,7 +30,6 @@ const MainSidebar = ({ aiList, mains, topicList, visibility, setMains, setVisibi
                 key={ai.id}
                 ai={ai}
                 mains={mains}
-                topicList={topicList}
                 setMains={setMains}
                 setVisibility={setVisibility}
                 visibility={visibility}

@@ -9,13 +9,13 @@ import useIsUserLoggedIn from "@/hooks/useIsLogguedIn";
 import { useRouter } from "next/router"
 
 //** GRAPHQL/APOLLO IMPORTS
-import { useQuery, useApolloClient } from "@apollo/client"
-import { ME, GET_AIS, GET_TOPICS, GET_CARDS } from '@/queries'
+import { useQuery } from "@apollo/client"
+import { ME, GET_AIS, GET_CARDS } from '@/queries'
 
 //** TYPES
 
-import { User, Topic, Card, AI, Mains, Visibility } from '../types'
-import { meData, aiListData, aiListVariables, topicListData, topicListVariables, getCardsData, getCardsVariables } from "../types";
+import { Mains, Visibility } from '../types'
+import { meData, aiListData, aiListVariables, getCardsData, getCardsVariables } from "../types";
 
 //** COMPONENTES
 import MainSidebar     from "@/components/MainSidebar";
@@ -44,12 +44,7 @@ export default function Me() {
     skip: !me?.id,
   });
 
-  const { data: {getTopics: topicList} = {} } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-    variables: { mainId: mains.main?.id },
-    skip: !mains.main?.id
-  });
-
-  const { data: {getCards: cardList} = {} } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+  const { data: { getCards: cardList } = {} } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
     variables: {topicId: mains.topic?.id},
     skip: !mains.topic?.id
   });
@@ -57,7 +52,6 @@ export default function Me() {
   //** HOOKS & CUSTOM HOOKS
   const router    = useRouter() 
   const columns   = useColumns(visibility)
-  const client    = useApolloClient()
   const isLoggued = useIsUserLoggedIn()
 
   //** USE EFFECTS
@@ -67,13 +61,6 @@ export default function Me() {
         router.push("/login")
     } 
   }, [isLoggued]) // eslint-disable-line
-
-  const signOff = async()=> {
-    sessionStorage.clear()
-    router.push("/login")
-    await client.resetStore()
-    await client.cache.reset()
-  }
   
   return (
     <div className={style.main}>
@@ -90,7 +77,6 @@ export default function Me() {
       <MainSidebar 
         mains         = {mains        }
         aiList        = {aiList       }   
-        topicList     = {topicList    } 
         visibility    = {visibility   }
         setMains      = {setMains     } 
         setVisibility = {setVisibility}
@@ -100,11 +86,9 @@ export default function Me() {
         me            = {me           } 
         mains         = {mains        } 
         aiList        = {aiList       } 
-        topicList     = {topicList    }
         visibility    = {visibility   } 
         setMains      = {setMains     }
         setVisibility = {setVisibility} 
-        signOff       = {signOff      }
       />
       <div className={style[`main-content`]} >
         <MainContentMenu mains={mains} />

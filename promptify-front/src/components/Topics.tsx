@@ -1,10 +1,10 @@
 import style from '../styles/secSidebar.module.css'
 
 import { useState } from 'react'
-import { useMutation } from '@apollo/client'
+import { useQuery ,useMutation } from '@apollo/client'
 
 import { theresFavs, doNothing } from '@/utils/functions'
-import { Topic,  } from '@/types'
+import { Topic, topicListData, topicListVariables  } from '@/types'
 
 import TopicComponent from './Topic'
 
@@ -20,16 +20,17 @@ interface addTopicVariables {
     }
 }
 
-const Topics = ({mains, setMains, currentAI, topicList, setVisibility, visibility, deleteAlert, setDeleteAlert} : any)=> {
-    const [addTopic,    setAddTopic   ] = useState<string>("")
-    const [show, setShow] = useState<boolean>(false)
+const Topics = ({mains, setMains, currentAI, setVisibility, visibility, deleteAlert, setDeleteAlert} : any)=> {
+    const [addTopic, setAddTopic] = useState<string>("")
+    const [show    , setShow    ] = useState<boolean>(false)
     const [toDelete, setToDelete] = useState<Topic | undefined>(undefined)
 
-    let isMobile: boolean
+    const isMobile = typeof window !== "undefined" ? window.matchMedia("(max-width: 500px)").matches : false;
 
-    if (typeof window !== "undefined") {
-        isMobile = window.matchMedia("(max-width: 500px)").matches;
-    }
+    const { data: { getTopics: topicList } = {} } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
+        variables: { mainId: mains.main?.id },
+        skip: !mains.main?.id
+    });
 
     const [ createTopic,    {loading: CTloading}   ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC, {
         update: (cache, response) => {
@@ -41,12 +42,10 @@ const Topics = ({mains, setMains, currentAI, topicList, setVisibility, visibilit
         }
     })
 
-
     const loadSections = (isFav = false) => {
-        if (!mains.main) {
-          return;
-        }
-      
+
+        if (!mains.main) return
+
         const clickHandler = (sec: Topic) => {
       
           setMains({ ...mains, topic: sec });
@@ -79,33 +78,18 @@ const Topics = ({mains, setMains, currentAI, topicList, setVisibility, visibilit
         try {
             e.preventDefault();
         
-            if (!mains.main) {
-                return;
-            }
-        
+            if (!mains.main) return
+            
             const variables = { aiId: mains.main?.id, topic: { name: addTopic } };
         
             const newTopic = await createTopic({ variables: variables });
         
-            if (!topicList || !newTopic.data) {
-                return;
-            }
+            if (!newTopic.data) return
         
-            let copied = [...topicList, newTopic.data.createTopic];
             setMains({ ...mains, topic: newTopic.data.createTopic });
             setAddTopic("");
-        
-            let m = { ...mains.main };
-            m.topics = m.topics?.concat(newTopic.data.createTopic.id);
-        
-            setMains({ ...mains, main: m });
-        
-            if (copied) {
-                if (!mains.main) {
-                return;
-                }
-                setShow(false);
-            }
+            setShow(false);
+
         } catch (error) {
             console.error('An error occurred while adding the topic:', error);
         }

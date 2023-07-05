@@ -1,7 +1,16 @@
-import { AI } from '../types'
+import { AI, Mains, Visibility } from '../types'
 import style from '../styles/mainSidebar.module.css'
+import { Dispatch } from 'react'
 
-const AiButton = ({ai, mains, setMains, setVisibility, visibility } : any)=> {
+interface AiButtonProps {
+    ai: AI
+    mains: Mains
+    visibility: Visibility
+    setMains: Dispatch<Mains>
+    setVisibility: Dispatch<Visibility>
+}
+
+const AiButton = ({ai, mains, setMains, setVisibility, visibility } : AiButtonProps)=> {
 
     const clickHandler = (ai: AI)=> {
 

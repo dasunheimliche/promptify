@@ -49,9 +49,11 @@ const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMai
 
     // EVENT HANDLERS
     const deleteTopicHandler = async()=> {
+        
         if (!toDelete) return
         
         await deleteTopicfunc(toDelete?.aiId, toDelete?.id)
+
         setDeleteAlert("none")
         setToDelete(undefined)
     }
@@ -90,11 +92,11 @@ const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMai
     };
 
     const addToFav = async () => {
+        
         try {
-            if (!topicList) {
-                return;
-            }
-            await addTopicToFavs({ variables: { topicId: sec.id } });
+
+            await addTopicToFavs({ variables: { topicId: sec.id } })
+
         } catch (error) {
             console.error('An error occurred while adding to favorites:', error);
         }
