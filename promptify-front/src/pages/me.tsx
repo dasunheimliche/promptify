@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 
 //** CUSTOM HOOKS
-import useColumns from '../hooks/useColumns'
 import useIsUserLoggedIn from "@/hooks/useIsLogguedIn";
 
 //** NEXTJS IMPORTS
@@ -36,7 +35,6 @@ export default function Me() {
   const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
 
   const router    = useRouter() 
-  const columns   = useColumns(visibility)
   const isLoggued = useIsUserLoggedIn()
   
   const { data: {me} = {} } = useQuery<meData>(ME)  
@@ -88,7 +86,6 @@ export default function Me() {
         <MainContentGrid 
           key            = {mains.topic?.id}
           mains          = {mains          } 
-          columns        = {columns        } 
           visibility     = {visibility     }
           setMains       = {setMains       }
           setVisibility  = {setVisibility  }

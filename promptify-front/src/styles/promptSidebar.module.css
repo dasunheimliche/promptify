@@ -8,21 +8,78 @@
     }
 }
 
+/* @keyframes sidebarAnimation {
+    0% {
+      min-width: 0px;
+      max-width: 0px;
+      width: 0px;
+    }
+    100% {
+      min-width: 700px;
+      max-width: 700px;
+      width: 700px;
+    }
+  }
+  
+  @keyframes hiddenBarAnimation {
+    0% {
+      min-width: 700px;
+      max-width: 700px;
+      width: 700px;
+    }
+    100% {
+      min-width: 0px;
+      max-width: 0px;
+      width: 0px;
+    }
+  }
+  
+  .prompt-sidebar {
+    background-color: var(--prompt-sidebar);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-width: 0px;
+    max-width: 0px;
+    width: 0px;
+    overflow: hidden;
+    animation-name: sidebarAnimation;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+  }
+  
+  .hidden-bar {
+    z-index: -1;
+    min-width: 700px;
+    max-width: 700px;
+    width: 700px;
+    transition-property: none;
+    animation-name: hiddenBarAnimation;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+  } */
+
+.update {
+    color: green;
+    font-weight: bolder;
+}
 
 .prompt-sidebar {
 
     background-color: var(--prompt-sidebar);
-    min-width: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
 
-    width: 700px;
+    min-width: 700px;
     max-width: 700px;
-    overflow: hidden;
+    width: 700px;
     transition-property: min-width, max-width, width;
     transition-duration: 0.3s;
+
+    overflow: hidden;
 }
 
 .hidden-bar {
@@ -36,8 +93,6 @@
 
 
 .header {
-    /* outline: 1px solid red;
-    outline-offset: -1px; */
     width: 95%;
     min-height: 60px;
     display: flex;
@@ -66,9 +121,8 @@
     margin-right: 3px;
 }
 
+
 .content {
-    /* outline: 1px solid blue;
-    outline-offset: -1px; */
     width: 95%;
     height: 90%;
     position: relative;

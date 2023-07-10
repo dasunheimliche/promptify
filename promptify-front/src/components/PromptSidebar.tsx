@@ -1,10 +1,10 @@
+import style from '../styles/promptSidebar.module.css'
+
 import { useState, Dispatch, useMemo } from 'react'
 
-import { Card, Mains, Visibility } from '../types'
-
-import style from '../styles/promptSidebar.module.css'
 import { useQuery } from '@apollo/client'
-import { getCardsData, getCardsVariables } from '../types'
+
+import { Card, Mains, Visibility,getCardsData, getCardsVariables } from '../types'
 import { GET_CARDS } from '@/queries'
 
 interface PromptSidebarProps {
@@ -16,6 +16,8 @@ interface PromptSidebarProps {
 
 
 const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSidebarProps)=> {
+
+    console.log("VISIBILITY ", visibility.showPS)
 
     const { data: { getCards: cardList } = {} } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
         variables: {topicId: mains.topic?.id},
@@ -34,8 +36,6 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
             setEdited(true)
         }
     }, [currentCard]) // eslint-disable-line 
-
-
 
     const clear = ()=> {
         setCard(currentCard) 
@@ -79,11 +79,11 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
     }
 
     return (
-        <div className={(card !== undefined && visibility.showPS === true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
+        <div className={(card !== undefined && visibility.showPS === true )? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
             <div className={style.header}>
                 <span className={`${style[`back-button`]} p`} onClick={close}></span>
                 <div className={style.buttons}>
-                    <div className='p' onClick={restart}>{edited? "UPDATE" : "RESTART"}</div> 
+                    <div className={edited? `p ${style.update}` : `p`} onClick={restart}>{edited? "UPDATE" : "RESTART"}</div> 
                     <div className='p' onClick={clear}>CLEAR</div>   
                     <div className='p' onClick={copy}>COPY</div>
                 </div>

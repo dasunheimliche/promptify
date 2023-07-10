@@ -48,6 +48,7 @@
 }
 
 .cards-wrapper {
+
     overflow: auto;
   
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -154,7 +155,6 @@
 }
 
 .add-prompt {
-    /* background-color: rgb(247,212,76); */
     background-color: var(--add-ai);
     border-radius: 100px;
     padding: 25px;
@@ -173,82 +173,6 @@
     user-select: none
     
 }
-
-/* ====================================================================== */
-
-/* .header {
-    min-height: 60px;
-}
-  
-.header-title {
-    font-size: 23px;
-}
-
-.cards-wrapper {
-    padding-left: 15px;
-    padding-right: 15px;
-    gap: 15px;
-}
-  
-
-.grid-favs {
-    margin-bottom: 10px;
-    font-size: 21px;
-}
-
-.grid {
-    column-gap: 15px;
-    padding: 15px;
-}
-
-.divisor-grid {
-    bottom: 5px;
-}
-
-.add-card-container {
-    right: 25px;
-    bottom: 25px;
-    gap: 10px;
-}
-
-#add-single-prompt {
-    background-size: 70%;
-
-}
-  
-#add-stack-prompt {
-    background-size: 70%;
-}
-  
-#add-single-prompt:hover::after {
-    font-size: 17px;
-    min-width: 100px;
-    right: 90px;
-    border-radius: 10px;
-    padding: 3px;
-    padding-left: 6px;
-    padding-right: 6px;
-}
-  
-#add-stack-prompt:hover::after {
-    font-size: 17px;
-    min-width: 85px;
-  
-    right: 90px;
-  
-    border-radius: 10px;
-    padding: 3px;
-    padding-left: 6px;
-    padding-right: 6px;
-}
-
-.add-prompt {
-    border-radius: 100px;
-    padding: 25px;
-    width: 60px;
-    height: 60px;
-    font-size: 23px;
-} */
 
 @media (max-width: 1600px) {
     .header {
@@ -275,6 +199,8 @@
     .grid {
         column-gap: 12px;
         padding: 12px;
+
+        columns: 292px auto;
     }
     
     .divisor-grid {
@@ -352,6 +278,8 @@
     .grid {
         column-gap: 11px;
         padding: 11px;
+
+        columns: 249px auto;
     }
     
     .divisor-grid {
@@ -414,15 +342,11 @@
         padding-left: 0px;
         padding-right: 0px;
         padding: 0px;
-    }
-    
-    #grid {
-        /* column-count: 1; */
 
         display: flex;
         flex-direction: column;
     }
-
+    
     .grid-favs {
         margin-top: 12px;
         margin-bottom: 0px;
@@ -433,7 +357,6 @@
     }
 
     .cards-wrapper {
-        /* outline: 1px solid red; */
         padding-left: 11px;
         padding-right: 11px;
         gap: 11px;

@@ -6,11 +6,11 @@ function useColumns(visibility: Visibility) {
 
   useEffect(() => {
     if (visibility.showPS && visibility.showSS) {
-      setColumns(2);
+        setColumns(2);
     } else if (!visibility.showPS && !visibility.showSS) {
-      setColumns(4);
+        setColumns(4);
     } else {
-      setColumns(3);
+        setColumns(3);
     }
   }, [visibility.showPS, visibility.showSS]);
 

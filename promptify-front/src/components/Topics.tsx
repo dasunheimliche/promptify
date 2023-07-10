@@ -103,7 +103,7 @@ const Topics = ({mains, setMains, setVisibility, visibility} : TopicsProps)=> {
             <div className={style.addContainer}>
                 <div className={style[`add-header`]}>
                     <span className={style[`add-title`]}>Topics</span>
-                    <button className={style[`add-button`]} onClick={e=>setShow(!show)}>+</button>
+                    <button className={style[`add-button`]} onClick={()=>setShow(!show)}>{show?"─" :"+"}</button>
                 </div>
 
                 {<form className={show ? style[`add-form`] : `${style['add-form']} ${style['hidden-form']}`} action="" onSubmit={CTloading? doNothing : addTopicHandler}>
