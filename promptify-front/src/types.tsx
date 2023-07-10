@@ -57,9 +57,9 @@ export interface Token {
 // CURRENT ITEMS
 
 export interface Mains {
-    main: AI | undefined
-    topic: Topic | undefined
-    currCard: Card | undefined
+    main: {id: string} | undefined
+    topic: {id: string, aiId: string} | undefined
+    currCard: {id: string, aiId: string, topicId: string} | undefined
     profile: boolean
 }
 

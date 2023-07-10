@@ -1,8 +1,11 @@
-import { useEffect, useState, Dispatch } from 'react'
+import { useState, Dispatch, useMemo } from 'react'
 
 import { Card, Mains, Visibility } from '../types'
 
 import style from '../styles/promptSidebar.module.css'
+import { useQuery } from '@apollo/client'
+import { getCardsData, getCardsVariables } from '../types'
+import { GET_CARDS } from '@/queries'
 
 interface PromptSidebarProps {
     mains: Mains
@@ -14,23 +17,34 @@ interface PromptSidebarProps {
 
 const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSidebarProps)=> {
 
+    const { data: { getCards: cardList } = {} } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
+        variables: {topicId: mains.topic?.id},
+        skip: !mains.topic?.id
+      });
 
-    const [card,  setCard ] = useState<Card | undefined>(mains.currCard)
-    const [index, setIndex] = useState<number>(0)
+    const currentCard = cardList?.find((card: Card) => card.id === mains.currCard?.id)
+
+    const [card,   setCard  ] = useState<Card | undefined>(currentCard)
+    const [index,  setIndex ] = useState<number>(0)
+    const [edited, setEdited] = useState<boolean>(false)
+
+    // deshabilito el lintern para que la comparación se haga solo cuando "currentCard" cambie, y no cuando card también.
+    useMemo(() => {
+        if (currentCard !== card) {
+            setEdited(true)
+        }
+    }, [currentCard]) // eslint-disable-line 
 
 
-    // useEffect(()=> {
-    //     setIndex(0)
-    //     setCard(mains.currCard)
-    // }, [mains.currCard])
 
     const clear = ()=> {
-        setCard(mains.currCard)
+        setCard(currentCard) 
     }
 
     const restart = ()=> {
         setIndex(0)
-        setCard(mains.currCard)
+        setCard(currentCard) 
+        setEdited(false)
     }
 
     const copy = ()=> {
@@ -41,7 +55,7 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
     }
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>)=> {
-        let copia = JSON.parse(JSON.stringify(card))
+        let copia = JSON.parse(JSON.stringify(currentCard))
         copia.prompts[index].content = e.target.value
         setCard(copia)
     }
@@ -52,34 +66,30 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
     }
 
     const forward = ()=> {
-        if (!card) {
-            return
-        }
+        if (!card) return
+ 
         const maxind = card.prompts.length - 1
-        if (index + 1 <= maxind) {
-            setIndex(index + 1)
-        }
+
+        if (index + 1 <= maxind) setIndex(index + 1)
+        
     }
 
     const back = ()=> {
-        if (index - 1 >= 0) {
-            setIndex(index - 1)
-        }
+        if (index - 1 >= 0) setIndex(index - 1)
     }
 
-
     return (
-        <div style={!visibility.showPS? {} : {}} className={(mains.currCard !== undefined && visibility.showPS === true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
+        <div className={(card !== undefined && visibility.showPS === true)? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
             <div className={style.header}>
                 <span className={`${style[`back-button`]} p`} onClick={close}></span>
                 <div className={style.buttons}>
-                    <div className='p' onClick={restart}>RESTART</div> 
+                    <div className='p' onClick={restart}>{edited? "UPDATE" : "RESTART"}</div> 
                     <div className='p' onClick={clear}>CLEAR</div>   
                     <div className='p' onClick={copy}>COPY</div>
                 </div>
             </div>
             <div className={style.content}>
-                <div className={style[`content-title`]}>{mains.currCard?.title}</div>
+                <div className={style[`content-title`]}>{card?.title}</div>
                 <div className={style[`content-subtitle-container`]}>
                     {(card && card.prompts.length > 1) && <div>{`${index + 1} - ${card.prompts[index].title}`}</div>}
                 </div>

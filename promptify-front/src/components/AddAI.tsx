@@ -66,7 +66,7 @@ const AddAI = ({me, setVisibility, setMains } : AddAIProps)  => {
             const { data: newAI } = await createAi({ variables});
         
             if (newAI) {
-                setMains(prev=>({...prev, main: newAI.createAi}))
+                setMains(prev=>({...prev, main: {id : newAI.createAi.id}}))
                 setVisibility(prev=>({...prev, showMenu: "none"}))
             }
         } catch (error) {

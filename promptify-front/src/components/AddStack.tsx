@@ -1,4 +1,4 @@
-import { useState, Dispatch } from 'react'
+import { useState } from 'react'
 
 import { Card, Mains, Visibility } from '../types'
 import { doNothing, closePopUp } from '@/utils/functions';
@@ -11,7 +11,6 @@ import style from '../styles/popups.module.css'
 interface AddPromptProps {
     setVisibility: React.Dispatch<React.SetStateAction<Visibility>>
     mains: Mains
-    setMains: Dispatch<Mains>
 }
 
 interface addCardData {
@@ -31,7 +30,7 @@ interface addCardVariables {
     }
 }
 
-const AddStack = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
+const AddStack = ({ mains, setVisibility } : AddPromptProps)=> {
 
     const [stackTitle,    setStackTitle   ] = useState<string>("")
     const [count,         setCount        ] = useState<number>(0)
@@ -42,7 +41,7 @@ const AddStack = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
 
     const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD, {
         update: (cache, response) => {
-            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => {
+            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => { // * main.mains
                 return {
                     getCards: getCards.concat(response.data?.createCard)
               }
@@ -66,13 +65,13 @@ const AddStack = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
     
-        if (!mains.topic || !stack) {
+        if (!mains.topic || !stack) { 
             return;
         }
     
         const variables = {
-            topicId: mains.topic.id,
-            aiId: mains.topic.aiId,
+            topicId: mains.topic.id, 
+            aiId: mains.topic.aiId, 
             card: {
                 title: stackTitle,
                 prompts: stack,
@@ -82,13 +81,7 @@ const AddStack = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
         try {
             const newCard = await createCard({ variables });
     
-            if (!newCard.data) {
-                return;
-            }
-    
-            let t = { ...mains.topic };
-            t.cards = t.cards ? [...t.cards, newCard.data.createCard.id] : [newCard.data.createCard.id];
-            setMains({...mains, topic: t});
+            if (!newCard.data) return
     
             setVisibility(prev=>({...prev, showMenu: "none"}))
         } catch (error) {

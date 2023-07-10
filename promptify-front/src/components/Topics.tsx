@@ -1,10 +1,10 @@
 import style from '../styles/secSidebar.module.css'
 
-import { useState } from 'react'
+import { Dispatch, useState } from 'react'
 import { useQuery ,useMutation } from '@apollo/client'
 
 import { theresFavs, doNothing } from '@/utils/functions'
-import { Topic, topicListData, topicListVariables  } from '@/types'
+import { Mains, Topic, Visibility, topicListData, topicListVariables  } from '@/types'
 
 import TopicComponent from './Topic'
 
@@ -20,21 +20,27 @@ interface addTopicVariables {
     }
 }
 
-const Topics = ({mains, setMains, currentAI, setVisibility, visibility, deleteAlert, setDeleteAlert} : any)=> {
+interface TopicsProps {
+    mains: Mains
+    visibility: Visibility
+    setMains: Dispatch<Mains>
+    setVisibility: Dispatch<Visibility>
+}
+
+const Topics = ({mains, setMains, setVisibility, visibility} : TopicsProps)=> {
     const [addTopic, setAddTopic] = useState<string>("")
     const [show    , setShow    ] = useState<boolean>(false)
-    const [toDelete, setToDelete] = useState<Topic | undefined>(undefined)
 
     const isMobile = typeof window !== "undefined" ? window.matchMedia("(max-width: 500px)").matches : false;
 
     const { data: { getTopics: topicList } = {} } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
         variables: { mainId: mains.main?.id },
-        skip: !mains.main?.id
+        skip: !mains.main
     });
 
     const [ createTopic,    {loading: CTloading}   ] = useMutation<addAiData, addTopicVariables>(ADD_TOPIC, {
         update: (cache, response) => {
-            cache.updateQuery({query: GET_TOPICS, variables: { mainId: currentAI?.id }}, ({ getTopics })=> {
+            cache.updateQuery({query: GET_TOPICS, variables: { mainId: mains.main?.id }}, ({ getTopics })=> {
                 return {
                     getTopics: getTopics.concat(response.data?.createTopic)
                 }
@@ -48,11 +54,11 @@ const Topics = ({mains, setMains, currentAI, setVisibility, visibility, deleteAl
 
         const clickHandler = (sec: Topic) => {
       
-          setMains({ ...mains, topic: sec });
-      
-          if (isMobile) {
-            setVisibility({ ...visibility, showSS: false });
-          }
+            setMains({ ...mains, topic: {id:sec.id, aiId: sec.aiId} });
+        
+            if (isMobile) {
+                setVisibility({ ...visibility, showSS: false });
+            }
         };
       
         const newTopicList = topicList?.filter((t: Topic) => (isFav ? t?.fav !== false : t?.fav === false));
@@ -60,16 +66,11 @@ const Topics = ({mains, setMains, currentAI, setVisibility, visibility, deleteAl
         return newTopicList?.map((sec: Topic, i: any) => (
             <TopicComponent
                 key={i}
-                toDelete={toDelete}
-                setToDelete={setToDelete}
-                currentAI = {currentAI}
                 sec={sec}
                 topicList={topicList}
                 mains={mains}
-                deleteAlert={deleteAlert}
                 clickHandler={clickHandler}
                 setMains={setMains}
-                setDeleteAlert={setDeleteAlert}
             />
         ));
     };
@@ -80,13 +81,13 @@ const Topics = ({mains, setMains, currentAI, setVisibility, visibility, deleteAl
         
             if (!mains.main) return
             
-            const variables = { aiId: mains.main?.id, topic: { name: addTopic } };
+            const variables = { aiId: mains.main.id, topic: { name: addTopic } };
         
             const newTopic = await createTopic({ variables: variables });
         
             if (!newTopic.data) return
         
-            setMains({ ...mains, topic: newTopic.data.createTopic });
+            setMains({ ...mains, topic: {id: newTopic.data.createTopic.id, aiId: newTopic.data.createTopic.aiId} });
             setAddTopic("");
             setShow(false);
 

@@ -15,27 +15,23 @@ import style from '../styles/secSidebar.module.css'
 interface TopicProps {
     sec: Topic
     topicList: Topic[] | undefined
-    deleteAlert: string
     mains: Mains
-    currentAI: AI | undefined
-    toDelete: Topic | undefined
-    setToDelete: Dispatch<Topic | undefined> 
     clickHandler: (sec: Topic)=>void
-    setDeleteAlert: Dispatch<string>
     setMains: Dispatch<Mains>
 }
 
 
-const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMains, setDeleteAlert, deleteAlert, clickHandler } : TopicProps)=> {
+const Topic = ({ sec, topicList, mains, setMains, clickHandler } : TopicProps)=> {
 
     const [edit,    setEdit   ] = useState<boolean>(false)
     const [newName, setNewName] = useState<string>(sec.name)
+    const [del,     setDel    ] = useState<boolean>(false)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
     const [ deleteTopic,    {loading: DTloading}   ] = useMutation(DELETE_TOPIC, {
         update: (cache, response) => {
-            cache.updateQuery({query: GET_TOPICS, variables: { mainId: currentAI?.id }}, ({ getTopics })=> {
+            cache.updateQuery({query: GET_TOPICS, variables: { mainId: mains.main?.id }}, ({ getTopics })=> {
                 return {
                     getTopics: getTopics.filter((topic: Topic) =>  response.data?.deleteTopic !== topic.id)
                 }
@@ -48,15 +44,6 @@ const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMai
     const [ editTopic, { loading: ETloading} ] = useMutation(EDIT_TOPIC)
 
     // EVENT HANDLERS
-    const deleteTopicHandler = async()=> {
-        
-        if (!toDelete) return
-        
-        await deleteTopicfunc(toDelete?.aiId, toDelete?.id)
-
-        setDeleteAlert("none")
-        setToDelete(undefined)
-    }
 
     const deleteTopicfunc = async (aiId: string, topicId:string) => {
         
@@ -67,14 +54,20 @@ const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMai
         
             const updatedTopicList = topicList.filter((arrayTopic: Topic) => arrayTopic.id !== topicId);
         
-            if (mains.topic?.id === topicId) {
-                setMains({ ...mains, topic: updatedTopicList[0] });
+            if (mains.topic?.id === topicId) { 
+                setMains({ ...mains, topic: {id:updatedTopicList[0].id, aiId: updatedTopicList[0].aiId} });
             }
         } catch (error) {
             console.error('An error occurred while deleting the topic:', error);
         }
     };
 
+    const deleteTopicHandler = async()=> {
+        
+        await deleteTopicfunc(sec?.aiId, sec?.id)
+
+        setDel(false)
+    }
     
 
     const editTopicHandler = async () => {
@@ -108,14 +101,16 @@ const Topic = ({ sec, toDelete, setToDelete, currentAI, topicList, mains, setMai
 
     return (
         <div className={style[`topic-container`]} >
-            {(deleteAlert === "topic") && <DeleteAlert setDeleteAlert={setDeleteAlert} deleteHandler={deleteTopicHandler} loading={DTloading} />}
+            {del && <DeleteAlert onAccept={deleteTopicHandler} onCancel={setDel} loading={DTloading} />}
+
             {!edit && <div className={ `${style[`topic-name`]} p`} onClick={()=>clickHandler(sec)}>{sec.name}</div>}
             {edit && <input ref={inputRef} value={newName} type={"text"} placeholder="Edit name" className={ `${style[`topic-name`]} p unset`} onChange={(e)=>setNewName(e.target.value)}/>}
 
             {<div className={style[`topic-opt`]}>
-                {!edit && <div className={`${style[`del-topic`]} p`}  onClick={()=>{setToDelete(sec);setDeleteAlert("topic")}} ></div>}
+                {!edit && <div className={`${style[`del-topic`]} p`}  onClick={()=>setDel(true)} ></div>}
                 {!edit && <div className={`${style[`edit-topic`]} p`} onClick={()=>setEdit(!edit)}></div>}  
                 {!edit && <div className={sec.fav? `${style[`fav-topic`]} ${style[`fav-topic-on`]} p`: `${style[`fav-topic`]} p`} onClick={ATTFloading? doNothing : addToFav}></div>}
+
                 {edit  && <div className={`${style.yes} p`} onClick={ETloading? doNothing : editTopicHandler}>✓</div>}
                 {edit  && <div className={`${style.not} p`} onClick={()=>setEdit(false)}>✕</div>}
             </div>}

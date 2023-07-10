@@ -14,17 +14,17 @@ const AiButton = ({ai, mains, setMains, setVisibility, visibility } : AiButtonPr
 
     const clickHandler = (ai: AI)=> {
 
-        setMains({...mains, main: ai, profile: false})
+        setMains({...mains, main: {id: ai.id}, profile: false})
 
         if (visibility.showSS && mains.profile) {
             return
         }
 
-        if (visibility.showSS && (ai.name !== mains.main?.name)) {
+        if (visibility.showSS && (ai.id !== mains.main?.id)) {
             return
         }
 
-        if (visibility.showSS && (ai.name === mains.main?.name)) {
+        if (visibility.showSS && (ai.id === mains.main?.id)) {
             setVisibility({...visibility, showSS: false})
             return
         }
@@ -35,7 +35,7 @@ const AiButton = ({ai, mains, setMains, setVisibility, visibility } : AiButtonPr
     }
 
     return(
-        <div  className={(mains.main && ai.id === mains.main.id)? `${style[`ai-logo`]} p ${style['selected-main']}` : `${style[`ai-logo`]} p` } onClick={()=>clickHandler(ai)}>{ai.abb}</div>
+        <div  className={(mains.main?.id && ai.id === mains.main.id)? `${style[`ai-logo`]} p ${style['selected-main']}` : `${style[`ai-logo`]} p` } onClick={()=>clickHandler(ai)}>{ai.abb}</div>
     )
 }
 

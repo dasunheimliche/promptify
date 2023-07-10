@@ -4,7 +4,7 @@ import { Card, Prompt } from '@/types'
 import { doNothing } from '@/utils/functions'
 
 import { useMutation } from '@apollo/client'
-import { EDIT_CARD, GET_CARDS } from '@/queries'
+import { EDIT_CARD } from '@/queries'
 import { Mains } from '@/types'
 
 import style from '../styles/popups.module.css'
@@ -28,18 +28,7 @@ const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
     const [index,      setIndex      ] = useState<number>(0)
 
     // MUTATIONS
-    const [ editCard, {loading} ] = useMutation(EDIT_CARD, {
-        update: (cache, response) => {
-            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => {
-                const cardIndex = getCards?.findIndex((card: Card) => card.id === mains.currCard?.id);
-                const newCardList = {...getCards}
-                newCardList[cardIndex] = response.data.editCard;
-                return {
-                    getCards: newCardList
-                }
-            });
-        }
-    }) 
+    const [ editCard, {loading} ] = useMutation(EDIT_CARD) 
 
     // EVENT HANDLERS
     const confirmEdit = ()=> {
@@ -102,8 +91,8 @@ const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
                 return;
             }
         
-            if (card.id === mains.currCard?.id) {
-                setMains({ ...mains, currCard: data.editCard });
+            if (card.id === mains.currCard?.id) { 
+                setMains({ ...mains, currCard: {id: data.editCard.id, aiId: data.editCard.aiId, topicId: data.editCard.topicId} });
             }
             setEdit(false);
         } catch (error) {

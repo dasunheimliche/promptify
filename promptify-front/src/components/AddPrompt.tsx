@@ -12,7 +12,6 @@ import style from '../styles/popups.module.css'
 interface AddPromptProps {
     setVisibility : React.Dispatch<React.SetStateAction<Visibility>>
     mains         : Mains
-    setMains      : Dispatch<Mains>
 }
 
 interface addCardData {
@@ -33,7 +32,7 @@ interface addCardVariables {
     }
 }
 
-const AddPrompt = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
+const AddPrompt = ({ mains, setVisibility } : AddPromptProps)=> {
 
     const [ title,   setTitle    ] = useState<string>("")
     const [ content, setContent  ] = useState<string>("")
@@ -41,22 +40,22 @@ const AddPrompt = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
 
     const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD, {
         update: (cache, response) => {
-            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => {
+            cache.updateQuery({ query: GET_CARDS, variables: {topicId: mains.topic?.id} }, ({getCards}) => { // * main.mains
                 return {
                     getCards: getCards.concat(response.data?.createCard)
-              }
+                }
             });
         }
     })
 
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
-      
-        if (!mains.topic) {
+
+        if (!mains.topic) { // * main.mains
             return;
         }
-      
-        const { id, aiId } = mains.topic;
+        
+        const { id, aiId } = mains.topic; // * main.mains
       
         const variables = {
             topicId: id,
@@ -75,12 +74,10 @@ const AddPrompt = ({ mains, setVisibility, setMains } : AddPromptProps)=> {
         try {
             const { data: newCard } = await createCard({ variables });
         
-            if (newCard) {
-                const updatedTopic = { ...mains.topic };
-                updatedTopic.cards = updatedTopic.cards?.concat(newCard.createCard.id);
-                setMains({...mains, topic: updatedTopic})
-                setVisibility(prev=>({...prev, showMenu: "none"}))
-            }
+            if (!newCard) return 
+            
+            setVisibility(prev=>({...prev, showMenu: "none"}))
+            
         } catch (error) {
             console.error(error);
         }
