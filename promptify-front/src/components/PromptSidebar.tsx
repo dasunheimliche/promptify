@@ -32,7 +32,7 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
 
     // deshabilito el lintern para que la comparación se haga solo cuando "currentCard" cambie, y no cuando card también.
     useMemo(() => {
-        if (currentCard !== card) {
+        if (currentCard !== card && currentCard) {
             setEdited(true)
         }
     }, [currentCard]) // eslint-disable-line 
