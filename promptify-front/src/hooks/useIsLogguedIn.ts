@@ -17,7 +17,7 @@ function useIsUserLoggedIn() {
     
   }, []) 
 
-    return isLoggedIn;
+  return isLoggedIn;
 }
 
 export default useIsUserLoggedIn

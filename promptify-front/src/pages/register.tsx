@@ -1,6 +1,6 @@
 // DEPENDENCIES
 
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useRouter } from "next/router"
 import { INVALID_USERNAMES, CREATE_USER } from '@/queries'
 import { useMutation, useQuery } from '@apollo/client'
@@ -20,51 +20,33 @@ interface Inputs {
     password2: string
 }
 
-type isOk = undefined | false | true
-
 const Register = ()=> {
 
     // STATES
-    let [inputs,       setInputs     ] = useState<Inputs>({ name: "", lastname: "", username: "", email: "", password: '', password2: '' })
-    let [validUsers,   setValidUsers ] = useState<string[] | undefined>([])
+    let [inputs, setInputs] = useState<Inputs>({ name: "", lastname: "", username: "", email: "", password: '', password2: '' })
 
-    let [isPassOk,     setIsPassOk   ] = useState<isOk>(undefined)
-    let [isUsernameOk, setIsUserameOk] = useState<isOk>(undefined) 
+    // APOLLO CLIENT
 
-    const { data, loading } = useQuery<InvaludUsernameList>(INVALID_USERNAMES)
-    const [ createUser, {loading: CUloading}] = useMutation(CREATE_USER)
+    const { data: {getInvalidUsernames: invalidUsernames} = {} } = useQuery<InvaludUsernameList>(INVALID_USERNAMES)
+    const [ createUser ] = useMutation(CREATE_USER)
 
     const router = useRouter()
 
-    useEffect(()=> {
-        if (data) {
-            setValidUsers(data.getInvalidUsernames)
-        }
-    }, [data])
-
-    useEffect(()=> {
-        if (inputs.password !== inputs.password2 || inputs.password.length < 1) {
-            setIsPassOk(false)
-        } else {
-            setIsPassOk(true)
-        }
-    }, [inputs.password, inputs.password2])
-
-    useEffect(()=> {
-        if (!validUsers) return
-
-        if (validUsers.includes(inputs.username)) {
-            setIsUserameOk(false)
-        } else {
-            setIsUserameOk(true)
-        }
-
-    }, [inputs.username, validUsers])
+    const isPasswordOk = useMemo(() => {
+        return !(inputs.password !== inputs.password2 || inputs.password.length < 1);
+    }, [inputs.password, inputs.password2]);
+      
+    const isUsernameOk = useMemo(() => {
+        return !(invalidUsernames?.includes(inputs.username));
+    }, [inputs.username, invalidUsernames]);
 
     // EVENT HANDLERS
     let signin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!isUsernameOk || !isPasswordOk) return
+
         try {
-            e.preventDefault();
             await createUser({
                 variables: {
                 name: inputs.name,
@@ -89,7 +71,7 @@ const Register = ()=> {
 
                     <div>Bienvenido a Promptify</div>
                     <div>Por favor ingrese sus datos</div>
-                    <form className={style.form} onSubmit={isPassOk && isUsernameOk? signin : undefined}>
+                    <form className={style.form} onSubmit={signin}>
 
                         <input required  type='text' onChange={(e)=> setInputs({...inputs, name: e.target.value})}     placeholder={'name'} />
                         <input required  type='text' onChange={(e)=> setInputs({...inputs, lastname: e.target.value})} placeholder={'lastname'} />

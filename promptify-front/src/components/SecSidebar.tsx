@@ -35,7 +35,7 @@ const SecSidebar = ({me, mains, aiList, visibility,  setMains, setVisibility}: S
 
 
     return (
-        <div style={!visibility.showSS? {} : {}} className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
+        <div className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
 
             {mains.profile && 
 

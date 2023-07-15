@@ -1,8 +1,5 @@
 //** REACT IMPORTS
-import React, { useEffect, useState } from "react";
-
-//** CUSTOM HOOKS
-import useIsUserLoggedIn from "@/hooks/useIsLogguedIn";
+import React, { useState } from "react";
 
 //** NEXTJS IMPORTS
 import { useRouter } from "next/router"
@@ -35,23 +32,21 @@ export default function Me() {
   const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
 
   const router    = useRouter() 
-  const isLoggued = useIsUserLoggedIn()
   
-  const { data: {me} = {} } = useQuery<meData>(ME)  
+  const { data: {me} = {} } = useQuery<meData>(ME)
 
   const { data: { getAis: aiList } = {} } = useQuery<aiListData, aiListVariables>(GET_AIS, {
     variables: {meId: me?.id},
     skip: !me?.id,
   });
 
-
-  //** USE EFFECTS
-
-  useEffect(()=> {
-    if (!isLoggued) {
-        router.push("/login")
-    } 
-  }, [isLoggued]) // eslint-disable-line
+  if (me === undefined) {
+    return <div className={style.loading}></div>;
+  }
+  
+  if (me === null) {
+    router.push("/login");
+  }
   
   return (
     <div className={style.main}>

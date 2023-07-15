@@ -1,10 +1,8 @@
 
-import { useState, useEffect } from 'react'
-// import { useAuth } from "@/contexts/Authcontext"
+import { useState } from 'react'
 import { useRouter } from "next/router"
 import Link from 'next/link'
 import { useMutation } from "@apollo/client"
-
 
 import { LOGIN } from '@/queries'
 import { Token } from '../types'
@@ -21,18 +19,13 @@ interface loginVariables {
 }
 
 const Login = ()=> {
-    let tkn 
-    if (typeof window !== "undefined") {
-        tkn = sessionStorage.getItem('user-token')
-    }
-
     
+    let token = typeof window !== "undefined" ? sessionStorage.getItem('user-token') : undefined;
 
     //  STATES
-    const [token,    setToken   ] = useState<string | undefined>(tkn? tkn : undefined)
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [ok,       setOk      ] = useState<boolean>(true)
+    const [error,    setError   ] = useState<boolean>(true)
 
     // CUSTOM STATES
     const router = useRouter()
@@ -41,35 +34,23 @@ const Login = ()=> {
     const [ login, {data, loading} ] = useMutation<loginData, loginVariables>(LOGIN, {
         onError: (error) => {
             if (error.graphQLErrors && error.graphQLErrors.length > 0) {
-                setOk(false)
+                setError(false)
                 console.error(error.graphQLErrors[0].message)
             } else {
-                setOk(false)
+                setError(false)
                 console.error("An unknown error occurred.")
             }
         }
     })
 
-    // USE EFFECTS
-    useEffect(()=> {
-        if (token) {
-            router.push("/me")
-        } 
-    }, [token]) // eslint-disable-line
-
-    useEffect(() => {
-        if ( data ) {
-            const token = data.login.value
-            setToken(token)
-            sessionStorage.setItem('user-token', token)
-        }
-    }, [data]) // eslint-disable-line
-
     // EVENT HANDLERS
     const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();
-            await login({ variables: { username, password } });
+            const {data} = await login({ variables: { username, password } });
+            if (!data) return
+            sessionStorage.setItem('user-token', data?.login.value)
+            router.push("/me")
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
         }
@@ -78,15 +59,20 @@ const Login = ()=> {
     const demoSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         try {
             event.preventDefault();
-            await login({ variables: { username: "Horrorshow", password: "12345" } });
+            const {data} = await login({ variables: { username: "Horrorshow", password: "12345" } });
+            if (!data) return
+            sessionStorage.setItem('user-token', data?.login.value)
+            router.push("/me")
         } catch (error) {
-            console.error('An error occurred while submitting the demo:', error);
+            console.error('An error occurred while submitting the form:', error);
         }
     };
 
+    if (token) router.push("/me")
+
     return (
         <div className={style.main}>
-            {(loading || token) && <div className={style.loading}></div>}
+            {(loading || data?.login.value) && <div className={style.loading}></div>}
             <div className={style['left-side']}>
 
                 <div className={style.card}>
@@ -99,7 +85,7 @@ const Login = ()=> {
                         <input required type='text'     onChange={(e)=> setUsername(e.target.value)} placeholder={'username'} />
                         <input required type='password' onChange={(e)=> setPassword(e.target.value)} placeholder={'password'} />
 
-                        {!ok && <div className={style.failedLogin}></div>}
+                        {!error && <div className={style.failedLogin}></div>}
                         
                         <button type='submit' className="p" >
                             Log in
