@@ -19,7 +19,7 @@
   background-image: url("../icons/svg-loaders/rings.svg");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 71px;
+  background-size: 4.44rem;
 }
 
 .main {
@@ -30,7 +30,6 @@
 }
 
 .main-content {
-
   display: flex;
   flex-direction: column;
   
@@ -87,7 +86,6 @@
 @media (max-width: 500px) and (orientation: portrait) {
   .main-content {
     min-width: calc(100% - 51px);
-    height: 100vh;
     height: 100dvh;
   }
 }

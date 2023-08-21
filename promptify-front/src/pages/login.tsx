@@ -20,17 +20,14 @@ interface loginVariables {
 
 const Login = ()=> {
     
-    let token = typeof window !== "undefined" ? sessionStorage.getItem('user-token') : undefined;
+    const token = typeof window !== "undefined" ? sessionStorage.getItem('user-token') : undefined;
 
-    //  STATES
     const [username, setUsername] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [error,    setError   ] = useState<boolean>(true)
 
-    // CUSTOM STATES
     const router = useRouter()
 
-    // USE MUTATION
     const [ login, {data, loading} ] = useMutation<loginData, loginVariables>(LOGIN, {
         onError: (error) => {
             if (error.graphQLErrors && error.graphQLErrors.length > 0) {
@@ -43,7 +40,6 @@ const Login = ()=> {
         }
     })
 
-    // EVENT HANDLERS
     const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();

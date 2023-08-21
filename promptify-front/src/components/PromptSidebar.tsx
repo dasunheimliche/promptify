@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client'
 
 import { Card, Mains, Visibility,getCardsData, getCardsVariables } from '../types'
 import { GET_CARDS } from '@/queries'
+import { PromptSidebarContent, PromptSidebarFooter, PromptSidebarHeader, PromptSidebarSubtitle, PromptSidebarTitle } from './PromptSidebarModule'
 
 interface PromptSidebarProps {
     mains: Mains
@@ -17,8 +18,6 @@ interface PromptSidebarProps {
 
 const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSidebarProps)=> {
 
-    console.log("VISIBILITY ", visibility.showPS)
-
     const { data: { getCards: cardList } = {} } = useQuery<getCardsData, getCardsVariables>(GET_CARDS, {
         variables: {topicId: mains.topic?.id},
         skip: !mains.topic?.id
@@ -29,6 +28,9 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
     const [card,   setCard  ] = useState<Card | undefined>(currentCard)
     const [index,  setIndex ] = useState<number>(0)
     const [edited, setEdited] = useState<boolean>(false)
+
+
+    const subtitleExists = card && card.prompts.length > 1
 
     // deshabilito el lintern para que la comparación se haga solo cuando "currentCard" cambie, y no cuando card también.
     useMemo(() => {
@@ -80,25 +82,25 @@ const PromptSidebar = ({mains, setVisibility, visibility, setMains} : PromptSide
 
     return (
         <div className={(card !== undefined && visibility.showPS === true )? style[`prompt-sidebar`] : `${style['prompt-sidebar']} ${style['hidden-bar']}`}>
-            <div className={style.header}>
-                <span className={`${style[`back-button`]} p`} onClick={close}></span>
-                <div className={style.buttons}>
-                    <div className={edited? `p ${style.update}` : `p`} onClick={restart}>{edited? "UPDATE" : "RESTART"}</div> 
-                    <div className='p' onClick={clear}>CLEAR</div>   
-                    <div className='p' onClick={copy}>COPY</div>
-                </div>
-            </div>
+            <PromptSidebarHeader 
+                isEdited={edited}
+                onHideSidebar={close}
+                onRestart={restart}
+                onClearPrompt={clear}
+                onCopyPrompt={copy}
+            />
             <div className={style.content}>
-                <div className={style[`content-title`]}>{card?.title}</div>
-                <div className={style[`content-subtitle-container`]}>
-                    {(card && card.prompts.length > 1) && <div>{`${index + 1} - ${card.prompts[index].title}`}</div>}
-                </div>
-                <textarea className={style[`content-textarea`]} placeholder='prompt' value={card?.prompts[index].content} onChange={onChangeHandler} spellCheck="false"></textarea>
-                <div className={style[`content-playback`]}>
-                    <div className={style.playback} onClick={back}>{"< "}</div>
-                    <div>{`${index+1}/${card?.prompts.length}`}</div>
-                    <div className={style.playback} onClick={forward}>{" >"}</div>
-                </div>
+                <PromptSidebarTitle title={card?.title} />
+                {subtitleExists && <PromptSidebarSubtitle 
+                    subtitle={`${index + 1} - ${card?.prompts[index].title}`}
+                />}
+                <PromptSidebarContent content={card?.prompts[index].content} onTyping={onChangeHandler}/>
+                <PromptSidebarFooter 
+                    onBack={back}
+                    onForward={forward}
+                    currentPrompt={index+1}
+                    stackLenght={card?.prompts.length}
+                />
             </div>
         </div>
     )

@@ -4,18 +4,15 @@ import React, { useState } from "react";
 //** NEXTJS IMPORTS
 import { useRouter } from "next/router"
 
-//** GRAPHQL/APOLLO IMPORTS
+
 import { useQuery } from "@apollo/client"
 import { ME, GET_AIS } from '@/queries'
-
-//** TYPES
 
 import { Mains, Visibility } from '../types'
 import { meData, aiListData, aiListVariables } from "../types";
 
-//** COMPONENTES
 import MainSidebar     from "@/components/MainSidebar";
-import SecSidebar      from "@/components/SecSidebar";
+import SecondSidebar   from "@/components/SecondSidebar";
 import MainContentMenu from "@/components/MainContentMenu";
 import MainContentGrid from "@/components/MainContentGrid";
 import PromptSidebar   from "@/components/PromptSidebar";
@@ -23,15 +20,20 @@ import AddAI           from "@/components/AddAI";
 import AddPrompt       from "@/components/AddPrompt";
 import AddStack        from "@/components/AddStack";
 
-//** STYLES
 import style from '../styles/me.module.css'
 
 export default function Me() {
 
-  const [mains,      setMains      ] = useState<Mains>({main: undefined, topic: undefined, currCard: undefined, profile: true});
+  const [ mains, setMains ] = useState<Mains>({
+    main: undefined, 
+    topic: undefined, 
+    currCard: undefined, 
+    profile: true
+  });
+
   const [visibility, setVisibility ] = useState<Visibility>({showMenu:"none", showSS:true, showPS:false})
 
-  const router    = useRouter() 
+  const router = useRouter() 
   
   const { data: {me} = {} } = useQuery<meData>(ME)
 
@@ -67,7 +69,7 @@ export default function Me() {
         setMains      = {setMains     } 
         setVisibility = {setVisibility}
       />
-      <SecSidebar 
+      <SecondSidebar 
         key           = {mains.main?.id}
         me            = {me           } 
         mains         = {mains        } 

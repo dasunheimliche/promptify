@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { User, AI, Mains, Visibility } from '../types'
-import { doNothing, closePopUp } from '@/utils/functions';
+import { closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
 import { ADD_AI, GET_AIS, ME } from '@/queries'
@@ -26,11 +26,9 @@ interface addAiVariables {
 
 const AddAI = ({me, setVisibility, setMains } : AddAIProps)  => {
 
-    //** STATES
     const [name, setName] = useState<string>("")
     const [abb,  setAbb ] = useState<string>("")
 
-    //** MUTATIONS
     const [ createAi, { loading } ] = useMutation<addAiData, addAiVariables>(ADD_AI, {
         update: (cache, response) => {
             cache.updateQuery({ query: ME}, ({me}) => {
@@ -47,8 +45,6 @@ const AddAI = ({me, setVisibility, setMains } : AddAIProps)  => {
             });
         }
     })
-
-    //** EVENT HANDLERS
 
     const addAI = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -75,17 +71,20 @@ const AddAI = ({me, setVisibility, setMains } : AddAIProps)  => {
     };
 
     return (
-        <div className={style.popup} onSubmit={loading? doNothing : addAI}>
+        <div className={style.popup} onSubmit={addAI}>
+            <h4 className={style.header}>Add a new AI</h4>
             <form action="" className={style.form}>
-                <label className={style.title}>{"AI's name:"}</label>
-                <input type="text" placeholder="name" onChange={e=> setName(e.target.value)} minLength={1} required/>
+                <label className={`${style.title} p`}>{"Name:"}
+                    <input type="text" placeholder="name" onChange={e=> setName(e.target.value)} minLength={1} required/>
+                </label>
 
-                <label className={style.title}>{"AI's abb:"}</label>
-                <input type="text" placeholder="abb"  onChange={e=> setAbb(e.target.value)} maxLength={5} required/>
-
+                <label className={`${style.title} p`}>{"Abbreviation:"}
+                    <input type="text" placeholder="abb"  onChange={e=> setAbb(e.target.value)} maxLength={5} required/>
+                </label>
+                
                 <div className={style.buttons}>
-                    <button type="submit">Enviar</button>
-                    <button onClick={e=>closePopUp(e, setVisibility)}>Cerrar</button>
+                    <button onClick={e=>closePopUp(e, setVisibility)}>Cancel</button>
+                    <button type="submit" disabled={loading}>Submit</button>
                 </div>
             </form>
         </div>

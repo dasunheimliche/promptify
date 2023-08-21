@@ -1,26 +1,37 @@
 /* ADD AI - PROMPT - STACK*/
 
+.hidden {
+    display: none;
+}
+
 .popup {
-    font-family: 'Lexend Deca', sans-serif;
     z-index: 2;
+
+    padding: 1.44rem;
+    padding-bottom: 0.6rem;
+
+    min-width: 16.87rem;
+
     background-color: white;
-    border-radius: 15px;
-    padding: 20px;
-    padding-bottom: 0px;
+    border-radius: 0.94rem;
+
+    font-family: 'Sora', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
 }
 
 .prompt-container {
     background-color: rgb(223, 223, 223);
-    padding: 10px;
+    padding: 0.62rem;
     display: flex;
     flex-direction: column;
 
-    border-radius: 15px;
+    border-radius: 0.94rem;
 }
 
 .prompt-container label:first-child {
-    padding-top: 7px;
-    padding-bottom: 7px;
+    padding-top: 0.44rem;
+    padding-bottom: 0.44rem;
 
     font-weight: bold;
     display: flex;
@@ -29,68 +40,76 @@
 .playback {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-left: 7px;
+    justify-content: center;    
+}
+
+.playback button {
+    border: none;
+
+    width: 0.81rem;
+    height: 0.81rem;
+
+    padding: 0.7rem;
+
+    background-color: transparent;
+    background-size: 0.81rem 0.81rem;
+    background-repeat: no-repeat;
+    background-position: center;
     
+    border-radius: 1.87rem;
+    
+    cursor: pointer;
 }
 
 .goBack {
     background-image: url('../icons/go-back.png');
-    background-size: cover;
-    width: 13px;
-    height: 13px;
-    border-radius: 30px;
-    margin-left: 5px;
-    margin-right: 8px;
-    outline: 5px solid rgba(236, 171, 155, 0);
-    cursor: pointer;
 
+    margin-left: 0.31rem;
+    margin-right: 0.5rem;
 }
 
 .goForward {
     background-image: url('../icons/go-forward.png');
-    background-size: cover;
-    width: 13px;
-    height: 13px;
-    border-radius: 30px;
-    margin-left: 8px;
-    margin-right: 5px;
-    outline: 5px solid rgba(236, 171, 155, 0);
-    cursor: pointer;
+
+    margin-left: 0.5rem;
+    margin-right: 0.31rem;
 }
 
-.goBack:hover, .goForward:hover {
-    outline: 5px solid rgb(184, 184, 184);
-    background-color: rgb(184, 184, 184);
+.playback button:hover{
+    background-color: rgb(252, 200, 56);
 }
 
 .options {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 0.62rem;
+}
+
+.options button {
+    border: none;
 }
 
 .delete {
     background-image: url('../icons/del-off-black.png');
     background-size: cover;
-    width: 19px;
-    height: 19px;
-    border-radius: 30px;
-    margin-left: 7px;
-    margin-right: 5px;
-    /* outline: 5px solid rgba(236, 171, 155, 0); */
+    background-color: transparent;
+    width: 1.19rem;
+    height: 1.19rem;
+    border-radius: 1.87rem;
+    margin-left: 0.44rem;
+    margin-right: 0.31rem;
     cursor: pointer;
 }
 
 .addPrompt {
     background-color: rgb(41, 41, 41);
     color: white;
-    border-radius: 11px;
-    font-size: 15px;
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
+    border-radius: 0.69rem;
+    font-size: 0.94rem;
+    padding: 0.31rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
     display: flex;
     align-items: center;
@@ -98,112 +117,180 @@
     cursor: pointer
 }
 
+.delete:hover {
+    background-image: url('../icons/del-on.png');
+}
+
+.addPrompt:hover {
+    background-color: rgb(56, 56, 56);
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   
-    margin-bottom: 19px;
+    margin-bottom: 1.44rem;
 }
 
 .header-first {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 15px;
+    gap: 0.94rem;
 }
 
-.header-first div:nth-child(2) {
+
+.header-first button {
+    all: unset;
+
+    padding: 0.31rem 0.5rem;
+
     background-color: rgb(41, 41, 41);
-    border-radius: 13px;
-    font-size: 17px;
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
+    border-radius: 0.81rem;
+
+    font-size: 1.06rem;
     color: white;
+
+    cursor: pointer;
+}
+
+.header-first button:hover {
+    background-color: rgb(247, 206, 94);
+    color: black;
 }
 
 .header-title {
-    font-size: 21px;
+    font-size: 1.19rem;
 }
 
 .header-close {
     all: unset;
     cursor: pointer;
-    font-size: 21px;
+    font-size: 1.31rem;
+    align-self: flex-start;
 }
 
 .stack-header {
     display: flex;
+
+    background-color: rgb(250, 235, 148);
+
+    border-radius: 0.62rem;
+
+    padding: 0.62rem;
+    padding-left: 0.19rem;
+    margin-bottom: 0.5rem;
+
     justify-content: space-between;
+    align-items: center;
 }
   
-.stack-header button {
-    all: unset;
-}
-
 
 .form {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.2rem;
 }
   
 .form input {
     all: unset;
-    margin-bottom: 10px;
+    
+    margin-bottom: 0.62rem;
   
-    border: 1px solid rgba(165, 165, 165, 0.742);
-    border-radius: 10px;
+    border-bottom: 1px solid rgb(138, 138, 138);
   
-    padding: 10px;
+    padding: 0.62rem;
   
-    width: 100%px;
-    height: 20px;
+    height: 1.25rem;
 
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(248, 248, 248);
 }
   
 .form textarea {
     all: unset;
-  
-    border: 1px solid rgba(165, 165, 165, 0.742);
-    border-radius: 10px;
+    border-bottom: 1px solid rgb(138, 138, 138);
     background-color: rgb(255, 255, 255);
+    background-color: rgb(248, 248, 248);
   
-    padding: 10px;
+    padding: 0.62rem;
   
-    width: 400px;
-    height: 250px;
+    width: 25rem;
+    height: 15.62rem;
 }
+
+
   
 .form textarea:focus {
-    border: 1px solid rgb(148, 202, 249);
+    border-bottom: 1px solid rgb(135, 202, 251);
+    background-color: rgb(240, 248, 253);
+    color: rgb(62, 62, 62);
 }
   
 .form input:focus {
-    border: 1px solid rgb(148, 202, 249);
+    border-bottom: 1px solid rgb(135, 202, 251);
+    background-color: rgb(240, 248, 253);
+    color: rgb(62, 62, 62);
 }
 
 .title {
-    margin-bottom: 5px;
-    font-size: 19px;
+    color: rgb(49, 49, 49);
+    font-size: 0.91rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.title input, .title textarea {
+    color: rgb(64, 64, 64);
 }
 
 .buttons {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 13px;
+    gap: 0.81rem;
   
-    height: 60px;
+    margin-top: 0.62rem;
 }
   
 .buttons button {
     all: unset;
+    
     color: rgba(0, 0, 0, 0.838);
     font-weight: 700;
   
     cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttons button::after {
+    content: "";
+    display: block;
+    width: 0%;
+    height: 0.25rem;
+    
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    
+    background: radial-gradient(rgb(255, 28, 77), rgba(255, 0, 0, 0));
+    background-size:contain;
+    background-repeat: no-repeat;
+
+    transition-property: width;
+    transition-duration: 0.2s;
+}
+
+.buttons button:hover::after {
+    width: 100%;
+
+    transition-property: width;
+    transition-duration: 0.2s;
 }
 
 /* DELETE ALERT */
@@ -228,455 +315,54 @@
 
 .delete-alert-container {
     background-color: white;
-    padding: 15px;
-    color: black;
-    font-size: 17px;
-    border-radius: 10px;
-    width: 250px;
+    padding: 0.94rem;
+    color: rgb(26, 26, 26);
+    font-size: 1.15rem;
+    border-radius: 0.5rem;
+    width: 20rem;
     position: relative;
   
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 1.25rem;
 }
 
 .delete-alert-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    font-size: 17px;
+    gap: 0.5rem;
     width: 100%;
 }
   
 .delete-alert-buttons button {
     all: unset;
     cursor: pointer;
+    font-size: 1rem;
     color: white;
-    font-size: 12px;
-    padding: 5px;
-    padding-left: 7px;
-    padding-right: 7px;
-    border-radius: 5px;
-
-    background-color: rgb(33, 33, 33);
+    padding: 0.31rem 0.44rem;
+    border-radius: 0.3rem;
+    background-color: rgb(34, 34, 34);
 }
 
 #delete {
-    background-color: rgb(209, 21, 0);
-}
-
-/* ====================================================================================== */
-
-/* .popup {
-    border-radius: 15px;
-    padding: 20px;
-    padding-bottom: 0px;
-}
-
-.prompt-container {
-    padding: 10px;
-    border-radius: 15px;
-}
-
-.prompt-container label:first-child {
-    padding-top: 7px;
-    padding-bottom: 7px;
-}
-
-.playback {
-    margin-left: 7px;
-}
-
-.goBack {
-    width: 13px;
-    height: 13px;
-    border-radius: 30px;
-    margin-left: 5px;
-    margin-right: 8px;
-    outline: 5px solid rgba(236, 171, 155, 0);
-}
-
-.goForward {
-    width: 13px;
-    height: 13px;
-    border-radius: 30px;
-    margin-left: 8px;
-    margin-right: 5px;
-    outline: 5px solid rgba(236, 171, 155, 0);
-}
-
-.goBack:hover, .goForward:hover {
-    outline: 5px solid rgb(184, 184, 184);
-}
-
-.options {
-    gap: 10px;
-}
-
-.delete {
-    width: 19px;
-    height: 19px;
-    border-radius: 30px;
-    margin-left: 7px;
-    margin-right: 5px;
-}
-
-.addPrompt {
-    border-radius: 11px;
-    font-size: 15px;
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
-}
-
-.header {
-    margin-bottom: 19px;
-}
-
-.header-first {
-    gap: 15px;
-}
-
-.header-first div:nth-child(2) {
-    border-radius: 13px;
-    font-size: 17px;
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
-}
-
-.header-title {
-    font-size: 21px;
-}
-
-.header-close {
-    font-size: 21px;
+    background-color: rgb(251, 73, 61);
 }
 
 
-  
-.form input {
-    margin-bottom: 10px;
-    border-radius: 10px;
-    padding: 10px;
-    width: 100%px;
-    height: 20px;
-}
-  
-.form textarea {
-    border-radius: 10px;
-    padding: 10px;
-    width: 400px;
-    height: 250px;
-}
-
-.title {
-    margin-bottom: 5px;
-    font-size: 19px;
-}
-
-.buttons {
-    gap: 13px;
-    height: 60px;
-}
-
-.delete-background {
-    min-width: 100%;
-    min-height: 100%;
-    top: 0;
-    left: 0px;
-}
-
-.delete-alert-container {
-    padding: 25px;
-    font-size: 20px;
-    border-radius: 15px;
-    width: 300px;
-    gap: 20px;
-}
-
-.delete-alert-buttons {
-    gap: 10px;
-    font-size: 17px;
-    width: 100%;
-} */
 
 @media (max-width: 1600px) {
-    .popup {
-        border-radius: 12px;
-        padding: 17px;
-        padding-bottom: 0px;
-    }
-    
-    .prompt-container {
-        padding: 8px;
-        border-radius: 12px;
-    }
-    
-    .prompt-container label:first-child {
-        padding-top: 6px;
-        padding-bottom: 6px;
-    }
-    
-    .playback {
-        margin-left: 6px;
-    }
-    
-    .goBack {
-        width: 11px;
-        height: 11px;
-        border-radius: 25px;
-        margin-left: 4px;
-        margin-right: 7px;
-        outline: 4px solid rgba(236, 171, 155, 0);
-    }
-    
-    .goForward {
-        width: 11px;
-        height: 11px;
-        border-radius: 25px;
-        margin-left: 7px;
-        margin-right: 4px;
-        outline: 4px solid rgba(236, 171, 155, 0);
-    }
-    
-    .goBack:hover, .goForward:hover {
-        outline: 4px solid rgb(184, 184, 184);
-    }
-    
-    .options {
-        gap: 8px;
-    }
-    
-    .delete {
-        width: 16px;
-        height: 16px;
-        border-radius: 25px;
-        margin-left: 6px;
-        margin-right: 4px;
-    }
-    
-    .addPrompt {
-        border-radius: 9px;
-        font-size: 12px;
-        padding: 4px;
-        padding-left: 7px;
-        padding-right: 7px;
-    }
-    
-    .header {
-        margin-bottom: 16px;
-    }
-    
-    .header-first {
-        gap: 12px;
-    }
-    
-    .header-first div:nth-child(2) {
-        border-radius: 11px;
-        font-size: 14px;
-        padding: 4px;
-        padding-left: 7px;
-        padding-right: 7px;
-    }
-    
-    .header-title {
-        font-size: 17px;
-    }
-    
-    .header-close {
-        font-size: 17px;
-    }
-    
-    
-      
-    .form input {
-        margin-bottom: 8px;
-        border-radius: 8px;
-        padding: 8px;
-        width: 100%px;
-        height: 17px;
-    }
-      
-    .form textarea {
-        border-radius: 8px;
-        padding: 8px;
-        width: 333px;
-        height: 208px;
-    }
-    
-    .title {
-        margin-bottom: 4px;
-        font-size: 16px;
-    }
-    
-    .buttons {
-        gap: 11px;
-        height: 50px;
-    }
-    
-    /* .delete-background {
-        min-width: 100%;
-        min-height: 100%;
-        top: 0;
-        left: 0px;
-    }
-    
-    .delete-alert-container {
-        padding: 21px;
-        font-size: 17px;
-        border-radius: 12px;
-        width: 250px;
-        gap: 17px;
-    }
-    
-    .delete-alert-buttons {
-        gap: 8px;
-        font-size: 14px;
-        width: 100%;
-    } */
 }
 
 @media (max-width: 1366px) {
-    .popup {
-        border-radius: 11px;
-        padding: 14px;
-        padding-bottom: 0px;
-    }
-    
-    .prompt-container {
-        padding: 7px;
-        border-radius: 11px;
-    }
-    
-    .prompt-container label:first-child {
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-    
-    .playback {
-        margin-left: 5px;
-    }
-    
-    .goBack {
-        width: 9px;
-        height: 9px;
-        border-radius: 21px;
-        margin-left: 4px;
-        margin-right: 6px;
-        outline: 4px solid rgba(236, 171, 155, 0);
-    }
-    
-    .goForward {
-        width: 9px;
-        height: 9px;
-        border-radius: 21px;
-        margin-left: 6px;
-        margin-right: 4px;
-        outline: 4px solid rgba(236, 171, 155, 0);
-    }
-    
-    .goBack:hover, .goForward:hover {
-        outline: 4px solid rgb(184, 184, 184);
-    }
-    
-    .options {
-        gap: 7px;
-    }
-    
-    .delete {
-        width: 13px;
-        height: 13px;
-        border-radius: 21px;
-        margin-left: 5px;
-        margin-right: 3px;
-    }
-    
-    .addPrompt {
-        border-radius: 8px;
-        font-size: 11px;
-        padding: 4px;
-        padding-left: 6px;
-        padding-right: 6px;
-    }
-    
-    .header {
-        margin-bottom: 13px;
-    }
-    
-    .header-first {
-        gap: 11px;
-    }
-    
-    .header-first div:nth-child(2) {
-        border-radius: 9px;
-        font-size: 12px;
-        padding: 4px;
-        padding-left: 6px;
-        padding-right: 6px;
-    }
-    
-    .header-title {
-        font-size: 15px;
-    }
-    
-    .header-close {
-        font-size: 15px;
-    }
-    
-    
-      
-    .form input {
-        margin-bottom: 7px;
-        border-radius: 7px;
-        padding: 7px;
-        width: 100%px;
-        height: 14px;
-    }
-      
-    .form textarea {
-        border-radius: 7px;
-        padding: 7px;
-        width: 284px;
-        height: 178px;
-    }
-    
-    .title {
-        margin-bottom: 3px;
-        font-size: 13px;
-    }
-    
-    .buttons {
-        gap: 9px;
-        height: 43px;
-    }
-    
-    /* .delete-background {
-        min-width: 100%;
-        min-height: 100%;
-        top: 0;
-        left: 0px;
-    }
-    
-    .delete-alert-container {
-        padding: 18px;
-        font-size: 14px;
-        border-radius: 11px;
-        width: 213px;
-        gap: 14px;
-    }
-    
-    .delete-alert-buttons {
-        gap: 7px;
-        font-size: 12px;
-        width: 100%;
-    } */
 }
 
 @media (max-width: 912px) and (orientation: portrait) {
 }
 
 @media (max-width: 490px) and (orientation: portrait) {
+    .popup {
+        min-width: 220px;
+    }
 }

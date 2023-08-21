@@ -84,11 +84,11 @@ const AddPrompt = ({ mains, setVisibility } : AddPromptProps)=> {
     };
 
     return (
-        <div className={style.popup} onSubmit={loading? doNothing : addPrompt}>
+        <div className={style.popup} onSubmit={addPrompt}>
             
             <div className={style.header}>
                 <div className={style[`header-title`]}>Add a Prompt</div>
-                <button className={style[`header-close`]} onClick={e=>closePopUp(e, setVisibility)}>x</button>
+                <button className={style[`header-close`]} onClick={e=>closePopUp(e, setVisibility)}>✕</button>
             </div>
 
             <form action="" className={style.form}>
@@ -99,7 +99,7 @@ const AddPrompt = ({ mains, setVisibility } : AddPromptProps)=> {
                 <textarea value={content} placeholder="Write your prompt" onChange={e=> setContent(e.target.value)} required/>
 
                 <div className={style.buttons}>
-                    <button type="submit">Add Prompt</button>
+                    <button type="submit" disabled={loading}>Add Prompt</button>
                 </div>
             </form>
             

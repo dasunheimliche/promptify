@@ -1,31 +1,29 @@
-import style from '../styles/secSidebar.module.css'
+import style from '../styles/secondSidebar.module.css'
 
 import { useMutation } from '@apollo/client';
-import { useState, useEffect, useRef, Dispatch } from 'react';
+import { useState, Dispatch } from 'react';
 
 import { EDIT_AI, ADD_AI_FAV, GET_AIS, DELETE_AI, ME } from '@/queries';
-import { doNothing } from '@/utils/functions';
 
 import { AI, Mains, User } from '@/types';
 
 import DeleteAlert from './DeleteAlert';
+import { AiTitleOptions, EditableAiTitle } from './SecondSidebarModule';
 
-interface SecSidebarHeaderProps {
+interface AiTitleSectionProps {
     me: User | undefined
     aiList: AI[] | undefined
     mains: Mains
     setMains: Dispatch<Mains>
 }
 
-const SecSidebarHeader = ({ me, aiList, mains, setMains } : SecSidebarHeaderProps)=> {
+const AiTitleSection = ({ me, aiList, mains, setMains } : AiTitleSectionProps)=> {
 
     const currentAI = aiList?.find((ai:AI)=> ai.id === mains.main?.id)
 
     const [edit,        setEdit       ] = useState<boolean>(false) 
     const [newTitle,    setNewTitle   ] = useState<string | undefined>(currentAI?.name)
     const [del,         setDel        ] = useState(false)
-
-    const inputRef = useRef<HTMLInputElement>(null)
 
     const [ addAiToFavs,    {loading: AATFloading} ] = useMutation(ADD_AI_FAV);
     const [ editAi,         {loading: EAloading}   ] = useMutation(EDIT_AI)
@@ -48,7 +46,7 @@ const SecSidebarHeader = ({ me, aiList, mains, setMains } : SecSidebarHeaderProp
     })
 
 
-    const addToFavs = async () => {
+    const handleAddToFavs = async () => {
         try {
 
             if (!currentAI) {
@@ -62,11 +60,11 @@ const SecSidebarHeader = ({ me, aiList, mains, setMains } : SecSidebarHeaderProp
         }
     };
 
-    const setEditHandler = ()=> {
+    const handleEnableEdit = ()=> {
         setEdit(!edit)
     }
 
-    const editAiHandler = async () => {
+    const handleConfirmEdit = async () => {
         try {
 
             if (!currentAI || !newTitle) {
@@ -87,11 +85,10 @@ const SecSidebarHeader = ({ me, aiList, mains, setMains } : SecSidebarHeaderProp
     };
 
     const deleteAifunc = async (userId: string, aiId: string) => {
-        try {
-            if (!userId || !aiId || !aiList) {
-                return;
-            }
         
+        if (!userId || !aiId || !aiList ) return;
+        
+        try {
             await deleteAi({ variables: { userId, aiId } });
         
             const newAiList = aiList?.filter((arrayAi: AI) => arrayAi.id !== aiId);
@@ -107,7 +104,7 @@ const SecSidebarHeader = ({ me, aiList, mains, setMains } : SecSidebarHeaderProp
         }
     };
 
-    const deleteAiHandler = async ()=> {
+    const handleDeleteAi = async ()=> {
 
         if (!currentAI) return
         
@@ -116,29 +113,33 @@ const SecSidebarHeader = ({ me, aiList, mains, setMains } : SecSidebarHeaderProp
         setDel(false)
     }
 
-    useEffect(()=> {
-        inputRef.current?.focus()
-    },[edit])
+    const handleTyping = (e:React.ChangeEvent<HTMLInputElement>)=> {
+        setNewTitle(e.target.value)
+    }
 
     if (mains.profile) return null
 
     return(
         <div className={style[`ai-container`]}>
-            {del && <DeleteAlert onAccept={deleteAiHandler} onCancel={setDel} loading={DAloading} />}
-            {!edit && <div className={style[`ai-title`]}>{currentAI && currentAI.name}</div>}
-            {edit && <input ref={inputRef} type={"text"} value={newTitle} placeholder={"edit name"} className={`${style[`ai-title`]} unset`} onChange={(e)=>setNewTitle(e.target.value)} minLength={1}></input>}
-            {currentAI && 
-                <div className={style[`ai-opt`]}>
-                    {!edit && <div className={`${style[`del-ai`]} p`} onClick={()=>setDel(true)}></div> }
-                    {!edit && <div className={`${style[`edit-ai`]} p`} onClick={setEditHandler}></div>}
-                    {!edit && <div className={currentAI?.fav? `${style[`fav-ai`]} ${style[`fav-ai-on`]} p` : `${style[`fav-ai`]} p` } onClick={AATFloading? doNothing : addToFavs}></div>}
-
-                    {edit  && <div className={`${style.yes} p`} onClick={EAloading? doNothing : editAiHandler}>✓</div>}
-                    {edit  && <div className={`${style.not} p`} onClick={()=>setEdit(!edit)}>✕</div>}
-                </div>
-            }
+            <DeleteAlert onAccept={handleDeleteAi} onCancel={setDel} isShown={del} loading={DAloading} />
+            <EditableAiTitle 
+                title={currentAI?.name}
+                newTitle={newTitle}
+                isEditEnabled={edit}
+                onTyping={handleTyping}
+            />
+            <AiTitleOptions 
+                isEditEnabled={edit}
+                isFav={currentAI?.fav}
+                isMutating={EAloading || AATFloading}
+                onClickDelete={()=>setDel(true)}
+                onClickEdit={handleEnableEdit}
+                onToggleFav={handleAddToFavs}
+                onConfirmEdit={handleConfirmEdit}
+                onCancelEdit ={handleEnableEdit}
+            />
         </div>
     )
 }
 
-export default SecSidebarHeader
+export default AiTitleSection

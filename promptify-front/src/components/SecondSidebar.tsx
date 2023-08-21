@@ -5,11 +5,13 @@ import { AI, User, Mains, Visibility } from '../types'
 import { useApolloClient } from '@apollo/client'
 import { useRouter } from "next/router"
 
-import SecSidebarHeader from './SecSidebarHeader'
-import Topics from './Topics'
-import style from '../styles/secSidebar.module.css'
+import AiTitleSection from './AiTitleSection'
+import TopicsSection from './TopicsSection'
 
-interface SecSideBarProps {
+import style from '../styles/secondSidebar.module.css'
+import { Profile } from './SecondSidebarModule'
+
+interface SecondSidebarProps {
     me: User | undefined
     mains: Mains
     visibility: Visibility
@@ -18,13 +20,12 @@ interface SecSideBarProps {
     setVisibility: Dispatch<Visibility>
 } 
 
-const SecSidebar = ({me, mains, aiList, visibility,  setMains, setVisibility}: SecSideBarProps)=> {
+const SecondSidebar = ({me, mains, aiList, visibility,  setMains, setVisibility}: SecondSidebarProps)=> {
         
     const router = useRouter() 
     const client = useApolloClient()
 
-
-    // EVENT HANDLERS
+    const isProfileButtonActive = mains.profile
 
     const handleSignOff = async()=> {
         sessionStorage.clear()
@@ -35,18 +36,12 @@ const SecSidebar = ({me, mains, aiList, visibility,  setMains, setVisibility}: S
 
 
     return (
-        <div className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-bar']}`} > 
+        <div className={visibility.showSS? style[`second-sidebar`] : `${style['second-sidebar']} ${style['hidden-sidebar']}`} > 
 
-            {mains.profile && 
+            {isProfileButtonActive && <Profile user={me} onSignOff={handleSignOff}/>}
 
-                <div className={style['profile-card']}>
-                    <div className={style['profile-name']}>{me?.name}</div>
-                    <button className={style['sign-off']} onClick={handleSignOff} type='button' title='Sign off'>Sign Off</button>
-                </div>
-            }
-
-            <SecSidebarHeader me={me} aiList={aiList} mains={mains} setMains={setMains}/>
-            <Topics 
+            <AiTitleSection me={me} aiList={aiList} mains={mains} setMains={setMains}/>
+            <TopicsSection
                 key={mains.main?.id}
                 mains={mains} 
                 setMains={setMains} 
@@ -57,4 +52,4 @@ const SecSidebar = ({me, mains, aiList, visibility,  setMains, setVisibility}: S
     )
 }
 
-export default SecSidebar
+export default SecondSidebar

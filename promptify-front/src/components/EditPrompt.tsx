@@ -8,11 +8,11 @@ import { EDIT_CARD } from '@/queries'
 import { Mains } from '@/types'
 
 import style from '../styles/popups.module.css'
+import { EditPromptFooter, EditPromptHeader, PromptContent, PromptTitle, StackOptions, StackTitle } from './EditPromptModule'
 
 interface EditPRomptProps {
     card: Card
     mains: Mains
-    edit: boolean
     setMains: Dispatch<Mains>
     setEdit: Dispatch<boolean>
 }
@@ -21,16 +21,15 @@ type mode = "stack" | "prompt"
 
 const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
 
-    // ESTADOS
     const [mode,       setMode       ] = useState<mode>(card.prompts.length > 1? "stack" : "prompt")
     const [newTitle,   setNewTitle   ] = useState<string>(card.title)
     const [newPrompts, setNewPrompts ] = useState<Prompt[]>(card.prompts)
     const [index,      setIndex      ] = useState<number>(0)
 
-    // MUTATIONS
+    console.log("CURRENT INDEX: ", index)
+
     const [ editCard, {loading} ] = useMutation(EDIT_CARD) 
 
-    // EVENT HANDLERS
     const confirmEdit = ()=> {
         return
     }
@@ -48,12 +47,14 @@ const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
         }
     }
 
-    const goBack = ()=> {
+    const goBack = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+        e.preventDefault()
         if (index-1 < 0) return
         setIndex(index - 1)
     }
 
-    const goForward = ()=> {
+    const goForward = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+        e.preventDefault()
         if ((index + 1) > (newPrompts.length - 1)) {
             return
         }
@@ -100,15 +101,15 @@ const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
         }
       };
 
-    const deletePrompt = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
+    const deletePrompt = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
         e.preventDefault()
         const prompts = [...newPrompts]
-        const editedPrompts = prompts.splice(index,1)
-        setNewPrompts(editedPrompts)
+        prompts.splice(index,1)
+        setNewPrompts(prompts)
         setIndex(index-1)
     }
 
-    const addNewPrompt = (e:React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
+    const addNewPrompt = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
         e.preventDefault()
         const prompts = newPrompts.slice()
         prompts.splice(index+1, 0, {title:"", content:""})
@@ -120,49 +121,27 @@ const EditPrompt = ({card, mains, setEdit, setMains} : EditPRomptProps)=> {
         <div className={style[`delete-background`]}>
             <div className={style.popup} onSubmit={confirmEdit}>
 
-                <div className={style.header}>
-                    <div className={style[`header-first`]}>
-                        <div className={style[`header-title`]}>{mode === "prompt"? "Edit Prompt" : "Edit Stack"}</div>
-                        <div className="p" onClick={setModeHandler}>{mode === "prompt"? "To stack" : "To prompt"}</div>
-                    </div>
-
-                    <div className={`${style[`header-close`]} p`} onClick={close}>x</div>
-                </div>
+                <EditPromptHeader mode={mode} onToggleMode={setModeHandler} onClose={close}/>
 
                 <form action="" className={style.form}>
-                    <label className={style.title}>{mode === "prompt"? "Title" : "Stack title"}</label>
-                    <input value={newTitle} type="text" placeholder="title" onChange={e=>setNewTitle(e.target.value)} minLength={1} required/>
+                    <StackTitle mode={mode} title={newTitle} onTyping={e=>setNewTitle(e.target.value)} />
                     
-                    <div className={style[`prompt-container`]}>
-                        {mode === "stack" &&
-                            <div className={style[`stack-header`]}>
+                    {mode === "stack" &&
+                        <StackOptions 
+                            isSingle={newPrompts.length !== 1}
+                            onNext={goForward}
+                            onPrevious={goBack}
+                            onDelete={deletePrompt}
+                            onAddToStack={addNewPrompt}
+                            current={index + 1}
+                            stackLenght={newPrompts.length}
+                        />
+                    }
 
-                                <label className={style.title}>
-                                    {`PROMPT `}
-                                    <div className={style.playback}>
-                                        <div className={style.goBack} onClick={goBack}></div>
-                                        <div>{`${index + 1} of ${newPrompts.length}`}</div>
-                                        <div className={style.goForward} onClick={goForward}></div>
-                                    </div>
-                                </label>
+                    {mode === "stack" && <PromptTitle title={newPrompts[index]?.title} onTyping={editPromptTitle} />}
 
-                                <div className={style.options}>
-                                    {newPrompts.length !== 1 && <div className={style.delete} onClick={deletePrompt}></div>}
-                                    <div className={style.addPrompt} onClick={addNewPrompt} >Add + </div>
-                                </div>
-                            </div>
-                        }
-
-                        {mode === "prompt" && <label className={style.title}>{"Prompt"}</label>}
-                        {mode === "stack" && <label className={style.title}>{"Prompt title:"}</label>}
-                        {mode === "stack" && <input value={newPrompts[index]?.title} placeholder={"Edit prompt title"} onChange={editPromptTitle} minLength={1} required/>}
-                        {mode === "stack" && <label className={style.title}>{"Prompt Content:"}</label>}
-                        <textarea value={newPrompts[index]?.content}  placeholder="Write your prompt" onChange={editPromptContent} minLength={1} required/>
-                    </div>
-
-                    <div className={style.buttons}>
-                        <button onClick={loading? doNothing : editCardHandler}>Save</button>
-                    </div>
+                    <PromptContent content={newPrompts[index]?.content} onTyping={editPromptContent} />
+                    <EditPromptFooter isMutating={loading} onSaveChanges={editCardHandler}/>
                 </form>
             </div>
         </div>

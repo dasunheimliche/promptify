@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import { INVALID_USERNAMES, CREATE_USER } from '@/queries'
 import { useMutation, useQuery } from '@apollo/client'
 
-import style from '../styles/register.module.css'
+import style from '../styles/auth.module.css'
 
 interface InvaludUsernameList {
     getInvalidUsernames: string[]
@@ -22,10 +22,7 @@ interface Inputs {
 
 const Register = ()=> {
 
-    // STATES
-    let [inputs, setInputs] = useState<Inputs>({ name: "", lastname: "", username: "", email: "", password: '', password2: '' })
-
-    // APOLLO CLIENT
+    const [inputs, setInputs] = useState<Inputs>({ name: "", lastname: "", username: "", email: "", password: '', password2: '' })
 
     const { data: {getInvalidUsernames: invalidUsernames} = {} } = useQuery<InvaludUsernameList>(INVALID_USERNAMES)
     const [ createUser ] = useMutation(CREATE_USER)
@@ -40,7 +37,6 @@ const Register = ()=> {
         return !(invalidUsernames?.includes(inputs.username));
     }, [inputs.username, invalidUsernames]);
 
-    // EVENT HANDLERS
     let signin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -64,11 +60,8 @@ const Register = ()=> {
 
     return (
         <div className={style.main}>
-
             <div className={style['left-side']}>
-
                 <div className={style.card}>
-
                     <div>Bienvenido a Promptify</div>
                     <div>Por favor ingrese sus datos</div>
                     <form className={style.form} onSubmit={signin}>
@@ -84,15 +77,10 @@ const Register = ()=> {
                         <div className={inputs.password? (inputs.password !== inputs.password2? style.notPass: (inputs.password.length < 5? style.tooShort : '')) : ''}></div>
 
                         <button type='submit' className="p">Sign in</button>
-
                     </form>
-
                 </div>
-
             </div>
-
             <div className={style['right-side']}>
-                
             </div>
         </div>
     )

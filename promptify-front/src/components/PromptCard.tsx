@@ -4,7 +4,6 @@ import { useMutation } from '@apollo/client'
 import { DELETE_CARD, ADD_CARD_FAV, GET_CARDS } from '@/queries'
 
 import { Card, Mains, Visibility } from '../types'
-import { doNothing } from '@/utils/functions'
 
 import DeleteAlert from './DeleteAlert'
 import EditPrompt from './EditPrompt'
@@ -18,12 +17,43 @@ interface PromptProps {
     setMains: Dispatch<Mains>
 }
 
+interface PromptContentProps {
+    onClick: ()=>void
+    title: string
+    prompt: string
+}
+
+interface PromptOptionsProps {
+    isMutating: boolean
+    isFav: boolean
+    onOpenDeleteMenu: ()=>void
+    onOpenEditMenu: ()=>void
+    onToggleFav: ()=>void
+}
+
+function PromptContent ({onClick, title, prompt} : PromptContentProps) {
+    return(
+        <div className='p' onClick={onClick}>
+            <div className={style.title}>{title}</div>
+            <div className={style.content}>{prompt}</div>
+        </div>   
+    )
+}
+
+function PromptOptions ({isMutating, isFav, onOpenDeleteMenu, onOpenEditMenu, onToggleFav} : PromptOptionsProps) {
+    return(
+        <div className={style.options}>
+            <button className={`${style.delete} p`} title='delete' onClick={onOpenDeleteMenu}></button>
+            <button className={`${style.edit} p`} title='edit' onClick={onOpenEditMenu}></button>
+            <button className={isFav? `${style.fav} ${style[`fav-on`]} p` : `${style.fav} p`} title='add to favs' onClick={onToggleFav} disabled={isMutating}></button>
+        </div>
+    )
+}
+
 const PromptCard = ({card, mains, visibility, setMains, setVisibility} : PromptProps)=> {
-    // STATE
     const [edit,        setEdit        ] = useState<boolean>(false)
     const [remove,      setRemove      ] = useState<boolean>(false)   
 
-    // MUTATIONS
     const [deleteCard,    { loading: DCloading }] = useMutation(DELETE_CARD, {
         update: (cache, response) => {
             cache.updateQuery({query: GET_CARDS, variables: {topicId: mains.topic?.id}}, ({ getCards })=> { 
@@ -35,7 +65,6 @@ const PromptCard = ({card, mains, visibility, setMains, setVisibility} : PromptP
     })
     const [addCardToFavs, {loading: ACTFloading}] = useMutation(ADD_CARD_FAV)
 
-    // EVENT HANDLER
     const openCardHandler = ()=> {
         setMains({...mains, currCard: {id: card.id, aiId: card.aiId, topicId: card.topicId}})
         setVisibility({...visibility, showPS: true})
@@ -75,27 +104,19 @@ const PromptCard = ({card, mains, visibility, setMains, setVisibility} : PromptP
             console.error('Error al agregar la tarjeta a favoritos:', error);
         }
     };
-    //* mains.currCard x 2
+
     return (
         <div className={card.prompts.length > 1? (card.id === mains.currCard?.id? `${style.prompt} ${style.stack} ${style.selected}`:`${style.prompt} ${style.stack}`) : (card.id === mains.currCard?.id? `${style.prompt} ${style.selected}` :style.prompt) } > 
-            {remove && <DeleteAlert onAccept={deleteCardHandler} onCancel={setRemove} loading={DCloading}/>}
-            {edit && 
-                <EditPrompt 
-                    card={card} 
-                    mains={mains} 
-                    edit={edit} 
-                    setEdit={setEdit} 
-                    setMains={setMains}/>
-            }
-            <div className='p' onClick={openCardHandler}>
-                <div className={style.title}>{card.title}</div>
-                <div className={style.content}>{card.prompts[0].content}</div>
-            </div>
-            <div className={style.options}>
-                <div className={`${style.delete} p`} onClick={()=>setRemove(true)}></div>
-                <div className={`${style.edit} p`} onClick={()=>setEdit(!edit)}></div>
-                <div className={card.fav? `${style.fav} ${style[`fav-on`]} p` : `${style.fav} p`} onClick={ACTFloading? doNothing : addToFavs}></div>
-            </div>
+            <DeleteAlert onAccept={deleteCardHandler} onCancel={setRemove} loading={DCloading} isShown={remove}/>
+            {edit && <EditPrompt card={card} mains={mains} setEdit={setEdit} setMains={setMains}/>}
+            <PromptContent title={card.title} prompt={card.prompts[0].content} onClick={openCardHandler}/>
+            <PromptOptions 
+                isMutating={ACTFloading}
+                isFav={card.fav}
+                onOpenDeleteMenu={()=>setRemove(true)}
+                onOpenEditMenu={()=>setEdit(!edit)}
+                onToggleFav={addToFavs}
+            />
         </div>
     )
 }

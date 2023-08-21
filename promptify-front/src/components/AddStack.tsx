@@ -1,12 +1,13 @@
 import { useState } from 'react'
 
-import { Card, Mains, Visibility } from '../types'
-import { doNothing, closePopUp } from '@/utils/functions';
+import { Card, Mains, Visibility, Prompt } from '../types'
+import { closePopUp } from '@/utils/functions';
 
 import { useMutation } from '@apollo/client';
 import { ADD_CARD, GET_CARDS } from '@/queries'
 
 import style from '../styles/popups.module.css'
+import { StackOptions, StackTitle, PromptTitle, PromptContent } from './EditPromptModule';
 
 interface AddPromptProps {
     setVisibility: React.Dispatch<React.SetStateAction<Visibility>>
@@ -32,12 +33,9 @@ interface addCardVariables {
 
 const AddStack = ({ mains, setVisibility } : AddPromptProps)=> {
 
-    const [stackTitle,    setStackTitle   ] = useState<string>("")
-    const [count,         setCount        ] = useState<number>(0)
-
-    const [stack,         setStack        ] = useState<promptVariables[] | undefined>([])
-    const [promptTitle,   setPromptTitle  ] = useState<string>("")
-    const [promptContent, setPromptContent] = useState<string>("")
+    const [newTitle,   setNewTitle   ] = useState<string>("")
+    const [newPrompts, setNewPrompts ] = useState<Prompt[]>([])
+    const [index,      setIndex      ] = useState<number>(0)
 
     const [ createCard, { loading } ] = useMutation<addCardData, addCardVariables>(ADD_CARD, {
         update: (cache, response) => {
@@ -49,23 +47,53 @@ const AddStack = ({ mains, setVisibility } : AddPromptProps)=> {
         }
     })
 
-    // EVENT HANDLERS
+    const goBack = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+        e.preventDefault()
+        if (index-1 < 0) return
+        setIndex(index - 1)
+    }
 
-    const addToStack = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-        const newPrompt = { title: promptTitle, content: promptContent };
-        const updatedStack = stack ? [...stack, newPrompt] : [newPrompt];
-        
-        setCount(count + 1);
-        setStack(updatedStack);
-        setPromptTitle("");
-        setPromptContent("");
-    };
+    const goForward = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+        e.preventDefault()
+        if ((index + 1) > (newPrompts.length - 1)) {
+            return
+        }
+
+        setIndex(index + 1)
+    }
+
+    const deletePrompt = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+        e.preventDefault()
+        const prompts = [...newPrompts]
+        prompts.splice(index,1)
+        setNewPrompts(prompts)
+        setIndex(index-1)
+    }
+
+    const addNewPrompt = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=> {
+        e.preventDefault()
+        const prompts = newPrompts.slice()
+        prompts.splice(index+1, 0, {title:"", content:""})
+        setNewPrompts(prompts)  
+        setIndex(index+1)
+    }
+
+    const editPromptTitle = (e:React.ChangeEvent<HTMLInputElement>)=> {
+        const prompts = [...newPrompts]
+        prompts[index] = {...prompts[index], title: e.target.value}
+        setNewPrompts(prompts)
+    }
+
+    const editPromptContent = (e: React.ChangeEvent<HTMLTextAreaElement>)=> {
+        const prompts = [...newPrompts]
+        prompts[index] = {...prompts[index], content: e.target.value}
+        setNewPrompts(prompts)
+    }
 
     const addPrompt = async (e: React.FormEvent<HTMLDivElement>) => {
         e.preventDefault();
     
-        if (!mains.topic || !stack) { 
+        if (!mains.topic || newPrompts.length < 1) { 
             return;
         }
     
@@ -73,8 +101,8 @@ const AddStack = ({ mains, setVisibility } : AddPromptProps)=> {
             topicId: mains.topic.id, 
             aiId: mains.topic.aiId, 
             card: {
-                title: stackTitle,
-                prompts: stack,
+                title: newTitle,
+                prompts: newPrompts,
             },
         };
     
@@ -91,24 +119,26 @@ const AddStack = ({ mains, setVisibility } : AddPromptProps)=> {
 
 
     return (
-        <div className={style.popup} onSubmit={loading? doNothing : addPrompt}>
+        <div className={style.popup} onSubmit={addPrompt}>
             <div className={style.header}>
                 <div className={style[`header-title`]}>Add a Stack</div>
-                <button className={style[`header-close`]} onClick={e=>closePopUp(e,setVisibility)}>x</button>
+                <button className={style[`header-close`]} onClick={e=>closePopUp(e,setVisibility)}>✕</button>
             </div>
             <form action="" className={style.form}>
-                <label className={style.title}>{"Stack Title"}</label>
-                <input type="text" placeholder=" stack title" onChange={ e=> setStackTitle(e.target.value)} minLength={1} required/>
-
-                <div className={style[`stack-header`]}>
-                    <label className={style.title}>{`Prompt Stack: ${count}`}</label>
-                    <button onClick={addToStack}>+ Add to Stack</button>
-                </div>
-                <input value={promptTitle} type="text" placeholder="prompt title" onChange={e=> setPromptTitle(e.target.value)} minLength={1} required={(stack && stack?.length > 0)? false:true}/>
-                <textarea value={promptContent} placeholder="Write your prompt" onChange={e=> setPromptContent(e.target.value)} required={(stack && stack?.length > 0)? false:true}/>
-
+                <StackTitle mode={"stack"} title={newTitle} onTyping={e=>setNewTitle(e.target.value)} />
+                <StackOptions 
+                    isSingle={newPrompts.length !== 1}
+                    onNext={goForward}
+                    onPrevious={goBack}
+                    onDelete={deletePrompt}
+                    onAddToStack={addNewPrompt}
+                    current={index + 1}
+                    stackLenght={newPrompts.length}
+                />
+                <PromptTitle title={newPrompts[index]?.title} onTyping={editPromptTitle} />
+                <PromptContent content={newPrompts[index]?.content} onTyping={editPromptContent} />
                 <div className={style.buttons}>
-                    <button type="submit">Add Prompt</button>
+                    <button type="submit" disabled={loading}>Add Prompt</button>
                 </div>
             </form>
         </div>
