@@ -124,7 +124,7 @@ export function AiTitleOptions({
 }: AiTitleOptionsProps) {
   return (
     <div className={style[`ai-options`]}>
-      {!isEditEnabled && (
+      {/* {!isEditEnabled && (
         <button
           className={`${style[`del`]} p`}
           title="delete"
@@ -137,7 +137,7 @@ export function AiTitleOptions({
           title="edit"
           onClick={onClickEdit}
         ></button>
-      )}
+      )} */}
       {!isEditEnabled && (
         <button
           className={

@@ -1,150 +1,145 @@
 @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-  
-    100% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }
 
-
 .prompt {
-    outline: 1px solid transparent;
-    overflow: hidden;
+  outline: 1px solid transparent;
+  overflow: hidden;
 
-    padding: 1.1rem;
-    padding-bottom: 0px;
-    margin-bottom: 0.94rem;
-    
-    background-color: rgba(255, 255, 255, 0.711);
+  padding: 1.1rem;
+  padding-bottom: 0px;
+  margin-bottom: 0.94rem;
 
-    color: rgba(49, 49, 49, 0.862);
+  background-color: rgba(255, 255, 255, 0.711);
 
-    border-radius: 0.6rem;
+  color: rgba(49, 49, 49, 0.862);
 
-    animation: fadeIn 0.3s ease-in-out;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  border-radius: 0.6rem;
 
-    -webkit-user-select:none;
-    user-select: none;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
 
-    transition-property: outline;
-    transition-duration: 0.15s;
+  -webkit-user-select: none;
+  user-select: none;
+
+  transition-property: outline;
+  transition-duration: 0.15s;
 }
 
 .prompt:hover {
-    outline: 1px solid rgba(31, 151, 255, 0.855);
+  outline: 1px solid rgba(31, 151, 255, 0.855);
 
-    transition-property: outline;
-    transition-duration: 0.15s;
+  transition-property: outline;
+  transition-duration: 0.15s;
 }
 
 .selected {
-    outline: 1px solid rgba(31, 151, 255, 0.855);
+  outline: 1px solid rgba(31, 151, 255, 0.855);
 
-    transition-property: outline;
-    transition-duration: 0.15s;
+  transition-property: outline;
+  transition-duration: 0.15s;
 }
 
 .title {
-    margin-bottom: 0.94rem;
-    margin-bottom: 0.4rem;
+  margin-bottom: 0.94rem;
+  margin-bottom: 0.4rem;
 
-    font-family: 'Lexend Deca', sans-serif;
-    font-size: 1.06rem;
-    font-weight: 500;
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 1.06rem;
+  font-weight: 500;
 }
 
-.content { 
-    padding-bottom:  2rem;
+.content {
+  padding-bottom: 2rem;
 
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 400;
-    white-space: pre-line;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+  white-space: pre-line;
 
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .options {
-    display: flex;
+  display: flex;
 
-    margin-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
 
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.8rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.8rem;
 }
 
 .options button {
-    background-color: transparent;
-    border: none;
-    color: white;
+  background-color: transparent;
+  border: none;
+  color: white;
 }
 
 .delete {
-    background-image: url('../icons/del-off-black.png');
-    background-size: cover;
-    height: 1.44rem;
-    width: 1.44rem;
-  
-    opacity: 10%;
+  background-image: url("../icons/del-off-black.png");
+  background-size: cover;
+  height: 1.44rem;
+  width: 1.44rem;
+
+  opacity: 10%;
 }
-  
+
 .fav {
-    background-image: url('../icons/fav-off-black.png');
-    background-size: cover;
-    height: 1.44rem;
-    width: 1.44rem;
-  
-    opacity: 10%;
+  background-image: url("../icons/fav-off-black.png");
+  background-size: cover;
+  height: 1.44rem;
+  width: 1.44rem;
+
+  opacity: 10%;
 }
 
 .edit {
-    background-image: url('../icons/edit-black.png');
-    background-size: cover;
-    height: 1.15rem;
-    width: 1.15rem;
-  
-    opacity: 10%;
+  background-image: url("../icons/edit-black2.png");
+  background-size: cover;
+  height: 1.15rem;
+  width: 1.15rem;
+
+  opacity: 10%;
 }
-  
+
 .fav-on {
-    opacity: 70%;
-    background-image: url('../icons/fav-on.png');
+  opacity: 70%;
+  background-image: url("../icons/fav-on.png");
 }
-  
+
 .delete:hover {
-    background-image: url('../icons/del-on.png');
-    opacity: 80%;
+  background-image: url("../icons/del-on.png");
+  opacity: 80%;
 }
 
 .fav:hover {
-    background-image: url('../icons/fav-on.png');
-    opacity: 80%;
+  background-image: url("../icons/fav-on.png");
+  opacity: 80%;
 }
 
 .edit:hover {
-    opacity: 80%;
+  opacity: 80%;
 }
 
-
-
 @media (max-width: 1600px) {
-   
 }
 
 @media (max-width: 1366px) {
-   
 }
 
 @media (max-width: 912px) and (orientation: portrait) {
 }
 
 @media (max-width: 500px) and (orientation: portrait) {
-    .prompt {
-        min-width: 100%;
-    }
+  .prompt {
+    min-width: 100%;
+  }
 }

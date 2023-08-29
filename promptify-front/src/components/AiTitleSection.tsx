@@ -127,30 +127,45 @@ const AiTitleSection = ({
   if (mains.profile) return null;
 
   return (
-    <div className={style[`ai-container`]}>
-      <DeleteAlert
-        onAccept={handleDeleteAi}
-        onCancel={setDel}
-        isShown={del}
-        loading={DAloading}
-      />
-      <EditableAiTitle
-        title={currentAI?.name}
-        newTitle={newTitle}
-        isEditEnabled={edit}
-        onTyping={handleTyping}
-      />
-      <AiTitleOptions
-        isEditEnabled={edit}
-        isFav={currentAI?.fav}
-        isMutating={EAloading || AATFloading}
-        onClickDelete={() => setDel(true)}
-        onClickEdit={handleEnableEdit}
-        onToggleFav={handleAddToFavs}
-        onConfirmEdit={handleConfirmEdit}
-        onCancelEdit={handleEnableEdit}
-      />
-    </div>
+    <>
+      <div className={style[`ai-container`]}>
+        <DeleteAlert
+          onAccept={handleDeleteAi}
+          onCancel={setDel}
+          isShown={del}
+          loading={DAloading}
+        />
+        <EditableAiTitle
+          title={currentAI?.name}
+          newTitle={newTitle}
+          isEditEnabled={edit}
+          onTyping={handleTyping}
+        />
+        <AiTitleOptions
+          isEditEnabled={edit}
+          isFav={currentAI?.fav}
+          isMutating={EAloading || AATFloading}
+          onClickDelete={() => setDel(true)}
+          onClickEdit={handleEnableEdit}
+          onToggleFav={handleAddToFavs}
+          onConfirmEdit={handleConfirmEdit}
+          onCancelEdit={handleEnableEdit}
+        />
+      </div>
+      <div className={style["ai-options2"]}>
+        <button
+          className={`${style[`del`]} p`}
+          title="delete"
+          onClick={() => setDel(true)}
+        />
+
+        <button
+          className={`${style[`edit`]} p`}
+          title="edit"
+          onClick={handleEnableEdit}
+        ></button>
+      </div>
+    </>
   );
 };
 
