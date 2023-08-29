@@ -1,4 +1,3 @@
-
 const typeDefs = `
 
 	# INPUT TYPES _ _ _ _ _ _ _ _ _

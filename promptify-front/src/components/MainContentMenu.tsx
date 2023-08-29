@@ -1,29 +1,32 @@
-import style from '../styles/mainContent.module.css'
+import style from "../styles/mainContent.module.css";
 
-import { useQuery } from '@apollo/client'
+import { useQuery } from "@apollo/client";
 
-import { Mains, Topic, topicListData, topicListVariables } from '../types'
-import { GET_TOPICS } from '@/queries'
+import { Mains, Topic, topicListData, topicListVariables } from "../types";
+import { GET_TOPICS } from "@/queries";
 
 interface MainContentMenu {
-    mains: Mains
+  mains: Mains;
 }
 
+const MainContentMenu = ({ mains }: MainContentMenu) => {
+  const { data: { getTopics: topicList } = {} } = useQuery<
+    topicListData,
+    topicListVariables
+  >(GET_TOPICS, {
+    variables: { mainId: mains.main?.id },
+    skip: !mains.main,
+  });
 
-const MainContentMenu = ({mains} : MainContentMenu )=> {
+  const currentTopic = topicList?.find(
+    (topic: Topic) => topic.id === mains.topic?.id
+  );
 
-    const { data: { getTopics: topicList } = {} } = useQuery<topicListData, topicListVariables>(GET_TOPICS, {
-        variables: { mainId: mains.main?.id },
-        skip: !mains.main
-      });
+  return (
+    <div className={style.header}>
+      <div className={style[`header-title`]}>{currentTopic?.name}</div>
+    </div>
+  );
+};
 
-    const currentTopic = topicList?.find((topic: Topic) => topic.id === mains.topic?.id)
-
-    return (
-        <div className={style.header}>
-            <div className={style[`header-title`]}>{currentTopic?.name}</div> 
-        </div>
-    )
-}
-
-export default MainContentMenu
+export default MainContentMenu;

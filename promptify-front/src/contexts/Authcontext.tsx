@@ -1,5 +1,5 @@
-import { Token } from 'graphql';
-import { createContext, useContext, useState, Dispatch } from 'react';
+import { Token } from "graphql";
+import { createContext, useContext, useState, Dispatch } from "react";
 
 export type AuthContextType = {
   token: string | undefined;
@@ -17,8 +17,7 @@ type AuthProviderProps = {
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children } : AuthProviderProps) => {
-
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | undefined>(undefined);
 
   return (

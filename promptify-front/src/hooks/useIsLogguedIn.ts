@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
-import { getUserToken } from '@/utils/functions';
+import { useState, useEffect } from "react";
+import { getUserToken } from "@/utils/functions";
 
 function useIsUserLoggedIn() {
-    const [token, setToken] = useState<string  | null>(getUserToken()? getUserToken() : null)
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(token? true: false);
+  const [token, setToken] = useState<string | null>(
+    getUserToken() ? getUserToken() : null
+  );
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(token ? true : false);
 
-
-  useEffect(()=> {
-    const token: string | null = sessionStorage.getItem('user-token')
+  useEffect(() => {
+    const token: string | null = sessionStorage.getItem("user-token");
     if (token === null) {
-        setIsLoggedIn(false)
-      return
+      setIsLoggedIn(false);
+      return;
     }
-    setIsLoggedIn(true)
-    setToken(token)
-    
-  }, []) 
+    setIsLoggedIn(true);
+    setToken(token);
+  }, []);
 
   return isLoggedIn;
 }
 
-export default useIsUserLoggedIn
+export default useIsUserLoggedIn;
