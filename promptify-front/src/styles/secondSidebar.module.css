@@ -189,10 +189,13 @@
   background-image: url("../icons/del-off.png");
   background-size: cover;
 
-  height: 1.07rem;
-  width: 1.07rem;
+  height: 1.2rem;
+  width: 1.2rem;
 
   opacity: 7%;
+
+  position: relative;
+  top: -1px;
 }
 
 .fav {
@@ -459,6 +462,11 @@
 @media (max-width: 500px) and (orientation: portrait) {
   .ai-title {
     font-size: 17px;
+  }
+
+  .ai-options .fav {
+    position: relative;
+    right: 0rem;
   }
 
   .second-sidebar {
