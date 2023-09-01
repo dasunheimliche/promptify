@@ -1,16 +1,16 @@
-import style from "../styles/mainContent.module.css";
-
 import { Dispatch } from "react";
-
-import { theresFavs } from "@/utils/functions";
 
 import { useQuery } from "@apollo/client";
 
+import { Mains, Visibility, getCardsData, getCardsVariables } from "@/types";
+
+import { GET_CARDS } from "@/queries";
+import { theresFavs } from "@/utils/functions";
+
+import CardtList from "./CardList";
 import AddCardButton from "./AddCardButton";
 
-import { Mains, Visibility, getCardsData, getCardsVariables } from "../types";
-import { GET_CARDS } from "@/queries";
-import { CardtList } from "./MainContentModule";
+import style from "@/styles/mainContent.module.css";
 
 interface MainContentGridProps {
   mains: Mains;

@@ -1,21 +1,19 @@
 import { Dispatch, useState } from "react";
 
 import { Card, Prompt } from "@/types";
-import { doNothing } from "@/utils/functions";
 
 import { useMutation } from "@apollo/client";
 import { EDIT_CARD } from "@/queries";
 import { Mains } from "@/types";
 
 import style from "../styles/popups.module.css";
-import {
-  EditPromptFooter,
-  EditPromptHeader,
-  PromptContent,
-  PromptTitle,
-  StackOptions,
-  StackTitle,
-} from "./EditPromptModule";
+
+import EditPromptHeader from "./EditPrompt/EditPromptHeader";
+import StackTitle from "./EditPrompt/StackTitle";
+import StackOptions from "./EditPrompt/StackOptions";
+import PromptTitle from "./EditPrompt/PromptTitle";
+import PromptContent from "./EditPrompt/PromptContent";
+import EditPromptFooter from "./EditPrompt/EditPromptFooter";
 
 interface EditPRomptProps {
   card: Card;

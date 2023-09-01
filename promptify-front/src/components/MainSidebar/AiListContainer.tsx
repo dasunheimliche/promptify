@@ -1,22 +1,10 @@
-import { AI, Mains, Visibility } from "@/types";
 import { Dispatch } from "react";
 
-import style from "../styles/mainSidebar.module.css";
+import AiButton from "./AiButton";
 
-interface ProfileButtonProps {
-  isActive: boolean;
-  onClick: () => void;
-}
+import { AI, Mains, Visibility } from "@/types";
 
-interface AddAiButtonProps {
-  onClick: () => void;
-}
-
-interface AiButtonProps {
-  caption: string;
-  isActive: boolean | undefined | "";
-  onClick: () => void;
-}
+import style from "../../styles/mainSidebar.module.css";
 
 interface AiListComponentProps {
   aiList: AI[] | undefined;
@@ -27,49 +15,7 @@ interface AiListComponentProps {
   isFav: boolean;
 }
 
-function AiButton({ caption, isActive, onClick }: AiButtonProps) {
-  return (
-    <div
-      className={
-        isActive
-          ? `${style[`ai-logo`]} ${style["selected-ai"]} p`
-          : `${style[`ai-logo`]} p`
-      }
-      onClick={onClick}
-    >
-      {caption}
-    </div>
-  );
-}
-
-export function Logo() {
-  return <div className={`${style.promptify} p`}>Pfy</div>;
-}
-
-export function ProfileButton({ onClick, isActive }: ProfileButtonProps) {
-  return (
-    <div
-      className={
-        isActive
-          ? `${style[`add-ai`]} ${style["selected-me"]} p`
-          : `${style[`add-ai`]} p`
-      }
-      onClick={onClick}
-    >
-      ME
-    </div>
-  );
-}
-
-export function AddAiButton({ onClick }: AddAiButtonProps) {
-  return (
-    <div className={`${style[`add-ai`]} p`} onClick={onClick}>
-      +
-    </div>
-  );
-}
-
-export function AiListComponent({
+export default function AiListComponent({
   aiList,
   mains,
   setMains,

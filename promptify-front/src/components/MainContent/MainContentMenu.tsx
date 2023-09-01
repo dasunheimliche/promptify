@@ -1,15 +1,15 @@
-import style from "../styles/mainContent.module.css";
-
 import { useQuery } from "@apollo/client";
 
-import { Mains, Topic, topicListData, topicListVariables } from "../types";
 import { GET_TOPICS } from "@/queries";
+import { Mains, Topic, topicListData, topicListVariables } from "@/types";
+
+import style from "@/styles/mainContent.module.css";
 
 interface MainContentMenu {
   mains: Mains;
 }
 
-const MainContentMenu = ({ mains }: MainContentMenu) => {
+export default function MainContentMenu({ mains }: MainContentMenu) {
   const { data: { getTopics: topicList } = {} } = useQuery<
     topicListData,
     topicListVariables
@@ -27,6 +27,4 @@ const MainContentMenu = ({ mains }: MainContentMenu) => {
       <div className={style[`header-title`]}>{currentTopic?.name}</div>
     </div>
   );
-};
-
-export default MainContentMenu;
+}

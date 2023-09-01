@@ -1,14 +1,14 @@
 import { Dispatch, useState, useRef, useEffect } from "react";
-
 import { useMutation } from "@apollo/client";
-import { EDIT_TOPIC, GET_TOPICS, ADD_TOPIC_FAV, DELETE_TOPIC } from "@/queries";
 
 import { Topic, Mains } from "@/types";
+import { DELETE_TOPIC, GET_TOPICS, ADD_TOPIC_FAV, EDIT_TOPIC } from "@/queries";
 
-import DeleteAlert from "./DeleteAlert";
-import { EditableTopicTitle, TopicOptions } from "./SecondSidebarModule";
+import DeleteAlert from "@/components/DeleteAlert";
+import EditableTopicTitle from "./TopicEditableTitle";
+import TopicOptions from "./TopicOptions";
 
-import style from "../styles/secondSidebar.module.css";
+import style from "@/styles/secondSidebar.module.css";
 
 interface TopicProps {
   sec: Topic;
@@ -18,7 +18,13 @@ interface TopicProps {
   setMains: Dispatch<Mains>;
 }
 
-const Topic = ({ sec, topicList, mains, setMains, onClick }: TopicProps) => {
+export default function TopicTile({
+  sec,
+  topicList,
+  mains,
+  setMains,
+  onClick,
+}: TopicProps) {
   const [edit, setEdit] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>(sec.name);
   const [del, setDel] = useState<boolean>(false);
@@ -119,6 +125,4 @@ const Topic = ({ sec, topicList, mains, setMains, onClick }: TopicProps) => {
       />
     </div>
   );
-};
-
-export default Topic;
+}

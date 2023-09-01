@@ -11,14 +11,14 @@ import {
   getCardsData,
   getCardsVariables,
 } from "../types";
+
 import { GET_CARDS } from "@/queries";
-import {
-  PromptSidebarContent,
-  PromptSidebarFooter,
-  PromptSidebarHeader,
-  PromptSidebarSubtitle,
-  PromptSidebarTitle,
-} from "./PromptSidebarModule";
+
+import PromptSidebarHeader from "./PromptSidebar/PromptSidebarHeader";
+import PromptSidebarTitle from "./PromptSidebar/PromptSidebarTitle";
+import PromptSidebarSubtitle from "./PromptSidebar/PromptSidebarSubtitle";
+import PromptSidebarContent from "./PromptSidebar/PromptSidebarContent";
+import PromptSidebarFooter from "./PromptSidebar/PromptSidebarFooter";
 
 interface PromptSidebarProps {
   mains: Mains;

@@ -3,12 +3,10 @@ import { Dispatch } from "react";
 import { AI, Mains, Visibility } from "../types";
 import { theresFavs } from "@/utils/functions";
 
-import {
-  Logo,
-  ProfileButton,
-  AddAiButton,
-  AiListComponent,
-} from "./MainSidebarModule";
+import Logo from "./MainSidebar/Logo";
+import ProfileButton from "./MainSidebar/ProfileButton";
+import AiListComponent from "./MainSidebar/AiListContainer";
+import AddAiButton from "./MainSidebar/AddAiButton";
 
 import style from "../styles/mainSidebar.module.css";
 
@@ -22,13 +20,13 @@ interface MainSideBarProps {
   setMains: Dispatch<Mains>;
 }
 
-const MainSidebar = ({
+export default function MainSidebar({
   aiList,
   mains,
   visibility,
   setMains,
   setVisibility,
-}: MainSideBarProps) => {
+}: MainSideBarProps) {
   const isProfileButtonActive = mains.profile && visibility.showSS;
   const isTopicsBarOpen = visibility.showSS;
   const isAiListempty = !(aiList && aiList.length > 0);
@@ -88,6 +86,4 @@ const MainSidebar = ({
       <AddAiButton onClick={handleOpenAddAiPopUp} />
     </div>
   );
-};
-
-export default MainSidebar;
+}

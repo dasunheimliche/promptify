@@ -5,6 +5,9 @@ import { DELETE_CARD, ADD_CARD_FAV, GET_CARDS } from "@/queries";
 
 import { Card, Mains, Visibility } from "../types";
 
+import PromptContent from "./PromptCard/PromptContent";
+import PromptOptions from "./PromptCard/PromptOptions";
+
 import DeleteAlert from "./DeleteAlert";
 import EditPrompt from "./EditPrompt";
 import style from "../styles/prompt.module.css";
@@ -15,60 +18,6 @@ interface PromptProps {
   visibility: Visibility;
   setVisibility: Dispatch<Visibility>;
   setMains: Dispatch<Mains>;
-}
-
-interface PromptContentProps {
-  onClick: () => void;
-  title: string;
-  prompt: string;
-}
-
-interface PromptOptionsProps {
-  isMutating: boolean;
-  isFav: boolean;
-  onOpenDeleteMenu: () => void;
-  onOpenEditMenu: () => void;
-  onToggleFav: () => void;
-}
-
-function PromptContent({ onClick, title, prompt }: PromptContentProps) {
-  return (
-    <div className="p" onClick={onClick}>
-      <div className={style.title}>{title}</div>
-      <div className={style.content}>{prompt}</div>
-    </div>
-  );
-}
-
-function PromptOptions({
-  isMutating,
-  isFav,
-  onOpenDeleteMenu,
-  onOpenEditMenu,
-  onToggleFav,
-}: PromptOptionsProps) {
-  return (
-    <div className={style.options}>
-      <button
-        className={`${style.delete} p`}
-        title="delete"
-        onClick={onOpenDeleteMenu}
-      ></button>
-      <button
-        className={`${style.edit} p`}
-        title="edit"
-        onClick={onOpenEditMenu}
-      ></button>
-      <button
-        className={
-          isFav ? `${style.fav} ${style[`fav-on`]} p` : `${style.fav} p`
-        }
-        title="add to favs"
-        onClick={onToggleFav}
-        disabled={isMutating}
-      ></button>
-    </div>
-  );
 }
 
 const PromptCard = ({

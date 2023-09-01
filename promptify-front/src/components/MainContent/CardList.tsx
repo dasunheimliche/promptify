@@ -1,8 +1,8 @@
 import { Card, Mains, Visibility } from "@/types";
-import PromptCard from "./PromptCard";
+import PromptCard from "../PromptCard";
 import { Dispatch } from "react";
 
-import style from "../styles/mainContent.module.css";
+import style from "@/styles/mainContent.module.css";
 
 interface CardListProps {
   cardList: Card[] | undefined;
@@ -13,7 +13,7 @@ interface CardListProps {
   isFav?: boolean;
 }
 
-export function CardtList({
+export default function CardtList({
   cardList,
   mains,
   visibility,

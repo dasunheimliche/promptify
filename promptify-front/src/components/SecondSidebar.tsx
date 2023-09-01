@@ -5,11 +5,9 @@ import { AI, User, Mains, Visibility } from "../types";
 import { useApolloClient } from "@apollo/client";
 import { useRouter } from "next/router";
 
-import AiTitleSection from "./AiTitleSection";
-import TopicsSection from "./TopicsSection";
-
 import style from "../styles/secondSidebar.module.css";
-import { Profile } from "./SecondSidebarModule";
+import Profile from "./SecondSidebar/Profile";
+import SelectedAI from "./SecondSidebar/SelectedAI";
 
 interface SecondSidebarProps {
   me: User | undefined;
@@ -20,18 +18,19 @@ interface SecondSidebarProps {
   setVisibility: Dispatch<Visibility>;
 }
 
-const SecondSidebar = ({
+export default function SecondSidebar({
   me,
   mains,
   aiList,
   visibility,
   setMains,
   setVisibility,
-}: SecondSidebarProps) => {
+}: SecondSidebarProps) {
   const router = useRouter();
   const client = useApolloClient();
 
   const isProfileButtonActive = mains.profile;
+  const isAiSelected = mains.main && !isProfileButtonActive;
 
   const handleSignOff = async () => {
     sessionStorage.clear();
@@ -49,22 +48,16 @@ const SecondSidebar = ({
       }
     >
       {isProfileButtonActive && <Profile user={me} onSignOff={handleSignOff} />}
-
-      <AiTitleSection
-        me={me}
-        aiList={aiList}
-        mains={mains}
-        setMains={setMains}
-      />
-      <TopicsSection
-        key={mains.main?.id}
-        mains={mains}
-        setMains={setMains}
-        setVisibility={setVisibility}
-        visibility={visibility}
-      />
+      {isAiSelected && (
+        <SelectedAI
+          me={me}
+          aiList={aiList}
+          mains={mains}
+          setMains={setMains}
+          visibility={visibility}
+          setVisibility={setVisibility}
+        />
+      )}
     </div>
   );
-};
-
-export default SecondSidebar;
+}

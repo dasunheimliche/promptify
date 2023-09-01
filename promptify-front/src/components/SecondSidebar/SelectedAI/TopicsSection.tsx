@@ -1,9 +1,10 @@
-import style from "../styles/secondSidebar.module.css";
-
 import { Dispatch, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 
 import { theresFavs } from "@/utils/functions";
+
+import { GET_TOPICS, ADD_TOPIC } from "@/queries";
+
 import {
   Mains,
   Topic,
@@ -12,9 +13,10 @@ import {
   topicListVariables,
 } from "@/types";
 
-import { GET_TOPICS, ADD_TOPIC } from "@/queries";
+import NewTopicInput from "./TopicNewInput";
+import TopicList from "./TopicList";
 
-import { NewTopicInput, TopicList } from "./SecondSidebarModule";
+import style from "@/styles/secondSidebar.module.css";
 
 interface addAiData {
   createTopic: Topic;
@@ -33,12 +35,12 @@ interface TopicsProps {
   setVisibility: Dispatch<Visibility>;
 }
 
-const TopicsSection = ({
+export default function TopicsSection({
   mains,
   setMains,
   setVisibility,
   visibility,
-}: TopicsProps) => {
+}: TopicsProps) {
   const [addTopic, setAddTopic] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
 
@@ -137,6 +139,4 @@ const TopicsSection = ({
       </div>
     </>
   );
-};
-
-export default TopicsSection;
+}

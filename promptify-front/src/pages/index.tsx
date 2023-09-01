@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { getUserToken } from "@/utils/functions";
-import Link from "next/link";
 
 const Home = () => {
   const [token] = useState<string | null>(

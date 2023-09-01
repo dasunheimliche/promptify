@@ -1,18 +1,17 @@
 import { useState } from "react";
 
-import { Card, Mains, Visibility, Prompt } from "../types";
+import { Card, Mains, Visibility, Prompt } from "@/types";
 import { closePopUp } from "@/utils/functions";
 
 import { useMutation } from "@apollo/client";
 import { ADD_CARD, GET_CARDS } from "@/queries";
 
-import style from "../styles/popups.module.css";
-import {
-  StackOptions,
-  StackTitle,
-  PromptTitle,
-  PromptContent,
-} from "./EditPromptModule";
+import style from "@/styles/popups.module.css";
+
+import StackTitle from "../EditPrompt/StackTitle";
+import StackOptions from "../EditPrompt/StackOptions";
+import PromptTitle from "../EditPrompt/PromptTitle";
+import PromptContent from "../EditPrompt/PromptContent";
 
 interface AddPromptProps {
   setVisibility: React.Dispatch<React.SetStateAction<Visibility>>;
@@ -36,7 +35,7 @@ interface addCardVariables {
   };
 }
 
-const AddStack = ({ mains, setVisibility }: AddPromptProps) => {
+export default function AddStack({ mains, setVisibility }: AddPromptProps) {
   const [newTitle, setNewTitle] = useState<string>("");
   const [newPrompts, setNewPrompts] = useState<Prompt[]>([]);
   const [index, setIndex] = useState<number>(0);
@@ -170,6 +169,4 @@ const AddStack = ({ mains, setVisibility }: AddPromptProps) => {
       </form>
     </div>
   );
-};
-
-export default AddStack;
+}

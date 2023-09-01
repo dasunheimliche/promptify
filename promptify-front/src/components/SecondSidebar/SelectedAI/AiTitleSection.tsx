@@ -1,14 +1,14 @@
-import style from "../styles/secondSidebar.module.css";
-
+import { Dispatch, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { useState, Dispatch } from "react";
 
-import { EDIT_AI, ADD_AI_FAV, GET_AIS, DELETE_AI, ME } from "@/queries";
+import { ADD_AI_FAV, EDIT_AI, DELETE_AI, ME, GET_AIS } from "@/queries";
+import { AI, User, Mains } from "@/types";
 
-import { AI, Mains, User } from "@/types";
+import DeleteAlert from "@/components/DeleteAlert";
+import EditableAiTitle from "./AiEditableTitle";
+import AiTitleOptions from "./AiTitleOptions";
 
-import DeleteAlert from "./DeleteAlert";
-import { AiTitleOptions, EditableAiTitle } from "./SecondSidebarModule";
+import style from "@/styles/secondSidebar.module.css";
 
 interface AiTitleSectionProps {
   me: User | undefined;
@@ -17,12 +17,12 @@ interface AiTitleSectionProps {
   setMains: Dispatch<Mains>;
 }
 
-const AiTitleSection = ({
+export default function AiTitleSection({
   me,
   aiList,
   mains,
   setMains,
-}: AiTitleSectionProps) => {
+}: AiTitleSectionProps) {
   const currentAI = aiList?.find((ai: AI) => ai.id === mains.main?.id);
 
   const [edit, setEdit] = useState<boolean>(false);
@@ -145,8 +145,6 @@ const AiTitleSection = ({
           isEditEnabled={edit}
           isFav={currentAI?.fav}
           isMutating={EAloading || AATFloading}
-          onClickDelete={() => setDel(true)}
-          onClickEdit={handleEnableEdit}
           onToggleFav={handleAddToFavs}
           onConfirmEdit={handleConfirmEdit}
           onCancelEdit={handleEnableEdit}
@@ -167,6 +165,4 @@ const AiTitleSection = ({
       </div>
     </>
   );
-};
-
-export default AiTitleSection;
+}

@@ -1,245 +1,239 @@
 @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-  
-    100% {
-      opacity: 1;
-    }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-
-
-
 .prompt-sidebar {
-    box-sizing: border-box;
-    display: flex;
-    position: relative;
-    overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+  overflow: hidden;
 
-    min-width: 42rem;
-    max-width:  42rem;
-    width:  42rem;
+  min-width: 42rem;
+  max-width: 42rem;
+  width: 42rem;
 
-    padding-left: 1.2rem;
-    padding-right: 1.2rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
 
-    background-color: var(--prompt-sidebar);
-    
-    flex-direction: column;
-    align-items: center;
-    
-    transition-property: min-width, max-width, width;
-    transition-duration: 0.3s;
+  background-color: var(--prompt-sidebar);
+
+  flex-direction: column;
+  align-items: center;
+
+  transition-property: min-width, max-width, width;
+  transition-duration: 0.3s;
 }
 
 .hidden-bar {
-    z-index: -1;
+  z-index: -1;
 
-    min-width: 0px;
-    max-width: 0px;
-    width: 0px;
-    padding: 0px;
+  min-width: 0px;
+  max-width: 0px;
+  width: 0px;
+  padding: 0px;
 
-    transition-property: min-width, max-width, width, padding;
-    transition-duration: 0.3s;
+  transition-property: min-width, max-width, width, padding;
+  transition-duration: 0.3s;
 }
 
-
 .header {
-    display: flex;
+  display: flex;
 
-    width: 100%;
-    min-height: 3.75rem;
-    
-    justify-content: space-between;
-    align-items: center;
+  width: 100%;
+  min-height: 3.75rem;
 
-    -webkit-user-select: none;
-    user-select: none;
+  justify-content: space-between;
+  align-items: center;
+
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .back-button {
-    width: 2.19rem;
-    height: 2.19rem;
-  
-    background-image: url(../icons/back2.png);
-    background-size: cover;
-  
-    transform: rotate(180deg);
+  width: 2.19rem;
+  height: 2.19rem;
+
+  background-image: url(../icons/back2.png);
+  background-size: cover;
+
+  transform: rotate(180deg);
 }
 
 .buttons {
-    display: flex;
-    gap: 1.25rem;
-  
-    font-family: 'Lexend Deca', sans-serif;
-  
-    margin-right: 0.19rem;
+  display: flex;
+  gap: 1.25rem;
+
+  font-family: "Lexend Deca", sans-serif;
+
+  margin-right: 0.19rem;
 }
 
 .buttons button {
-    all: unset;
-    position: relative;
+  all: unset;
+  position: relative;
 
-    color: rgba(0, 0, 0, 0.907);
+  color: rgba(0, 0, 0, 0.907);
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .buttons button::after {
-    content: "";
-    display: block;
-    width: 0%;
-    position: absolute;
-    top: 100%;
-    height: 0.3rem;
+  content: "";
+  display: block;
+  width: 0%;
+  position: absolute;
+  top: 100%;
+  height: 0.3rem;
 
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    
-    background: radial-gradient(rgba(63, 255, 159, 0.955), rgba(255, 0, 0, 0));
-    background-size:contain;
-    background-repeat: no-repeat;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 
-    transition-property: width;
-    transition-duration: 0.2s;
+  background: radial-gradient(rgba(63, 255, 159, 0.955), rgba(255, 0, 0, 0));
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  transition-property: width;
+  transition-duration: 0.2s;
 }
 
 .buttons button:hover::after {
-    width: 100%;
+  width: 100%;
 
-    transition-property: width;
-    transition-duration: 0.2s;
+  transition-property: width;
+  transition-duration: 0.2s;
 }
 
 .update {
-    color: rgb(24, 202, 1) !important;
-    font-weight: 600 !important;
-    text-shadow: 1px 1px 2px rgb(101, 255, 84) !important;
+  color: rgb(24, 202, 1) !important;
+  font-weight: 600 !important;
+  text-shadow: 1px 1px 2px rgb(101, 255, 84) !important;
 }
 
 .content {
-    position: relative;
-    display: flex;
-    overflow: hidden;
+  position: relative;
+  display: flex;
+  overflow: hidden;
 
-    width: 100%;
-    height: 90%;
+  width: 100%;
+  height: 90%;
 
-    padding: 0 1.1rem;
-    background-color: white;
+  padding: 0 1.1rem;
+  background-color: white;
 
-    border-radius: 0.45rem;
+  border-radius: 0.45rem;
 
-    color: rgba(49, 49, 49, 0.862);
+  color: rgba(49, 49, 49, 0.862);
 
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .content-title {
-    display: flex;
+  display: flex;
 
-    height: 2.5rem;
+  height: 2.5rem;
 
-    padding-top: 1.8rem;
-  
-    font-family: 'Lexend Deca', sans-serif;
-    font-size: 1.69rem;
-    font-weight: 400;
-  
-    align-items: center;
+  padding-top: 1.8rem;
+
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 1.69rem;
+  font-weight: 400;
+
+  align-items: center;
 }
 
 .content-subtitle-container {
-    display: flex;
+  display: flex;
 
-    padding-top: 1.3rem;
+  padding-top: 1.3rem;
 
-    font-family: 'Lexend Deca', sans-serif;
-    font-weight: 400;
-    font-size: 1.31rem;
+  font-family: "Lexend Deca", sans-serif;
+  font-weight: 400;
+  font-size: 1.31rem;
 
-    align-items: center;
-    justify-content: space-between;  
+  align-items: center;
+  justify-content: space-between;
 }
 
 .content-textarea {
-    all: unset;  
+  all: unset;
 
-    height: 100%;
+  height: 100%;
 
-    padding-top: 1.3rem;
+  padding-top: 1.3rem;
 
-    color: rgba(0, 0, 0, 0.757);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 1.15rem;
+  color: rgba(0, 0, 0, 0.757);
+  font-family: "Source Code Pro", monospace;
+  font-size: 1.15rem;
 }
 
 .content-playback {
-    display: flex;
+  display: flex;
 
-    height: 2.5rem;
+  height: 2.5rem;
 
-    margin-bottom: 0.3rem;
+  margin-bottom: 0.3rem;
 
-    font-family: 'Source Code Pro', monospace;
-    font-size: 1.31rem;
-    font-weight: bolder;
-  
-    align-items: center;
-    justify-content: center;
-    gap: 0.44rem;
+  font-family: "Source Code Pro", monospace;
+  font-size: 1.31rem;
+  font-weight: bolder;
+
+  align-items: center;
+  justify-content: center;
+  gap: 0.44rem;
 }
 
 .playback {
-    display: flex; 
+  display: flex;
 
-    width: 1.2rem;
-    height: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
 
-    padding: 0.75rem;
+  padding: 0.75rem;
 
-    background-color: rgb(243, 228, 253);
-    
-    align-items: center;
-    justify-content: center;
+  background-color: rgb(237, 237, 237);
 
-    border-radius: 100px;
+  align-items: center;
+  justify-content: center;
 
-    cursor: pointer;
+  border-radius: 100px;
+
+  cursor: pointer;
 }
 
 .playback:hover {
-    background-color: rgb(229, 201, 252);
+  background-color: rgb(225, 225, 225);
 }
 
 @media (max-width: 1600px) {
-    
 }
 
 @media (max-width: 1366px) {
-   
 }
 
 @media (max-width: 912px) and (orientation: portrait) {
 }
 
 @media (max-width: 500px) and (orientation: portrait) {
-    .prompt-sidebar {
-        position: relative;
-        right: 100%;
-        min-width: 100%;
-        min-height: 100dvh;
-    }
+  .prompt-sidebar {
+    position: relative;
+    right: 100%;
+    min-width: 100%;
+    min-height: 100dvh;
+  }
 
-    .content {
-        height: 85dvh;
-        position: relative;
-    }
+  .content {
+    height: 85dvh;
+    position: relative;
+  }
 }

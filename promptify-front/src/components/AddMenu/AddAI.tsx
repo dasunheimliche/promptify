@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-import { User, AI, Mains, Visibility } from "../types";
+import { User, AI, Mains, Visibility } from "@/types";
 import { closePopUp } from "@/utils/functions";
 
 import { useMutation } from "@apollo/client";
 import { ADD_AI, GET_AIS, ME } from "@/queries";
 
-import style from "../styles/popups.module.css";
+import style from "@/styles/popups.module.css";
 
 interface AddAIProps {
   me: User | undefined;
@@ -24,7 +24,7 @@ interface addAiVariables {
   };
 }
 
-const AddAI = ({ me, setVisibility, setMains }: AddAIProps) => {
+export default function AddAI({ me, setVisibility, setMains }: AddAIProps) {
   const [name, setName] = useState<string>("");
   const [abb, setAbb] = useState<string>("");
 
@@ -110,6 +110,4 @@ const AddAI = ({ me, setVisibility, setMains }: AddAIProps) => {
       </form>
     </div>
   );
-};
-
-export default AddAI;
+}

@@ -1,6 +1,6 @@
-import { Dispatch, useState } from "react";
-import { Visibility } from "@/types";
-import style from "../styles/mainContent.module.css";
+import { useState } from "react";
+
+import style from "@/styles/mainContent.module.css";
 
 interface AddCardButtonProps {
   onOpenAddPromptMenu: () => void;

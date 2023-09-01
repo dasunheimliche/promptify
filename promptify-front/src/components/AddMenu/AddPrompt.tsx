@@ -1,12 +1,12 @@
-import { useState, Dispatch } from "react";
+import { useState } from "react";
 
-import { Visibility, Card, Mains } from "../types";
-import { doNothing, closePopUp } from "@/utils/functions";
+import { Visibility, Card, Mains } from "@/types";
+import { closePopUp } from "@/utils/functions";
 
 import { useMutation } from "@apollo/client";
 import { ADD_CARD, GET_CARDS } from "@/queries";
 
-import style from "../styles/popups.module.css";
+import style from "@/styles/popups.module.css";
 
 interface AddPromptProps {
   setVisibility: React.Dispatch<React.SetStateAction<Visibility>>;
@@ -31,7 +31,7 @@ interface addCardVariables {
   };
 }
 
-const AddPrompt = ({ mains, setVisibility }: AddPromptProps) => {
+export default function AddPrompt({ mains, setVisibility }: AddPromptProps) {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
@@ -42,7 +42,6 @@ const AddPrompt = ({ mains, setVisibility }: AddPromptProps) => {
         cache.updateQuery(
           { query: GET_CARDS, variables: { topicId: mains.topic?.id } },
           ({ getCards }) => {
-            // * main.mains
             return {
               getCards: getCards.concat(response.data?.createCard),
             };
@@ -56,11 +55,10 @@ const AddPrompt = ({ mains, setVisibility }: AddPromptProps) => {
     e.preventDefault();
 
     if (!mains.topic) {
-      // * main.mains
       return;
     }
 
-    const { id, aiId } = mains.topic; // * main.mains
+    const { id, aiId } = mains.topic;
 
     const variables = {
       topicId: id,
@@ -125,6 +123,4 @@ const AddPrompt = ({ mains, setVisibility }: AddPromptProps) => {
       </form>
     </div>
   );
-};
-
-export default AddPrompt;
+}
